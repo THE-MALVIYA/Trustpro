@@ -33,7 +33,7 @@ import {
 } from 'lucide-react';
 
 export const SettingsView: React.FC = () => {
-  const { currentUser, setCurrentUser, setUsers, addNotification, deleteUserAccount } = useWallet();
+  const { currentUser, updateUserAccount, addNotification, deleteUserAccount } = useWallet();
 
   const [twoFactor, setTwoFactor] = useState(currentUser?.twoFactorEnabled ?? false);
   const [passkey, setPasskey] = useState(currentUser?.passkeyEnabled ?? true);
@@ -86,14 +86,11 @@ export const SettingsView: React.FC = () => {
     setTimeout(() => {
       setIsRegisteringPasskey(false);
       if (createdSuccess && currentUser) {
-        const updatedUser = {
-          ...currentUser,
+        updateUserAccount({
           passkeyEnabled: true,
           passkeyRegisteredAt: new Date().toISOString(),
           passkeyDeviceName: 'Touch ID / Windows Hello Fingerprint',
-        };
-        setCurrentUser(updatedUser);
-        setUsers((prev) => prev.map((u) => (u.id === currentUser.id ? updatedUser : u)));
+        });
         setPasskey(true);
         setPasskeyMsg({
           type: 'success',
@@ -112,21 +109,16 @@ export const SettingsView: React.FC = () => {
   const handleTogglePasskey = (enabled: boolean) => {
     if (!currentUser) return;
     setPasskey(enabled);
-    const updatedUser = { ...currentUser, passkeyEnabled: enabled };
-    setCurrentUser(updatedUser);
-    setUsers((prev) => prev.map((u) => (u.id === currentUser.id ? updatedUser : u)));
+    updateUserAccount({ passkeyEnabled: enabled });
   };
 
   const handleRemovePasskey = () => {
     if (!currentUser) return;
-    const updatedUser = {
-      ...currentUser,
+    updateUserAccount({
       passkeyEnabled: false,
       passkeyRegisteredAt: undefined,
       passkeyDeviceName: undefined,
-    };
-    setCurrentUser(updatedUser);
-    setUsers((prev) => prev.map((u) => (u.id === currentUser.id ? updatedUser : u)));
+    });
     setPasskey(false);
     setPasskeyMsg({ type: 'success', text: 'Fingerprint Passkey removed.' });
   };
@@ -183,14 +175,10 @@ export const SettingsView: React.FC = () => {
       return;
     }
 
-    const updatedUser = {
-      ...currentUser,
+    updateUserAccount({
       twoFactorEnabled: true,
       twoFactorSecret: totpSecret,
-    };
-
-    setCurrentUser(updatedUser);
-    setUsers((prev) => prev.map((u) => (u.id === currentUser.id ? updatedUser : u)));
+    });
     setTwoFactor(true);
     setIs2FAModalOpen(false);
 
@@ -204,13 +192,10 @@ export const SettingsView: React.FC = () => {
 
   const handleDisable2FA = () => {
     if (!currentUser) return;
-    const updatedUser = {
-      ...currentUser,
+    updateUserAccount({
       twoFactorEnabled: false,
       twoFactorSecret: undefined,
-    };
-    setCurrentUser(updatedUser);
-    setUsers((prev) => prev.map((u) => (u.id === currentUser.id ? updatedUser : u)));
+    });
     setTwoFactor(false);
 
     addNotification(
@@ -224,13 +209,10 @@ export const SettingsView: React.FC = () => {
   const handleSaveSettings = (e: React.FormEvent) => {
     e.preventDefault();
     if (currentUser) {
-      const updatedUser = {
-        ...currentUser,
+      updateUserAccount({
         twoFactorEnabled: twoFactor,
         passkeyEnabled: passkey,
-      };
-      setCurrentUser(updatedUser);
-      setUsers((prev) => prev.map((u) => (u.id === currentUser.id ? updatedUser : u)));
+      });
       setSavedMsg(true);
       setTimeout(() => setSavedMsg(false), 3000);
       addNotification(currentUser.id, 'Settings Saved', 'Wallet security preferences updated', 'security');
@@ -245,13 +227,9 @@ export const SettingsView: React.FC = () => {
       return;
     }
 
-    const updatedUser = {
-      ...currentUser,
+    updateUserAccount({
       kycStatus: 'pending' as const,
-    };
-
-    setCurrentUser(updatedUser);
-    setUsers((prev) => prev.map((u) => (u.id === currentUser.id ? updatedUser : u)));
+    });
     setKycSubmitSuccess(true);
 
     addNotification(

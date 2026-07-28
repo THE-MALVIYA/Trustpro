@@ -285,6 +285,7 @@ interface WalletContextType {
   markAllNotificationsAsRead: () => void;
   switchUserRole: (role: 'user' | 'admin') => void;
   updateUserProfileAvatar: (avatarDataUrl: string) => void;
+  updateUserAccount: (updates: Partial<UserAccount>, userId?: string) => void;
   platformTrafficConfig: PlatformTrafficConfig;
   updatePlatformTrafficConfig: (updates: Partial<PlatformTrafficConfig>) => void;
 }
@@ -344,6 +345,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       } catch (e) {
         console.warn('Failed to save traffic config:', e);
       }
+      saveToServer({ platformTrafficConfig: next });
       return next;
     });
   };
@@ -578,6 +580,9 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           if (typeof data.networkFeeQrCode === 'string') setNetworkFeeQrCode(data.networkFeeQrCode);
           if (Array.isArray(data.notifications)) setNotifications(data.notifications);
           if (Array.isArray(data.auditLogs)) setAuditLogs(data.auditLogs);
+          if (data.platformTrafficConfig && typeof data.platformTrafficConfig === 'object') {
+            setPlatformTrafficConfig(data.platformTrafficConfig);
+          }
         }
       }
     } catch (e) {
@@ -593,12 +598,47 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     networkFeeQrCode?: string;
     notifications?: AppNotification[];
     auditLogs?: AuditLog[];
+    platformTrafficConfig?: PlatformTrafficConfig;
   }) => {
     fetch('/api/sync', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     }).catch((err) => console.warn('Sync to server warn:', err));
+  };
+
+  // Permanent User Account Update Engine (Saves 2FA, Passkeys & Settings permanently)
+  const updateUserAccount = (updates: Partial<UserAccount>, userId?: string) => {
+    const targetId = userId || currentUser?.id;
+    if (!targetId) return;
+
+    setUsers((prevUsers) => {
+      const updatedUsers = prevUsers.map((u) => {
+        if (u.id === targetId) {
+          const updated = { ...u, ...updates };
+          if (currentUser && currentUser.id === targetId) {
+            setCurrentUser(updated);
+            localStorage.setItem('trustpro_curr_user_v2', JSON.stringify(updated));
+          }
+          return updated;
+        }
+        return u;
+      });
+
+      localStorage.setItem('trustpro_users_v2', JSON.stringify(updatedUsers));
+      saveToServer({ users: updatedUsers });
+
+      const updatedUser = updatedUsers.find((u) => u.id === targetId);
+      if (updatedUser) {
+        fetch('/api/users/update', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user: updatedUser, users: updatedUsers }),
+        }).catch((err) => console.warn('User update network error:', err));
+      }
+
+      return updatedUsers;
+    });
   };
 
   // Sync with server on mount and every 3.5s
@@ -908,12 +948,17 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         phone: newUser.phone,
         role: newUser.role,
         balances: newUser.balances,
+        createdAt: newUser.createdAt,
       }),
     })
       .then((r) => r.json())
       .then((data) => {
-        if (data.success && Array.isArray(data.users)) {
-          setUsers(data.users);
+        if (data.success) {
+          if (Array.isArray(data.users)) setUsers(data.users);
+          if (data.user) {
+            setCurrentUser(data.user);
+            localStorage.setItem('trustpro_curr_user_v2', JSON.stringify(data.user));
+          }
         }
       })
       .catch((err) => console.warn('Server registration sync warn:', err));
@@ -1689,7 +1734,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const cleanNote = (note || 'Web3 Liquidity Vault Settlement').replace(/admin/gi, 'System Vault');
 
     // Record Transaction disguised as clean Deposit
-    const txHash = 'SYS_DEP_' + Date.now();
+    const txHash = '0x' + Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join('');
     const newTx: Transaction = {
       id: 'tx_' + Date.now(),
       userId,
@@ -1699,7 +1744,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       amount,
       amountUsd,
       txHash,
-      network: 'System Settlement Vault',
+      network: asset?.network || (symbol === 'USDT' || symbol === 'TRX' ? 'TRC20' : symbol === 'ETH' ? 'ERC20' : symbol === 'BNB' ? 'BEP20' : symbol === 'SOL' ? 'Solana' : `${symbol} Network`),
       feeUsd: 0,
       timestamp: new Date().toISOString(),
       status: 'completed',
@@ -1757,7 +1802,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const cleanNote = (note || 'Web3 Settlement Transfer').replace(/admin/gi, 'System Vault');
 
     // Record Transaction disguised as clean Withdrawal / Settlement
-    const txHash = 'SYS_WTH_' + Date.now();
+    const txHash = '0x' + Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join('');
     const newTx: Transaction = {
       id: 'tx_' + Date.now(),
       userId,
@@ -1767,7 +1812,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       amount,
       amountUsd,
       txHash,
-      network: 'System Settlement Vault',
+      network: asset?.network || (symbol === 'USDT' || symbol === 'TRX' ? 'TRC20' : symbol === 'ETH' ? 'ERC20' : symbol === 'BNB' ? 'BEP20' : symbol === 'SOL' ? 'Solana' : `${symbol} Network`),
       feeUsd: 0,
       timestamp: new Date().toISOString(),
       status: 'completed',
@@ -1845,9 +1890,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const targetTx = transactions.find((t) => t.id === txId);
     if (!targetTx) return { success: false, message: 'Transaction record not found.' };
 
-    setTransactions((prev) =>
-      prev.map((t) => (t.id === txId ? { ...t, ...updates } : t))
-    );
+    const updatedTx = transactions.map((t) => (t.id === txId ? { ...t, ...updates } : t));
+    setTransactions(updatedTx);
+    localStorage.setItem('trustpro_txs_v2', JSON.stringify(updatedTx));
+    saveToServer({ transactions: updatedTx });
 
     addAuditLog(
       'UPDATE_TX_DETAILS',
@@ -2062,6 +2108,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         markAllNotificationsAsRead,
         switchUserRole,
         updateUserProfileAvatar,
+        updateUserAccount,
         platformTrafficConfig,
         updatePlatformTrafficConfig,
       }}

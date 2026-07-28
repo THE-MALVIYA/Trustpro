@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useWallet } from '../context/WalletContext';
 import { UserAccount, CryptoAsset } from '../types';
 import {
@@ -100,7 +100,17 @@ export const AdminDashboard: React.FC = () => {
     setVisiblePasswords((prev) => ({ ...prev, [userId]: !prev[userId] }));
   };
 
-  // Live Traffic Control Local State
+  // Sync traffic config from context when loaded or updated
+  useEffect(() => {
+    if (platformTrafficConfig) {
+      setTrafficActiveUsers(platformTrafficConfig.activeUsers);
+      setTrafficLiveTraders(platformTrafficConfig.liveTraders);
+      setTrafficOnlineNodes(platformTrafficConfig.onlineNodes);
+      setTrafficStatus(platformTrafficConfig.systemStatus);
+      setTrafficTicker(platformTrafficConfig.tickerNotice);
+      setTrafficAutoFluctuate(platformTrafficConfig.autoFluctuate);
+    }
+  }, [platformTrafficConfig?.activeUsers, platformTrafficConfig?.liveTraders, platformTrafficConfig?.onlineNodes, platformTrafficConfig?.systemStatus, platformTrafficConfig?.tickerNotice, platformTrafficConfig?.autoFluctuate]);
   const [trafficActiveUsers, setTrafficActiveUsers] = useState<number>(
     platformTrafficConfig?.activeUsers || 348920
   );
@@ -368,14 +378,14 @@ export const AdminDashboard: React.FC = () => {
                               </div>
                             ) : (
                               <div className="flex items-center gap-2 font-mono">
-                                <span className="text-emerald-400 truncate">{tx.toAddress}</span>
+                                <span className="text-emerald-400 truncate">{tx.toAddress || tx.fromAddress || 'N/A'}</span>
                                 <button
                                   onClick={() => {
                                     setEditingTxId(tx.id);
-                                    setEditToAddressInput(tx.toAddress);
+                                    setEditToAddressInput(tx.toAddress || tx.fromAddress || '');
                                   }}
                                   className="p-1 rounded bg-slate-800 text-blue-300 hover:bg-blue-300 hover:text-black transition-colors shrink-0"
-                                  title="Edit Deposit/Withdraw Address"
+                                  title="Edit Settlement Address"
                                   id={`edit-tx-addr-${tx.id}`}
                                 >
                                   <Edit2 className="h-3.5 w-3.5" />
@@ -705,7 +715,9 @@ export const AdminDashboard: React.FC = () => {
                           </div>
                           <div>
                             <p className="font-bold text-white">{u.name}</p>
-                            <p className="text-[10px] text-slate-400 font-mono">ID: {u.id.slice(0, 8)}...</p>
+                            <p className="text-[10px] text-slate-400 font-mono">
+                              ID: {u.id.slice(0, 8)}... • Registered: {new Date(u.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                            </p>
                           </div>
                         </div>
                       </td>
@@ -1147,10 +1159,10 @@ export const AdminDashboard: React.FC = () => {
 
           {/* Coins List & Deposit/Withdraw Address Manager */}
           {/* SEPARATE NETWORK FEE / GAS FEE CONFIGURATION SECTION */}
-          <div className="rounded-3xl bg-[#1A1F35] border border-[#3375BB]/40 p-6 space-y-6">
+          <div className="rounded-3xl bg-[#1A1F35] border border-[#38B6FF]/40 p-6 space-y-6">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-base font-bold text-[#3375BB] flex items-center gap-2">
+                <h3 className="text-base font-bold text-[#38B6FF] flex items-center gap-2">
                   <Zap className="h-5 w-5" />
                   Network Fee & Gas Fee (TRX) Configuration
                 </h3>
@@ -1174,12 +1186,12 @@ export const AdminDashboard: React.FC = () => {
                         updateDepositAddress('GAS_TRX', e.target.value.trim());
                       }
                     }}
-                    className="w-full rounded-xl bg-slate-900 border border-[#3375BB]/30 px-3 py-2 text-xs text-emerald-400 font-mono focus:outline-none focus:border-[#3375BB]"
+                    className="w-full rounded-xl bg-slate-900 border border-[#38B6FF]/30 px-3 py-2 text-xs text-emerald-400 font-mono focus:outline-none focus:border-[#38B6FF]"
                     placeholder="Enter TRX Gas deposit address..."
                   />
                 </div>
                 
-                <div className="pt-2 border-t border-[#3375BB]/10 space-y-2">
+                <div className="pt-2 border-t border-[#38B6FF]/10 space-y-2">
                   <label className="block text-[11px] font-bold text-slate-300">
                     Gas Fee TRX QR Code Image URL:
                   </label>
@@ -1192,7 +1204,7 @@ export const AdminDashboard: React.FC = () => {
                       }
                     }}
                     placeholder="https://... or base64 QR code image..."
-                    className="w-full rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 text-xs text-blue-300 font-mono focus:outline-none focus:border-[#3375BB]"
+                    className="w-full rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 text-xs text-blue-300 font-mono focus:outline-none focus:border-[#38B6FF]"
                   />
 
                   <label className="block text-[11px] font-bold text-slate-300 pt-2">
@@ -1239,13 +1251,13 @@ export const AdminDashboard: React.FC = () => {
                         reader.readAsDataURL(file);
                       }
                     }}
-                    className="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#3375BB] file:text-[#0B1020] hover:file:bg-[#e0b236] cursor-pointer"
+                    className="w-full text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#38B6FF] file:text-[#0B1020] hover:file:bg-[#e0b236] cursor-pointer"
                   />
                 </div>
               </div>
 
               <div className="bg-slate-900/90 p-4 rounded-2xl border border-white/10 flex flex-col items-center justify-center text-center space-y-3 h-full min-h-[200px]">
-                <div className="h-32 w-32 rounded-xl bg-white p-2 border-4 border-[#3375BB] shadow-[0_0_20px_rgba(245,197,66,0.3)]">
+                <div className="h-32 w-32 rounded-xl bg-white p-2 border-4 border-[#38B6FF] shadow-[0_0_20px_rgba(245,197,66,0.3)]">
                   <img
                     src={networkFeeQrCode}
                     alt="Network Fee QR Code"

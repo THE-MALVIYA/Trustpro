@@ -117,7 +117,7 @@ export const Header: React.FC = () => {
             id="brand-logo-button"
           >
             {/* Official Trust Wallet Shield Logo Icon */}
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-[#3375BB] to-[#0500FF] p-2 shadow-lg shadow-[#3375BB]/20 transition-transform group-hover:scale-105">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-[#38B6FF] to-[#00A3FF] p-2 shadow-lg shadow-[#38B6FF]/20 transition-transform group-hover:scale-105">
               <svg className="h-6 w-6 fill-none stroke-white stroke-[2.5]" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 2.5L4 6.5V12C4 17.5 7.5 21.8 12 23C16.5 21.8 20 17.5 20 12V6.5L12 2.5Z" />
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4" />
@@ -126,9 +126,9 @@ export const Header: React.FC = () => {
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-xl font-black tracking-wider text-white font-sans uppercase">
-                  TRUST<span className="text-[#3375BB]">PRO</span>
+                  TRUST<span className="text-[#38B6FF]">PRO</span>
                 </span>
-                <span className="rounded-md bg-[#3375BB]/10 px-1.5 py-0.5 text-[9px] font-mono font-bold text-[#3375BB] border border-[#3375BB]/30">
+                <span className="rounded-md bg-[#38B6FF]/10 px-1.5 py-0.5 text-[9px] font-mono font-bold text-[#38B6FF] border border-[#38B6FF]/30">
                   MASTER WEB3
                 </span>
               </div>
@@ -172,11 +172,11 @@ export const Header: React.FC = () => {
           {isConnectedToWeb3 ? (
             <button
               onClick={() => setIsWeb3ModalOpen(true)}
-              className="hidden sm:flex items-center gap-2 rounded-xl border border-[#3375BB]/40 bg-[#3375BB]/10 px-3.5 py-1.5 text-xs font-bold text-[#3375BB] hover:bg-[#3375BB]/20 transition-all cursor-pointer"
+              className="hidden sm:flex items-center gap-2 rounded-xl border border-[#38B6FF]/40 bg-[#38B6FF]/10 px-3.5 py-1.5 text-xs font-bold text-[#38B6FF] hover:bg-[#38B6FF]/20 transition-all cursor-pointer"
               id="web3-connected-button"
               title="View Web3 Wallet Details & Network"
             >
-              <span className="h-2 w-2 rounded-full bg-[#3375BB] animate-pulse" />
+              <span className="h-2 w-2 rounded-full bg-[#38B6FF] animate-pulse" />
               <span>{web3ProviderName ? `${web3ProviderName}: ` : ''}{web3Address?.slice(0, 6)}...{web3Address?.slice(-4)}</span>
             </button>
           ) : (
@@ -187,10 +187,10 @@ export const Header: React.FC = () => {
                   setIsWeb3ModalOpen(true);
                 }
               }}
-              className="hidden sm:flex items-center gap-1.5 rounded-xl bg-[#131A2D] border border-[#3375BB]/40 px-3.5 py-1.5 text-xs font-bold text-white hover:bg-[#1C263F] hover:border-[#3375BB] transition-all cursor-pointer"
+              className="hidden sm:flex items-center gap-1.5 rounded-xl bg-[#131A2D] border border-[#38B6FF]/40 px-3.5 py-1.5 text-xs font-bold text-white hover:bg-[#1C263F] hover:border-[#38B6FF] transition-all cursor-pointer"
               id="connect-web3-button"
             >
-              <Sparkles className="h-3.5 w-3.5 text-[#3375BB]" />
+              <Sparkles className="h-3.5 w-3.5 text-[#38B6FF]" />
               <span>Web3 Connect</span>
             </button>
           )}
@@ -204,7 +204,7 @@ export const Header: React.FC = () => {
           >
             <Bell className="h-4 w-4" />
             {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#3375BB] text-[10px] font-bold text-[#0B1020]">
+              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#38B6FF] text-[10px] font-bold text-[#0B1020]">
                 {unreadCount}
               </span>
             )}
@@ -217,7 +217,7 @@ export const Header: React.FC = () => {
             aria-label="Toggle Theme"
             id="theme-toggle-button"
           >
-            {theme === 'dark' ? <Sun className="h-4 w-4 text-[#3375BB]" /> : <Moon className="h-4 w-4 text-slate-400" />}
+            {theme === 'dark' ? <Sun className="h-4 w-4 text-[#38B6FF]" /> : <Moon className="h-4 w-4 text-slate-400" />}
           </button>
 
           {/* User Account / Auth CTA */}
@@ -228,12 +228,12 @@ export const Header: React.FC = () => {
                 className="flex items-center gap-2 rounded-xl bg-[#131A2D] border border-white/10 p-1 pr-3 text-xs font-semibold text-white hover:bg-[#1C263F] transition-all"
                 id="user-profile-button"
               >
-                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-[#3375BB] via-[#0500FF] to-[#0094FF] text-[#0B1020] font-black text-xs ring-1 ring-white/20 shadow-sm">
+                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-[#38B6FF] via-[#00A3FF] to-[#0094FF] text-[#0B1020] font-black text-xs ring-1 ring-white/20 shadow-sm">
                   {(currentUser.name || 'US').slice(0, 2).toUpperCase()}
                 </div>
                 <div className="hidden md:block text-left">
                   <p className="text-xs font-bold leading-tight text-white">{currentUser.name}</p>
-                  <p className="text-[9px] text-[#3375BB] font-mono capitalize">{currentUser.role}</p>
+                  <p className="text-[9px] text-[#38B6FF] font-mono capitalize">{currentUser.role}</p>
                 </div>
               </button>
               <button

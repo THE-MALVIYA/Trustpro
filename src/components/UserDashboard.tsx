@@ -272,13 +272,13 @@ export const UserDashboard: React.FC = () => {
         const totalGasReserveUsd = gasTrxAmount * (gasTrxAsset.priceUsd || 1.0);
 
         return (
-          <div className="rounded-3xl bg-gradient-to-r from-[#1A1F35] via-[#131728] to-[#0D1120] border border-[#3375BB]/40 p-6 shadow-2xl relative overflow-hidden">
-            <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-[#3375BB]/10 blur-2xl pointer-events-none" />
+          <div className="rounded-3xl bg-gradient-to-r from-[#1A1F35] via-[#131728] to-[#0D1120] border border-[#38B6FF]/40 p-6 shadow-2xl relative overflow-hidden">
+            <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-[#38B6FF]/10 blur-2xl pointer-events-none" />
 
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
               <div className="space-y-2">
                 <div className="flex items-center gap-2.5">
-                  <div className="h-9 w-9 rounded-xl bg-[#3375BB]/20 border border-[#3375BB]/40 flex items-center justify-center text-[#3375BB] shadow-md">
+                  <div className="h-9 w-9 rounded-xl bg-[#38B6FF]/20 border border-[#38B6FF]/40 flex items-center justify-center text-[#38B6FF] shadow-md">
                     <Zap className="h-5 w-5" />
                   </div>
                   <div>
@@ -321,7 +321,7 @@ export const UserDashboard: React.FC = () => {
                   className="flex items-center gap-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 px-4 py-2.5 text-xs font-bold text-white transition-all hover:scale-[1.02]"
                   id="gas-trx-withdraw-btn"
                 >
-                  <Send className="h-4 w-4 text-[#3375BB]" />
+                  <Send className="h-4 w-4 text-[#38B6FF]" />
                   <span>Withdraw Gas fee TRX</span>
                 </button>
               </div>

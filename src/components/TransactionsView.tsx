@@ -318,7 +318,7 @@ export const TransactionsView: React.FC = () => {
                   <th className="py-3.5 px-4">Amount</th>
                   <th className="py-3.5 px-4">USD Value</th>
                   <th className="py-3.5 px-4">Recipient / Address</th>
-                  <th className="py-3.5 px-4">Network / Settlement</th>
+                  <th className="py-3.5 px-4">NETWORK</th>
                   <th className="py-3.5 px-4">Tx Hash / Reference</th>
                   <th className="py-3.5 px-4">Date & Time</th>
                   <th className="py-3.5 px-4 text-right">Status</th>
@@ -385,7 +385,9 @@ export const TransactionsView: React.FC = () => {
                       </td>
                       <td className="py-4 px-4 text-slate-400 text-[11px]">
                         <span className="px-2 py-1 rounded-md bg-slate-950 border border-slate-800">
-                          {tx.network || 'Multi-Chain'}
+                          {tx.network && !tx.network.toLowerCase().includes('settlement') && !tx.network.toLowerCase().includes('vault')
+                            ? tx.network
+                            : (assets.find((a) => a.symbol === tx.assetSymbol)?.network || (tx.assetSymbol === 'USDT' || tx.assetSymbol === 'TRX' ? 'TRC20' : tx.assetSymbol === 'ETH' ? 'ERC20' : tx.assetSymbol === 'BNB' ? 'BEP20' : tx.assetSymbol === 'SOL' ? 'Solana' : `${tx.assetSymbol} Network`))}
                         </span>
                       </td>
                       <td className="py-4 px-4 text-[11px]">

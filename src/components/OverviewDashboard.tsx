@@ -147,7 +147,7 @@ export const OverviewDashboard: React.FC = () => {
   if (!currentUser) {
     return (
       <div className="flex flex-col items-center justify-center py-20 px-4 text-center">
-        <div className="h-16 w-16 rounded-2xl bg-[#3375BB]/10 border border-[#3375BB]/30 flex items-center justify-center text-[#3375BB] mb-4 animate-bounce">
+        <div className="h-16 w-16 rounded-2xl bg-[#38B6FF]/10 border border-[#38B6FF]/30 flex items-center justify-center text-[#38B6FF] mb-4 animate-bounce">
           <LayoutDashboard className="h-8 w-8" />
         </div>
         <h2 className="text-2xl font-extrabold text-white tracking-wider">Welcome to TrustPro Overview</h2>
@@ -194,13 +194,13 @@ export const OverviewDashboard: React.FC = () => {
   const allocationData =
     totalPortfolioUsd > 0
       ? [
-          { name: 'Spot Wallet', value: spotWalletUsd, color: '#3375BB' },
-          { name: 'Futures Wallet', value: futuresWalletUsd, color: '#0500FF' },
-          { name: 'Earn Wallet', value: earnWalletUsd, color: '#3375BB' },
+          { name: 'Spot Wallet', value: spotWalletUsd, color: '#38B6FF' },
+          { name: 'Futures Wallet', value: futuresWalletUsd, color: '#00A3FF' },
+          { name: 'Earn Wallet', value: earnWalletUsd, color: '#38B6FF' },
           { name: 'Funding Wallet', value: fundingWalletUsd, color: '#A855F7' },
           { name: 'Staking Wallet', value: marginWalletUsd, color: '#EC4899' },
         ]
-      : [{ name: 'Spot Wallet', value: 0, color: '#3375BB' }];
+      : [{ name: 'Spot Wallet', value: 0, color: '#38B6FF' }];
 
   // Handle Photo Selection
   const handlePhotoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -266,28 +266,28 @@ export const OverviewDashboard: React.FC = () => {
       title: 'All Dashboard',
       subtitle: 'Master overview & summary cards',
       icon: LayoutDashboard,
-      color: 'from-[#3375BB] to-[#0500FF]',
+      color: 'from-[#38B6FF] to-[#00A3FF]',
     },
     {
       id: 'portfolio',
       title: 'Portfolio',
       subtitle: 'Total balance & asset breakdown',
       icon: Wallet,
-      color: 'from-[#0500FF] to-[#0094FF]',
+      color: 'from-[#00A3FF] to-[#0094FF]',
     },
     {
       id: 'wallets',
       title: 'Wallets',
       subtitle: 'Spot, Funding, Futures & Staking',
       icon: DollarSign,
-      color: 'from-[#3375BB] to-[#10B981]',
+      color: 'from-[#38B6FF] to-[#10B981]',
     },
     {
       id: 'markets',
       title: 'Market Overview',
       subtitle: 'Live prices, top gainers & volume',
       icon: TrendingUp,
-      color: 'from-[#3375BB] to-[#F59E0B]',
+      color: 'from-[#38B6FF] to-[#F59E0B]',
     },
     {
       id: 'allocation',
@@ -301,14 +301,14 @@ export const OverviewDashboard: React.FC = () => {
       title: 'Wallet Activity',
       subtitle: 'All recent wallet transactions',
       icon: Activity,
-      color: 'from-[#0094FF] to-[#3375BB]',
+      color: 'from-[#0094FF] to-[#38B6FF]',
     },
     {
       id: 'deposits',
       title: 'Deposit History',
       subtitle: 'Crypto deposit logs & hashes',
       icon: Download,
-      color: 'from-[#3375BB] to-[#059669]',
+      color: 'from-[#38B6FF] to-[#059669]',
     },
     {
       id: 'withdrawals',
@@ -322,7 +322,7 @@ export const OverviewDashboard: React.FC = () => {
       title: 'Trade History',
       subtitle: 'Spot, Futures & Swap orders',
       icon: Repeat,
-      color: 'from-[#3375BB] to-[#10B981]',
+      color: 'from-[#38B6FF] to-[#10B981]',
     },
     {
       id: 'transactions',
@@ -336,7 +336,7 @@ export const OverviewDashboard: React.FC = () => {
       title: 'Assets',
       subtitle: 'Available token balances',
       icon: Coins,
-      color: 'from-[#3375BB] to-[#3375BB]',
+      color: 'from-[#38B6FF] to-[#38B6FF]',
     },
     {
       id: 'analytics',
@@ -364,42 +364,42 @@ export const OverviewDashboard: React.FC = () => {
       title: 'Security',
       subtitle: '2FA, Password & API keys',
       icon: ShieldCheck,
-      color: 'from-[#3375BB] to-[#0500FF]',
+      color: 'from-[#38B6FF] to-[#00A3FF]',
     },
     {
       id: 'notifications',
       title: 'Notifications',
       subtitle: 'System & trade alerts',
       icon: Bell,
-      color: 'from-[#3375BB] to-[#EF4444]',
+      color: 'from-[#38B6FF] to-[#EF4444]',
     },
     {
       id: 'referral',
       title: 'Referral',
       subtitle: 'Invite friends & earn yield',
       icon: Gift,
-      color: 'from-[#EC4899] to-[#3375BB]',
+      color: 'from-[#EC4899] to-[#38B6FF]',
     },
     {
       id: 'support',
       title: 'Support',
       subtitle: '24/7 compliance ticket desk',
       icon: MessageSquare,
-      color: 'from-[#0094FF] to-[#3375BB]',
+      color: 'from-[#0094FF] to-[#38B6FF]',
     },
     {
       id: 'kyc',
       title: 'KYC',
       subtitle: 'Identity verification & limits',
       icon: Shield,
-      color: 'from-[#3375BB] to-[#10B981]',
+      color: 'from-[#38B6FF] to-[#10B981]',
     },
     {
       id: 'profile',
       title: 'Profile',
       subtitle: 'User info & profile picture',
       icon: User,
-      color: 'from-[#0500FF] to-[#6366F1]',
+      color: 'from-[#00A3FF] to-[#6366F1]',
     },
   ];
 
@@ -410,7 +410,7 @@ export const OverviewDashboard: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
           <div className="flex items-center gap-5">
             {/* Professional Institutional Badge Avatar */}
-            <div className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-[#3375BB] via-[#0500FF] to-[#0094FF] text-[#0B1020] font-black text-2xl shadow-xl ring-4 ring-white/10 shrink-0">
+            <div className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-[#38B6FF] via-[#00A3FF] to-[#0094FF] text-[#0B1020] font-black text-2xl shadow-xl ring-4 ring-white/10 shrink-0">
               {(currentUser.name || 'US').slice(0, 2).toUpperCase()}
             </div>
 
@@ -419,13 +419,13 @@ export const OverviewDashboard: React.FC = () => {
                 <h1 className="text-2xl font-black text-white">{currentUser.name}</h1>
                 {/* Dynamic KYC Status Badge */}
                 {currentUser.kycStatus === 'verified' && (
-                  <span className="rounded-full bg-[#3375BB]/10 border border-[#3375BB]/50 px-3 py-0.5 text-[11px] font-black text-[#3375BB] uppercase tracking-wider flex items-center gap-1">
+                  <span className="rounded-full bg-[#38B6FF]/10 border border-[#38B6FF]/50 px-3 py-0.5 text-[11px] font-black text-[#38B6FF] uppercase tracking-wider flex items-center gap-1">
                     <CheckCircle2 className="h-3 w-3" />
                     VERIFIED
                   </span>
                 )}
                 {currentUser.kycStatus === 'pending' && (
-                  <span className="rounded-full bg-[#3375BB]/10 border border-[#3375BB]/50 px-3 py-0.5 text-[11px] font-black text-[#3375BB] uppercase tracking-wider flex items-center gap-1">
+                  <span className="rounded-full bg-[#38B6FF]/10 border border-[#38B6FF]/50 px-3 py-0.5 text-[11px] font-black text-[#38B6FF] uppercase tracking-wider flex items-center gap-1">
                     <Clock className="h-3 w-3" />
                     PENDING VERIFICATION
                   </span>
@@ -448,7 +448,15 @@ export const OverviewDashboard: React.FC = () => {
               </div>
               <p className="text-xs text-[#AAB3C5] mt-1.5 font-mono">
                 Email: <span className="text-white font-medium">{currentUser.email}</span> • Registered:{' '}
-                {(currentUser?.createdAt || new Date().toISOString()).split('T')[0]}
+                <span className="text-white font-medium">
+                  {currentUser?.createdAt
+                    ? new Date(currentUser.createdAt).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                      })
+                    : new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                </span>
               </p>
             </div>
           </div>
@@ -468,7 +476,7 @@ export const OverviewDashboard: React.FC = () => {
               className="flex items-center gap-2 btn-secondary-dark px-5 py-3 text-xs font-bold transition-all"
               id="header-withdraw-btn"
             >
-              <Send className="h-4 w-4 text-[#3375BB]" />
+              <Send className="h-4 w-4 text-[#38B6FF]" />
               <span>Withdraw</span>
             </button>
             <button
@@ -490,7 +498,7 @@ export const OverviewDashboard: React.FC = () => {
             {/* 3-LINE HAMBURGER MENU TOGGLE BUTTON */}
             <button
               onClick={() => setIsNavMenuOpen(!isNavMenuOpen)}
-              className="flex items-center gap-3 rounded-2xl bg-gradient-to-r from-[#3375BB] via-[#0500FF] to-[#0094FF] px-4 py-3 text-[#0B1020] font-black shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all group"
+              className="flex items-center gap-3 rounded-2xl bg-gradient-to-r from-[#38B6FF] via-[#00A3FF] to-[#0094FF] px-4 py-3 text-[#0B1020] font-black shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all group"
               id="three-line-nav-menu-toggle"
               title="Click to open or close 3-line navigation menu"
             >
@@ -519,7 +527,7 @@ export const OverviewDashboard: React.FC = () => {
             {activeSection !== 'all' && (
               <button
                 onClick={() => setActiveSection('all')}
-                className="flex items-center gap-2 rounded-xl bg-[#0B1020] border border-[#3375BB]/40 px-3.5 py-2 text-xs font-extrabold text-[#3375BB] hover:bg-[#1C263F] transition-all"
+                className="flex items-center gap-2 rounded-xl bg-[#0B1020] border border-[#38B6FF]/40 px-3.5 py-2 text-xs font-extrabold text-[#38B6FF] hover:bg-[#1C263F] transition-all"
               >
                 <ArrowLeft className="h-4 w-4" />
                 <span>Show Master Dashboard</span>
@@ -529,21 +537,21 @@ export const OverviewDashboard: React.FC = () => {
               onClick={() => setActiveModal('about')}
               className="flex items-center gap-1.5 rounded-xl bg-[#0B1020] border border-white/10 px-3 py-2 text-xs font-semibold text-[#AAB3C5] hover:text-white transition-all"
             >
-              <Info className="h-3.5 w-3.5 text-[#3375BB]" />
+              <Info className="h-3.5 w-3.5 text-[#38B6FF]" />
               <span>About</span>
             </button>
             <button
               onClick={() => setActiveModal('contact')}
               className="flex items-center gap-1.5 rounded-xl bg-[#0B1020] border border-white/10 px-3 py-2 text-xs font-semibold text-[#AAB3C5] hover:text-white transition-all"
             >
-              <Phone className="h-3.5 w-3.5 text-[#0500FF]" />
+              <Phone className="h-3.5 w-3.5 text-[#00A3FF]" />
               <span>Contact</span>
             </button>
             <button
               onClick={() => setActiveModal('privacy')}
               className="flex items-center gap-1.5 rounded-xl bg-[#0B1020] border border-white/10 px-3 py-2 text-xs font-semibold text-[#AAB3C5] hover:text-white transition-all"
             >
-              <ShieldCheck className="h-3.5 w-3.5 text-[#3375BB]" />
+              <ShieldCheck className="h-3.5 w-3.5 text-[#38B6FF]" />
               <span>Privacy</span>
             </button>
           </div>
@@ -553,7 +561,7 @@ export const OverviewDashboard: React.FC = () => {
         {isNavMenuOpen && (
           <div className="pt-4 border-t border-white/10 animate-fadeIn">
             <div className="flex items-center justify-between mb-3 px-1">
-              <p className="text-xs font-extrabold text-[#3375BB] uppercase tracking-wider flex items-center gap-2">
+              <p className="text-xs font-extrabold text-[#38B6FF] uppercase tracking-wider flex items-center gap-2">
                 <Sparkles className="h-4 w-4" />
                 <span>All 20 Navigation Dashboard Modules (Select to open):</span>
               </p>
@@ -577,8 +585,8 @@ export const OverviewDashboard: React.FC = () => {
                     }}
                     className={`flex flex-col justify-between text-left p-3.5 rounded-[18px] border transition-all hover:-translate-y-1 ${
                       isSelected
-                        ? 'bg-[#1C263F] border-[#3375BB] shadow-lg shadow-[#3375BB]/10 ring-2 ring-[#3375BB]/40'
-                        : 'bg-[#0B1020] border-white/10 hover:border-[#3375BB]/40'
+                        ? 'bg-[#1C263F] border-[#38B6FF] shadow-lg shadow-[#38B6FF]/10 ring-2 ring-[#38B6FF]/40'
+                        : 'bg-[#0B1020] border-white/10 hover:border-[#38B6FF]/40'
                     }`}
                     id={`dashboard-nav-card-${btn.id}`}
                   >
@@ -589,7 +597,7 @@ export const OverviewDashboard: React.FC = () => {
                         <Icon className="h-4 w-4 stroke-[2.5]" />
                       </div>
                       <span
-                        className={`h-2 w-2 rounded-full ${isSelected ? 'bg-[#3375BB] animate-ping' : 'bg-white/20'}`}
+                        className={`h-2 w-2 rounded-full ${isSelected ? 'bg-[#38B6FF] animate-ping' : 'bg-white/20'}`}
                       />
                     </div>
                     <div>
@@ -678,7 +686,7 @@ export const OverviewDashboard: React.FC = () => {
             <div className="rounded-[20px] bg-[#131A2D] border border-white/10 p-6 shadow-xl space-y-6">
               <div className="flex items-center justify-between border-b border-white/10 pb-4">
                 <div className="flex items-center gap-2">
-                  <Wallet className="h-5 w-5 text-[#3375BB]" />
+                  <Wallet className="h-5 w-5 text-[#38B6FF]" />
                   <h2 className="text-base font-bold text-white uppercase tracking-wider">
                     Total Portfolio Overview
                   </h2>
@@ -717,7 +725,7 @@ export const OverviewDashboard: React.FC = () => {
                   <div className="flex items-center gap-2 mt-1">
                     <p
                       className={`text-2xl font-black font-mono ${
-                        weighted24hPnlUsd >= 0 ? 'text-[#3375BB]' : 'text-[#F6465D]'
+                        weighted24hPnlUsd >= 0 ? 'text-[#38B6FF]' : 'text-[#F6465D]'
                       }`}
                     >
                       {showBalance
@@ -727,7 +735,7 @@ export const OverviewDashboard: React.FC = () => {
                     <span
                       className={`rounded-md px-2 py-0.5 text-xs font-bold font-mono ${
                         weighted24hPnlPercent >= 0
-                          ? 'bg-[#3375BB]/10 text-[#3375BB]'
+                          ? 'bg-[#38B6FF]/10 text-[#38B6FF]'
                           : 'bg-[#F6465D]/10 text-[#F6465D]'
                       }`}
                     >
@@ -744,13 +752,13 @@ export const OverviewDashboard: React.FC = () => {
                   <div className="mt-1.5 space-y-1 text-xs font-mono">
                     <div className="flex justify-between">
                       <span className="text-[#AAB3C5]">Available:</span>
-                      <span className="text-[#3375BB] font-bold">
+                      <span className="text-[#38B6FF] font-bold">
                         ${showBalance ? availableBalanceUsd.toFixed(2) : '••••'}
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-[#AAB3C5]">Frozen:</span>
-                      <span className="text-[#3375BB] font-bold">
+                      <span className="text-[#38B6FF] font-bold">
                         ${showBalance ? frozenBalanceUsd.toFixed(2) : '••••'}
                       </span>
                     </div>
@@ -765,15 +773,15 @@ export const OverviewDashboard: React.FC = () => {
         {(activeSection === 'portfolio' || activeSection === 'wallets') && (
           <div className="rounded-[20px] bg-[#131A2D] border border-white/10 p-6 shadow-xl space-y-6 animate-fadeIn">
             <h3 className="text-lg font-black text-white flex items-center gap-2">
-              <Wallet className="h-5 w-5 text-[#3375BB]" />
+              <Wallet className="h-5 w-5 text-[#38B6FF]" />
               <span>Multi-Wallet Asset Breakdown</span>
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-5 gap-4">
               {[
-                { label: 'Spot Wallet', val: spotWalletUsd, color: 'text-[#3375BB]' },
-                { label: 'Futures Wallet', val: futuresWalletUsd, color: 'text-[#0500FF]' },
-                { label: 'Earn Wallet', val: earnWalletUsd, color: 'text-[#3375BB]' },
+                { label: 'Spot Wallet', val: spotWalletUsd, color: 'text-[#38B6FF]' },
+                { label: 'Futures Wallet', val: futuresWalletUsd, color: 'text-[#00A3FF]' },
+                { label: 'Earn Wallet', val: earnWalletUsd, color: 'text-[#38B6FF]' },
                 { label: 'Funding Wallet', val: fundingWalletUsd, color: 'text-[#A855F7]' },
                 { label: 'Staking Wallet', val: marginWalletUsd, color: 'text-[#EC4899]' },
               ].map((w, idx) => (
@@ -817,7 +825,7 @@ export const OverviewDashboard: React.FC = () => {
                         </td>
                         <td
                           className={`py-3 px-4 font-mono font-bold ${
-                            asset.change24h >= 0 ? 'text-[#3375BB]' : 'text-[#F6465D]'
+                            asset.change24h >= 0 ? 'text-[#38B6FF]' : 'text-[#F6465D]'
                           }`}
                         >
                           {asset.change24h >= 0 ? '+' : ''}
@@ -836,7 +844,7 @@ export const OverviewDashboard: React.FC = () => {
                                 setSelectedAssetForModal(asset);
                                 setIsReceiveModalOpen(true);
                               }}
-                              className="px-3 py-1.5 rounded-xl bg-[#3375BB]/10 text-[#3375BB] hover:bg-[#3375BB]/20 font-bold text-xs"
+                              className="px-3 py-1.5 rounded-xl bg-[#38B6FF]/10 text-[#38B6FF] hover:bg-[#38B6FF]/20 font-bold text-xs"
                             >
                               Deposit
                             </button>
@@ -845,7 +853,7 @@ export const OverviewDashboard: React.FC = () => {
                                 setSelectedAssetForModal(asset);
                                 setIsSendModalOpen(true);
                               }}
-                              className="px-3 py-1.5 rounded-xl bg-[#0500FF]/10 text-[#0500FF] hover:bg-[#0500FF]/20 font-bold text-xs"
+                              className="px-3 py-1.5 rounded-xl bg-[#00A3FF]/10 text-[#00A3FF] hover:bg-[#00A3FF]/20 font-bold text-xs"
                             >
                               Withdraw
                             </button>
@@ -862,10 +870,10 @@ export const OverviewDashboard: React.FC = () => {
             <div className="rounded-2xl bg-[#0B1020] border border-white/10 p-5 space-y-4">
               <div className="flex items-center justify-between border-b border-white/10 pb-3">
                 <h4 className="text-sm font-extrabold text-white flex items-center gap-2">
-                  <Layers className="h-4 w-4 text-[#3375BB]" />
+                  <Layers className="h-4 w-4 text-[#38B6FF]" />
                   <span>Network Fee Schedule</span>
                 </h4>
-                <span className="text-[10px] font-mono text-[#3375BB] bg-[#3375BB]/10 px-2.5 py-0.5 rounded-full font-bold border border-[#3375BB]/30">
+                <span className="text-[10px] font-mono text-[#38B6FF] bg-[#38B6FF]/10 px-2.5 py-0.5 rounded-full font-bold border border-[#38B6FF]/30">
                   REAL-TIME ON-CHAIN RATES
                 </span>
               </div>
@@ -915,8 +923,8 @@ export const OverviewDashboard: React.FC = () => {
                             <span className="font-bold text-white font-sans">{asset.name}</span>
                             <span className="text-[10px] text-[#AAB3C5]">({asset.symbol})</span>
                           </td>
-                          <td className="py-2.5 px-3 font-bold text-[#0500FF]">{netName}</td>
-                          <td className="py-2.5 px-3 text-[#3375BB] font-bold">Free (0.00%)</td>
+                          <td className="py-2.5 px-3 font-bold text-[#00A3FF]">{netName}</td>
+                          <td className="py-2.5 px-3 text-[#38B6FF] font-bold">Free (0.00%)</td>
                           <td className="py-2.5 px-3 text-white font-bold">{withdrawFee}</td>
                         </tr>
                       );
@@ -940,7 +948,7 @@ export const OverviewDashboard: React.FC = () => {
                   onClick={() => setIsSendModalOpen(true)}
                   className="flex-1 btn-secondary-dark py-2.5 text-xs font-bold text-white flex items-center justify-center gap-2 border border-white/10 hover:bg-white/10"
                 >
-                  <ArrowUpRight className="h-4 w-4 text-[#0500FF]" />
+                  <ArrowUpRight className="h-4 w-4 text-[#00A3FF]" />
                   <span>Withdraw</span>
                 </button>
               </div>
@@ -953,12 +961,12 @@ export const OverviewDashboard: React.FC = () => {
           <div className="rounded-[20px] bg-[#131A2D] border border-white/10 p-6 shadow-xl space-y-6 animate-fadeIn">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-black text-white flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-[#3375BB]" />
+                <TrendingUp className="h-5 w-5 text-[#38B6FF]" />
                 <span>Live Crypto Market Overview</span>
               </h3>
               <button
                 onClick={() => setActiveTab('markets')}
-                className="text-xs font-bold text-[#3375BB] hover:underline"
+                className="text-xs font-bold text-[#38B6FF] hover:underline"
               >
                 Open Full Trading Market →
               </button>
@@ -968,7 +976,7 @@ export const OverviewDashboard: React.FC = () => {
               {assets.slice(0, 8).map((coin) => (
                 <div
                   key={coin.id}
-                  className="rounded-2xl bg-[#0B1020] border border-white/10 p-4 hover:border-[#3375BB]/50 transition-all"
+                  className="rounded-2xl bg-[#0B1020] border border-white/10 p-4 hover:border-[#38B6FF]/50 transition-all"
                 >
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
@@ -977,7 +985,7 @@ export const OverviewDashboard: React.FC = () => {
                     </div>
                     <span
                       className={`text-xs font-bold font-mono px-2 py-0.5 rounded ${
-                        coin.change24h >= 0 ? 'bg-[#3375BB]/10 text-[#3375BB]' : 'bg-[#F6465D]/10 text-[#F6465D]'
+                        coin.change24h >= 0 ? 'bg-[#38B6FF]/10 text-[#38B6FF]' : 'bg-[#F6465D]/10 text-[#F6465D]'
                       }`}
                     >
                       {coin.change24h >= 0 ? '+' : ''}
@@ -1029,7 +1037,7 @@ export const OverviewDashboard: React.FC = () => {
                       <span className="h-3.5 w-3.5 rounded-full" style={{ backgroundColor: item.color }} />
                       <span className="text-xs font-bold text-white">{item.name}</span>
                     </div>
-                    <span className="text-xs font-mono font-bold text-[#3375BB]">
+                    <span className="text-xs font-mono font-bold text-[#38B6FF]">
                       ${item.value.toFixed(2)}
                     </span>
                   </div>
@@ -1039,11 +1047,11 @@ export const OverviewDashboard: React.FC = () => {
 
             {/* RICH ATTRACTIVE OVERVIEW CARDS & WEBSITE DESCRIPTION */}
             <div className="rounded-[22px] bg-gradient-to-br from-[#131A2D] via-[#0E1528] to-[#131A2D] border border-white/10 p-6 sm:p-8 shadow-2xl space-y-6 relative overflow-hidden">
-              <div className="absolute top-0 right-0 h-96 w-96 rounded-full bg-[#3375BB]/5 blur-3xl pointer-events-none" />
+              <div className="absolute top-0 right-0 h-96 w-96 rounded-full bg-[#38B6FF]/5 blur-3xl pointer-events-none" />
 
               <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative z-10">
                 <div className="space-y-2 max-w-2xl">
-                  <div className="inline-flex items-center gap-2 rounded-full bg-[#3375BB]/10 border border-[#3375BB]/30 px-3.5 py-1 text-xs font-black text-[#3375BB] uppercase tracking-wider">
+                  <div className="inline-flex items-center gap-2 rounded-full bg-[#38B6FF]/10 border border-[#38B6FF]/30 px-3.5 py-1 text-xs font-black text-[#38B6FF] uppercase tracking-wider">
                     <Sparkles className="h-3.5 w-3.5 animate-spin" />
                     <span>Master Web3 Crypto Infrastructure</span>
                   </div>
@@ -1067,7 +1075,7 @@ export const OverviewDashboard: React.FC = () => {
                     onClick={() => setActiveModal('about')}
                     className="btn-secondary-dark px-6 py-3.5 text-xs font-bold flex items-center gap-2 hover:bg-white/10 transition-all"
                   >
-                    <Info className="h-4 w-4 text-[#3375BB]" />
+                    <Info className="h-4 w-4 text-[#38B6FF]" />
                     <span>Ecosystem Overview</span>
                   </button>
                 </div>
@@ -1076,7 +1084,7 @@ export const OverviewDashboard: React.FC = () => {
               {/* 4 CORE ECOSYSTEM HIGHLIGHT CARDS */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
                 <div className="p-4 rounded-2xl bg-[#0B1020]/80 border border-white/10 space-y-2">
-                  <div className="h-10 w-10 rounded-xl bg-[#3375BB]/10 border border-[#3375BB]/30 text-[#3375BB] flex items-center justify-center font-bold">
+                  <div className="h-10 w-10 rounded-xl bg-[#38B6FF]/10 border border-[#38B6FF]/30 text-[#38B6FF] flex items-center justify-center font-bold">
                     <Cpu className="h-5 w-5" />
                   </div>
                   <h3 className="text-sm font-extrabold text-white">100,000+ TPS Engine</h3>
@@ -1086,7 +1094,7 @@ export const OverviewDashboard: React.FC = () => {
                 </div>
 
                 <div className="p-4 rounded-2xl bg-[#0B1020]/80 border border-white/10 space-y-2">
-                  <div className="h-10 w-10 rounded-xl bg-[#0500FF]/10 border border-[#0500FF]/30 text-[#0500FF] flex items-center justify-center font-bold">
+                  <div className="h-10 w-10 rounded-xl bg-[#00A3FF]/10 border border-[#00A3FF]/30 text-[#00A3FF] flex items-center justify-center font-bold">
                     <ShieldCheck className="h-5 w-5" />
                   </div>
                   <h3 className="text-sm font-extrabold text-white">Non-Custodial Vaults</h3>
@@ -1096,7 +1104,7 @@ export const OverviewDashboard: React.FC = () => {
                 </div>
 
                 <div className="p-4 rounded-2xl bg-[#0B1020]/80 border border-white/10 space-y-2">
-                  <div className="h-10 w-10 rounded-xl bg-[#3375BB]/10 border border-[#3375BB]/30 text-[#3375BB] flex items-center justify-center font-bold">
+                  <div className="h-10 w-10 rounded-xl bg-[#38B6FF]/10 border border-[#38B6FF]/30 text-[#38B6FF] flex items-center justify-center font-bold">
                     <Layers className="h-5 w-5" />
                   </div>
                   <h3 className="text-sm font-extrabold text-white">70+ Blockchain Chains</h3>
@@ -1118,11 +1126,11 @@ export const OverviewDashboard: React.FC = () => {
             </div>
 
             {/* DEDICATED TRUST WALLET MENTION & INTEGRATION CARD */}
-            <div className="rounded-[22px] bg-gradient-to-br from-[#0B132B] via-[#101A36] to-[#0D152D] border border-[#3375BB]/30 p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+            <div className="rounded-[22px] bg-gradient-to-br from-[#0B132B] via-[#101A36] to-[#0D152D] border border-[#38B6FF]/30 p-6 sm:p-8 shadow-2xl relative overflow-hidden">
               <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative z-10">
                 <div className="flex items-start sm:items-center gap-4">
                   {/* Trust Wallet Shield Icon */}
-                  <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-[#3375BB] to-[#0500FF] p-3 text-white flex items-center justify-center shrink-0 shadow-lg shadow-[#3375BB]/20 ring-4 ring-[#3375BB]/20">
+                  <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-[#38B6FF] to-[#00A3FF] p-3 text-white flex items-center justify-center shrink-0 shadow-lg shadow-[#38B6FF]/20 ring-4 ring-[#38B6FF]/20">
                     <svg className="h-8 w-8 fill-none stroke-white stroke-[2.5]" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 2.5L4 6.5V12C4 17.5 7.5 21.8 12 23C16.5 21.8 20 17.5 20 12V6.5L12 2.5Z" />
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4" />
@@ -1131,7 +1139,7 @@ export const OverviewDashboard: React.FC = () => {
 
                   <div className="space-y-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-xs font-mono font-bold text-[#3375BB] uppercase tracking-wider bg-[#3375BB]/10 border border-[#3375BB]/30 px-2.5 py-0.5 rounded-full">
+                      <span className="text-xs font-mono font-bold text-[#38B6FF] uppercase tracking-wider bg-[#38B6FF]/10 border border-[#38B6FF]/30 px-2.5 py-0.5 rounded-full">
                         Official Infrastructure Partner
                       </span>
                       <span className="text-xs font-extrabold text-white">Integrated with Trust Wallet Protocol</span>
@@ -1159,7 +1167,7 @@ export const OverviewDashboard: React.FC = () => {
                     onClick={() => setActiveModal('about')}
                     className="btn-secondary-dark px-4 py-3 text-xs font-bold flex items-center justify-center gap-2"
                   >
-                    <Shield className="h-4 w-4 text-[#3375BB]" />
+                    <Shield className="h-4 w-4 text-[#38B6FF]" />
                     <span>Trust Security Details</span>
                   </button>
                 </div>
@@ -1193,7 +1201,7 @@ export const OverviewDashboard: React.FC = () => {
             <div className="rounded-[20px] bg-[#131A2D] border border-white/10 p-6 shadow-xl space-y-6 animate-fadeIn">
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-black text-white flex items-center gap-2 capitalize">
-                  <Clock className="h-5 w-5 text-[#3375BB]" />
+                  <Clock className="h-5 w-5 text-[#38B6FF]" />
                   <span>{activeSection.replace('_', ' ')} History Logs</span>
                 </h3>
                 <span className="text-xs font-mono text-[#AAB3C5]">
@@ -1230,7 +1238,7 @@ export const OverviewDashboard: React.FC = () => {
                       {displayTxs.map((tx) => (
                         <tr key={tx.id} className="hover:bg-white/5 transition-colors">
                           <td className="py-3 px-4">
-                            <span className="rounded-lg bg-[#3375BB]/10 border border-[#3375BB]/30 px-2 py-0.5 text-[10px] font-extrabold text-[#3375BB] uppercase">
+                            <span className="rounded-lg bg-[#38B6FF]/10 border border-[#38B6FF]/30 px-2 py-0.5 text-[10px] font-extrabold text-[#38B6FF] uppercase">
                               {tx.type}
                             </span>
                           </td>
@@ -1238,7 +1246,7 @@ export const OverviewDashboard: React.FC = () => {
                           <td className="py-3 px-4 font-bold text-white">{tx.amount}</td>
                           <td className="py-3 px-4 text-white">
                             {tx.toAddress ? (
-                              <span className="text-[#3375BB] font-bold max-w-[160px] truncate block text-[11px]" title={tx.toAddress}>
+                              <span className="text-[#38B6FF] font-bold max-w-[160px] truncate block text-[11px]" title={tx.toAddress}>
                                 {tx.toAddress}
                               </span>
                             ) : tx.fromAddress ? (
@@ -1293,7 +1301,7 @@ export const OverviewDashboard: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="p-4 rounded-2xl bg-[#0B1020] border border-white/10">
                   <p className="text-xs text-[#AAB3C5]">7-Day Cumulative PnL</p>
-                  <p className="text-2xl font-black text-[#3375BB] font-mono mt-1">+$0.00 (0.0%)</p>
+                  <p className="text-2xl font-black text-[#38B6FF] font-mono mt-1">+$0.00 (0.0%)</p>
                 </div>
                 <div className="p-4 rounded-2xl bg-[#0B1020] border border-white/10">
                   <p className="text-xs text-[#AAB3C5]">30-Day Trading Volume</p>
@@ -1303,7 +1311,7 @@ export const OverviewDashboard: React.FC = () => {
                 </div>
                 <div className="p-4 rounded-2xl bg-[#0B1020] border border-white/10">
                   <p className="text-xs text-[#AAB3C5]">Win Rate</p>
-                  <p className="text-2xl font-black text-[#3375BB] font-mono mt-1">{winRate}</p>
+                  <p className="text-2xl font-black text-[#38B6FF] font-mono mt-1">{winRate}</p>
                 </div>
               </div>
             </div>
@@ -1316,14 +1324,14 @@ export const OverviewDashboard: React.FC = () => {
             <div className="flex items-center justify-between border-b border-white/10 pb-4">
               <div>
                 <h3 className="text-xl font-black text-white flex items-center gap-2">
-                  <ShieldCheck className="h-6 w-6 text-[#3375BB]" />
+                  <ShieldCheck className="h-6 w-6 text-[#38B6FF]" />
                   <span>Identity Verification (KYC Compliance)</span>
                 </h3>
                 <p className="text-xs text-[#AAB3C5] mt-1">
                   Upload official state-issued documents to unlock unlimited daily withdrawal limits.
                 </p>
               </div>
-              <span className="rounded-full bg-[#3375BB]/10 border border-[#3375BB]/50 px-3 py-1 text-xs font-black text-[#3375BB] uppercase">
+              <span className="rounded-full bg-[#38B6FF]/10 border border-[#38B6FF]/50 px-3 py-1 text-xs font-black text-[#38B6FF] uppercase">
                 Status: VERIFIED
               </span>
             </div>
@@ -1331,20 +1339,20 @@ export const OverviewDashboard: React.FC = () => {
             <form onSubmit={handleKycSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* ID Front Upload Card */}
-                <div className="rounded-2xl bg-[#0B1020] border-2 border-dashed border-white/20 p-6 text-center hover:border-[#3375BB] transition-all relative">
+                <div className="rounded-2xl bg-[#0B1020] border-2 border-dashed border-white/20 p-6 text-center hover:border-[#38B6FF] transition-all relative">
                   <input
                     type="file"
                     accept="image/*"
                     onChange={(e) => setIdFrontFile(e.target.files?.[0] || null)}
                     className="absolute inset-0 opacity-0 cursor-pointer"
                   />
-                  <div className="h-12 w-12 rounded-xl bg-[#3375BB]/10 text-[#3375BB] flex items-center justify-center mx-auto mb-3">
+                  <div className="h-12 w-12 rounded-xl bg-[#38B6FF]/10 text-[#38B6FF] flex items-center justify-center mx-auto mb-3">
                     <FileText className="h-6 w-6" />
                   </div>
                   <h4 className="text-xs font-black text-white">Government ID Front</h4>
                   <p className="text-[10px] text-[#AAB3C5] mt-1">Passport or Driver's License</p>
                   {idFrontFile ? (
-                    <p className="text-xs font-bold text-[#3375BB] mt-3 font-mono">
+                    <p className="text-xs font-bold text-[#38B6FF] mt-3 font-mono">
                       ✓ {idFrontFile.name}
                     </p>
                   ) : (
@@ -1355,20 +1363,20 @@ export const OverviewDashboard: React.FC = () => {
                 </div>
 
                 {/* ID Back Upload Card */}
-                <div className="rounded-2xl bg-[#0B1020] border-2 border-dashed border-white/20 p-6 text-center hover:border-[#3375BB] transition-all relative">
+                <div className="rounded-2xl bg-[#0B1020] border-2 border-dashed border-white/20 p-6 text-center hover:border-[#38B6FF] transition-all relative">
                   <input
                     type="file"
                     accept="image/*"
                     onChange={(e) => setIdBackFile(e.target.files?.[0] || null)}
                     className="absolute inset-0 opacity-0 cursor-pointer"
                   />
-                  <div className="h-12 w-12 rounded-xl bg-[#0500FF]/10 text-[#0500FF] flex items-center justify-center mx-auto mb-3">
+                  <div className="h-12 w-12 rounded-xl bg-[#00A3FF]/10 text-[#00A3FF] flex items-center justify-center mx-auto mb-3">
                     <FileText className="h-6 w-6" />
                   </div>
                   <h4 className="text-xs font-black text-white">Government ID Back</h4>
                   <p className="text-[10px] text-[#AAB3C5] mt-1">Back side barcode / details</p>
                   {idBackFile ? (
-                    <p className="text-xs font-bold text-[#3375BB] mt-3 font-mono">
+                    <p className="text-xs font-bold text-[#38B6FF] mt-3 font-mono">
                       ✓ {idBackFile.name}
                     </p>
                   ) : (
@@ -1379,20 +1387,20 @@ export const OverviewDashboard: React.FC = () => {
                 </div>
 
                 {/* Selfie Upload Card */}
-                <div className="rounded-2xl bg-[#0B1020] border-2 border-dashed border-white/20 p-6 text-center hover:border-[#3375BB] transition-all relative">
+                <div className="rounded-2xl bg-[#0B1020] border-2 border-dashed border-white/20 p-6 text-center hover:border-[#38B6FF] transition-all relative">
                   <input
                     type="file"
                     accept="image/*"
                     onChange={(e) => setSelfieFile(e.target.files?.[0] || null)}
                     className="absolute inset-0 opacity-0 cursor-pointer"
                   />
-                  <div className="h-12 w-12 rounded-xl bg-[#3375BB]/10 text-[#3375BB] flex items-center justify-center mx-auto mb-3">
+                  <div className="h-12 w-12 rounded-xl bg-[#38B6FF]/10 text-[#38B6FF] flex items-center justify-center mx-auto mb-3">
                     <Camera className="h-6 w-6" />
                   </div>
                   <h4 className="text-xs font-black text-white">Liveness Selfie Verification</h4>
                   <p className="text-[10px] text-[#AAB3C5] mt-1">Clear face photo holding ID</p>
                   {selfieFile ? (
-                    <p className="text-xs font-bold text-[#3375BB] mt-3 font-mono">
+                    <p className="text-xs font-bold text-[#38B6FF] mt-3 font-mono">
                       ✓ {selfieFile.name}
                     </p>
                   ) : (
@@ -1406,13 +1414,13 @@ export const OverviewDashboard: React.FC = () => {
               {/* Progress Bar Animation */}
               {isUploadingKyc && (
                 <div className="space-y-2">
-                  <div className="flex justify-between text-xs text-[#3375BB] font-bold">
+                  <div className="flex justify-between text-xs text-[#38B6FF] font-bold">
                     <span>Uploading Documents...</span>
                     <span>{uploadProgress}%</span>
                   </div>
                   <div className="w-full h-2 rounded-full bg-[#0B1020] overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-[#3375BB] to-[#0500FF] transition-all duration-300"
+                      className="h-full bg-gradient-to-r from-[#38B6FF] to-[#00A3FF] transition-all duration-300"
                       style={{ width: `${uploadProgress}%` }}
                     />
                   </div>
@@ -1420,7 +1428,7 @@ export const OverviewDashboard: React.FC = () => {
               )}
 
               {kycSuccess && (
-                <div className="p-4 rounded-2xl bg-[#3375BB]/10 border border-[#3375BB]/40 flex items-center gap-3 text-[#3375BB] text-xs font-bold">
+                <div className="p-4 rounded-2xl bg-[#38B6FF]/10 border border-[#38B6FF]/40 flex items-center gap-3 text-[#38B6FF] text-xs font-bold">
                   <CheckCircle2 className="h-5 w-5 shrink-0" />
                   <span>KYC Documents verified and approved successfully! Unlimited withdrawals active.</span>
                 </div>
@@ -1446,7 +1454,7 @@ export const OverviewDashboard: React.FC = () => {
           activeSection === 'support') && (
           <div className="rounded-[20px] bg-[#131A2D] border border-white/10 p-6 shadow-xl space-y-6 animate-fadeIn">
             <h3 className="text-lg font-black text-white flex items-center gap-2 capitalize">
-              <SettingsIcon className="h-5 w-5 text-[#3375BB]" />
+              <SettingsIcon className="h-5 w-5 text-[#38B6FF]" />
               <span>{activeSection} Management</span>
             </h3>
 
@@ -1478,14 +1486,14 @@ export const OverviewDashboard: React.FC = () => {
                     <p className="text-xs font-bold text-white">Two-Factor Authentication (2FA)</p>
                     <p className="text-[10px] text-[#AAB3C5]">Google Authenticator / SMS Code</p>
                   </div>
-                  <span className="text-xs font-bold text-[#3375BB]">ENABLED</span>
+                  <span className="text-xs font-bold text-[#38B6FF]">ENABLED</span>
                 </div>
                 <div className="p-4 rounded-2xl bg-[#0B1020] border border-white/10 flex items-center justify-between">
                   <div>
                     <p className="text-xs font-bold text-white">Anti-Phishing Code</p>
                     <p className="text-[10px] text-[#AAB3C5]">Verify legitimate emails from TrustPro</p>
                   </div>
-                  <span className="text-xs font-bold text-[#3375BB]">CONFIGURED</span>
+                  <span className="text-xs font-bold text-[#38B6FF]">CONFIGURED</span>
                 </div>
               </div>
             )}
@@ -1493,13 +1501,13 @@ export const OverviewDashboard: React.FC = () => {
             {activeSection === 'profile' && (
               <div className="p-6 rounded-2xl bg-[#0B1020] border border-white/10 space-y-4">
                 <div className="flex items-center gap-4">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[#3375BB] via-[#0500FF] to-[#0094FF] text-[#0B1020] font-black text-xl shadow-xl ring-2 ring-white/10 shrink-0">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[#38B6FF] via-[#00A3FF] to-[#0094FF] text-[#0B1020] font-black text-xl shadow-xl ring-2 ring-white/10 shrink-0">
                     {(currentUser.name || 'US').slice(0, 2).toUpperCase()}
                   </div>
                   <div>
                     <h4 className="text-base font-extrabold text-white">{currentUser.name}</h4>
                     <p className="text-xs text-[#AAB3C5] font-mono">{currentUser.email}</p>
-                    <div className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-[#3375BB]/10 border border-[#3375BB]/30 px-3 py-1 text-[11px] font-extrabold text-[#3375BB]">
+                    <div className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-[#38B6FF]/10 border border-[#38B6FF]/30 px-3 py-1 text-[11px] font-extrabold text-[#38B6FF]">
                       <ShieldCheck className="h-3.5 w-3.5" />
                       <span>Verified Institutional Web3 Account</span>
                     </div>
@@ -1516,7 +1524,7 @@ export const OverviewDashboard: React.FC = () => {
             {/* Brand Col */}
             <div className="space-y-3">
               <div className="flex items-center gap-2.5">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#3375BB] to-[#0500FF] p-1.5 shadow-md">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#38B6FF] to-[#00A3FF] p-1.5 shadow-md">
                   <svg className="h-5 w-5 fill-none stroke-white stroke-[2.5]" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 2.5L4 6.5V12C4 17.5 7.5 21.8 12 23C16.5 21.8 20 17.5 20 12V6.5L12 2.5Z" />
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4" />
@@ -1524,9 +1532,9 @@ export const OverviewDashboard: React.FC = () => {
                 </div>
                 <div>
                   <span className="text-lg font-black text-white uppercase tracking-wider">
-                    TRUST<span className="text-[#3375BB]">PRO</span>
+                    TRUST<span className="text-[#38B6FF]">PRO</span>
                   </span>
-                  <span className="ml-2 text-[9px] font-mono font-bold text-[#3375BB] bg-[#3375BB]/10 border border-[#3375BB]/30 px-1.5 py-0.5 rounded">
+                  <span className="ml-2 text-[9px] font-mono font-bold text-[#38B6FF] bg-[#38B6FF]/10 border border-[#38B6FF]/30 px-1.5 py-0.5 rounded">
                     MASTER WEB3
                   </span>
                 </div>
@@ -1538,7 +1546,7 @@ export const OverviewDashboard: React.FC = () => {
                 href="https://trustwallet.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs font-extrabold text-[#3375BB] hover:underline"
+                className="inline-flex items-center gap-1.5 text-xs font-extrabold text-[#38B6FF] hover:underline"
               >
                 <span>Trust Wallet Official Website</span>
                 <ExternalLink className="h-3.5 w-3.5" />
@@ -1565,7 +1573,7 @@ export const OverviewDashboard: React.FC = () => {
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setActiveModal('trade')} className="hover:text-white transition-colors text-[#3375BB] font-bold">
+                  <button onClick={() => setActiveModal('trade')} className="hover:text-white transition-colors text-[#38B6FF] font-bold">
                     Futures 125x Leverage Hub
                   </button>
                 </li>
@@ -1578,19 +1586,19 @@ export const OverviewDashboard: React.FC = () => {
               <ul className="space-y-2 text-xs text-[#AAB3C5]">
                 <li>
                   <button onClick={() => setActiveModal('privacy')} className="hover:text-white transition-colors flex items-center gap-1.5">
-                    <ShieldCheck className="h-3.5 w-3.5 text-[#3375BB]" />
+                    <ShieldCheck className="h-3.5 w-3.5 text-[#38B6FF]" />
                     <span>Privacy Policy</span>
                   </button>
                 </li>
                 <li>
                   <button onClick={() => setActiveModal('about')} className="hover:text-white transition-colors flex items-center gap-1.5">
-                    <Info className="h-3.5 w-3.5 text-[#0500FF]" />
+                    <Info className="h-3.5 w-3.5 text-[#00A3FF]" />
                     <span>About TrustPro Web3</span>
                   </button>
                 </li>
                 <li>
                   <button onClick={() => setActiveModal('contact')} className="hover:text-white transition-colors flex items-center gap-1.5">
-                    <Phone className="h-3.5 w-3.5 text-[#3375BB]" />
+                    <Phone className="h-3.5 w-3.5 text-[#38B6FF]" />
                     <span>Contact Us & Helpdesk</span>
                   </button>
                 </li>
@@ -1611,12 +1619,12 @@ export const OverviewDashboard: React.FC = () => {
               </p>
               <div className="space-y-1.5 text-xs text-white font-mono">
                 <p className="flex items-center gap-2">
-                  <Mail className="h-3.5 w-3.5 text-[#3375BB]" />
+                  <Mail className="h-3.5 w-3.5 text-[#38B6FF]" />
                   <span>support@trustpro.exchange</span>
                 </p>
                 <p className="flex items-center gap-2">
-                  <Globe className="h-3.5 w-3.5 text-[#0500FF]" />
-                  <a href="https://trustwallet.com" target="_blank" rel="noopener noreferrer" className="hover:underline text-[#3375BB]">
+                  <Globe className="h-3.5 w-3.5 text-[#00A3FF]" />
+                  <a href="https://trustwallet.com" target="_blank" rel="noopener noreferrer" className="hover:underline text-[#38B6FF]">
                     www.trustwallet.com
                   </a>
                 </p>
@@ -1653,12 +1661,12 @@ export const OverviewDashboard: React.FC = () => {
             </button>
 
             <div className="flex items-center gap-3">
-              <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-[#3375BB] to-[#0500FF] p-2.5 text-white flex items-center justify-center shadow-lg">
+              <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-[#38B6FF] to-[#00A3FF] p-2.5 text-white flex items-center justify-center shadow-lg">
                 <Info className="h-6 w-6 stroke-[2.5]" />
               </div>
               <div>
                 <h3 className="text-xl font-black text-white">About TrustPro Master Web3</h3>
-                <p className="text-xs text-[#3375BB] font-bold">Integrated with Trust Wallet Security Shield</p>
+                <p className="text-xs text-[#38B6FF] font-bold">Integrated with Trust Wallet Security Shield</p>
               </div>
             </div>
 
@@ -1673,23 +1681,23 @@ export const OverviewDashboard: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                 <div className="p-3 rounded-xl bg-[#0B1020] border border-white/10 space-y-1">
                   <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
-                    <Cpu className="h-4 w-4 text-[#3375BB]" /> 100,000+ TPS Matching
+                    <Cpu className="h-4 w-4 text-[#38B6FF]" /> 100,000+ TPS Matching
                   </h4>
                   <p className="text-[11px]">Sub-millisecond trade processing engine with zero slippage execution.</p>
                 </div>
                 <div className="p-3 rounded-xl bg-[#0B1020] border border-white/10 space-y-1">
                   <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
-                    <ShieldCheck className="h-4 w-4 text-[#0500FF]" /> Trust Wallet Shield
+                    <ShieldCheck className="h-4 w-4 text-[#00A3FF]" /> Trust Wallet Shield
                   </h4>
                   <p className="text-[11px]">Non-custodial seed phrase protection and hardware-level encryption.</p>
                 </div>
               </div>
 
-              <div className="p-4 rounded-xl bg-[#3375BB]/10 border border-[#3375BB]/30 space-y-2">
+              <div className="p-4 rounded-xl bg-[#38B6FF]/10 border border-[#38B6FF]/30 space-y-2">
                 <p className="text-xs font-bold text-white">Official Trust Wallet Website Reference:</p>
                 <p className="text-[11px] text-[#AAB3C5]">
                   Learn more about Trust Wallet self-custody and mobile/browser extension tools at{' '}
-                  <a href="https://trustwallet.com" target="_blank" rel="noopener noreferrer" className="text-[#3375BB] font-bold hover:underline">
+                  <a href="https://trustwallet.com" target="_blank" rel="noopener noreferrer" className="text-[#38B6FF] font-bold hover:underline">
                     https://trustwallet.com
                   </a>
                 </p>
@@ -1729,12 +1737,12 @@ export const OverviewDashboard: React.FC = () => {
             </button>
 
             <div className="flex items-center gap-3">
-              <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-[#3375BB] to-[#F97316] p-2.5 text-[#0B1020] flex items-center justify-center shadow-lg">
+              <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-[#38B6FF] to-[#F97316] p-2.5 text-[#0B1020] flex items-center justify-center shadow-lg">
                 <ShieldCheck className="h-6 w-6 stroke-[2.5]" />
               </div>
               <div>
                 <h3 className="text-xl font-black text-white">Privacy Policy & Security Guarantee</h3>
-                <p className="text-xs text-[#3375BB] font-bold">Zero-Knowledge Non-Custodial Data Standards</p>
+                <p className="text-xs text-[#38B6FF] font-bold">Zero-Knowledge Non-Custodial Data Standards</p>
               </div>
             </div>
 
@@ -1774,12 +1782,12 @@ export const OverviewDashboard: React.FC = () => {
             </button>
 
             <div className="flex items-center gap-3">
-              <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-[#0500FF] to-[#0094FF] p-2.5 text-white flex items-center justify-center shadow-lg">
+              <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-[#00A3FF] to-[#0094FF] p-2.5 text-white flex items-center justify-center shadow-lg">
                 <Phone className="h-6 w-6 stroke-[2.5]" />
               </div>
               <div>
                 <h3 className="text-xl font-black text-white">Contact Us & Trust Wallet Support</h3>
-                <p className="text-xs text-[#0500FF] font-bold">24/7 Global Customer Support Desk</p>
+                <p className="text-xs text-[#00A3FF] font-bold">24/7 Global Customer Support Desk</p>
               </div>
             </div>
 
@@ -1790,19 +1798,19 @@ export const OverviewDashboard: React.FC = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="p-4 rounded-2xl bg-[#0B1020] border border-white/10 space-y-2">
-                  <Mail className="h-5 w-5 text-[#3375BB]" />
+                  <Mail className="h-5 w-5 text-[#38B6FF]" />
                   <h4 className="text-xs font-bold text-white">Email Support</h4>
-                  <p className="text-xs font-mono text-[#3375BB]">support@trustpro.exchange</p>
+                  <p className="text-xs font-mono text-[#38B6FF]">support@trustpro.exchange</p>
                 </div>
 
                 <div className="p-4 rounded-2xl bg-[#0B1020] border border-white/10 space-y-2">
-                  <Globe className="h-5 w-5 text-[#0500FF]" />
+                  <Globe className="h-5 w-5 text-[#00A3FF]" />
                   <h4 className="text-xs font-bold text-white">Trust Wallet Official Site</h4>
                   <a
                     href="https://trustwallet.com"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs font-mono text-[#3375BB] hover:underline flex items-center gap-1"
+                    className="text-xs font-mono text-[#38B6FF] hover:underline flex items-center gap-1"
                   >
                     <span>https://trustwallet.com</span>
                     <ExternalLink className="h-3 w-3" />
@@ -1812,18 +1820,18 @@ export const OverviewDashboard: React.FC = () => {
 
               <div className="p-4 rounded-2xl bg-[#0B1020] border border-white/10 space-y-3">
                 <h4 className="text-xs font-bold text-white flex items-center gap-2">
-                  <MessageSquare className="h-4 w-4 text-[#3375BB]" />
+                  <MessageSquare className="h-4 w-4 text-[#38B6FF]" />
                   <span>Send Direct Message to Support</span>
                 </h4>
                 <input
                   type="text"
                   placeholder="Subject (e.g. Deposit Inquiry / Trust Wallet Connect)"
-                  className="w-full rounded-xl bg-[#131A2D] border border-white/10 px-3.5 py-2 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-[#3375BB]"
+                  className="w-full rounded-xl bg-[#131A2D] border border-white/10 px-3.5 py-2 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-[#38B6FF]"
                 />
                 <textarea
                   rows={3}
                   placeholder="Describe your issue or question..."
-                  className="w-full rounded-xl bg-[#131A2D] border border-white/10 px-3.5 py-2 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-[#3375BB]"
+                  className="w-full rounded-xl bg-[#131A2D] border border-white/10 px-3.5 py-2 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-[#38B6FF]"
                 />
                 <button
                   type="button"
@@ -1869,7 +1877,7 @@ export const OverviewDashboard: React.FC = () => {
               </div>
               <div className="flex items-center justify-between p-3 rounded-xl bg-[#0B1020] border border-white/10">
                 <span>Trust Wallet Auto-Connect</span>
-                <span className="font-mono font-bold text-[#3375BB]">Enabled</span>
+                <span className="font-mono font-bold text-[#38B6FF]">Enabled</span>
               </div>
               <div className="flex items-center justify-between p-3 rounded-xl bg-[#0B1020] border border-white/10">
                 <span>2FA Security Layer</span>
@@ -1899,12 +1907,12 @@ export const OverviewDashboard: React.FC = () => {
             </button>
 
             <div className="flex items-center gap-3">
-              <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-[#3375BB] to-[#0500FF] p-2.5 text-[#0B1020] flex items-center justify-center shadow-lg">
+              <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-[#38B6FF] to-[#00A3FF] p-2.5 text-[#0B1020] flex items-center justify-center shadow-lg">
                 <TrendingUp className="h-6 w-6 stroke-[2.5]" />
               </div>
               <div>
                 <h3 className="text-xl font-black text-white">Master Web3 Trade Hub</h3>
-                <p className="text-xs text-[#3375BB] font-bold">Spot, Futures 125x, Swap & Staking</p>
+                <p className="text-xs text-[#38B6FF] font-bold">Spot, Futures 125x, Swap & Staking</p>
               </div>
             </div>
 
@@ -1914,11 +1922,11 @@ export const OverviewDashboard: React.FC = () => {
                   setActiveTab('markets');
                   setActiveModal(null);
                 }}
-                className="p-4 rounded-xl bg-[#0B1020] border border-white/10 hover:border-[#3375BB] text-left transition-all space-y-1"
+                className="p-4 rounded-xl bg-[#0B1020] border border-white/10 hover:border-[#38B6FF] text-left transition-all space-y-1"
               >
                 <div className="text-xs font-bold text-white flex items-center justify-between">
                   <span>Spot Trading</span>
-                  <ArrowRight className="h-3.5 w-3.5 text-[#3375BB]" />
+                  <ArrowRight className="h-3.5 w-3.5 text-[#38B6FF]" />
                 </div>
                 <p className="text-[10px] text-[#AAB3C5]">Real-time order book with 350+ pairs</p>
               </button>
@@ -1928,11 +1936,11 @@ export const OverviewDashboard: React.FC = () => {
                   setActiveTab('swap');
                   setActiveModal(null);
                 }}
-                className="p-4 rounded-xl bg-[#0B1020] border border-white/10 hover:border-[#0500FF] text-left transition-all space-y-1"
+                className="p-4 rounded-xl bg-[#0B1020] border border-white/10 hover:border-[#00A3FF] text-left transition-all space-y-1"
               >
                 <div className="text-xs font-bold text-white flex items-center justify-between">
                   <span>Instant Swap</span>
-                  <ArrowRight className="h-3.5 w-3.5 text-[#0500FF]" />
+                  <ArrowRight className="h-3.5 w-3.5 text-[#00A3FF]" />
                 </div>
                 <p className="text-[10px] text-[#AAB3C5]">0 slippage multi-chain converter</p>
               </button>
@@ -1942,11 +1950,11 @@ export const OverviewDashboard: React.FC = () => {
                   setActiveTab('staking');
                   setActiveModal(null);
                 }}
-                className="p-4 rounded-xl bg-[#0B1020] border border-white/10 hover:border-[#3375BB] text-left transition-all space-y-1"
+                className="p-4 rounded-xl bg-[#0B1020] border border-white/10 hover:border-[#38B6FF] text-left transition-all space-y-1"
               >
                 <div className="text-xs font-bold text-white flex items-center justify-between">
                   <span>Earn & Staking</span>
-                  <ArrowRight className="h-3.5 w-3.5 text-[#3375BB]" />
+                  <ArrowRight className="h-3.5 w-3.5 text-[#38B6FF]" />
                 </div>
                 <p className="text-[10px] text-[#AAB3C5]">Up to 32.5% APY yield vaults</p>
               </button>

