@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useWallet, ViewTab } from '../context/WalletContext';
+import { Web3ConnectModal } from './Web3ConnectModal';
 import {
   Shield,
   Wallet,
@@ -38,6 +39,9 @@ export const Header: React.FC = () => {
     setIsAuthModalOpen,
     isConnectedToWeb3,
     web3Address,
+    web3ProviderName,
+    isWeb3ModalOpen,
+    setIsWeb3ModalOpen,
     connectWeb3Wallet,
     disconnectWeb3Wallet,
     switchUserRole,
@@ -167,17 +171,23 @@ export const Header: React.FC = () => {
           {/* Web3 Wallet Connect */}
           {isConnectedToWeb3 ? (
             <button
-              onClick={disconnectWeb3Wallet}
-              className="hidden sm:flex items-center gap-2 rounded-xl border border-[#3375BB]/40 bg-[#3375BB]/10 px-3.5 py-1.5 text-xs font-bold text-[#3375BB] hover:bg-[#3375BB]/20 transition-all"
+              onClick={() => setIsWeb3ModalOpen(true)}
+              className="hidden sm:flex items-center gap-2 rounded-xl border border-[#3375BB]/40 bg-[#3375BB]/10 px-3.5 py-1.5 text-xs font-bold text-[#3375BB] hover:bg-[#3375BB]/20 transition-all cursor-pointer"
               id="web3-connected-button"
+              title="View Web3 Wallet Details & Network"
             >
               <span className="h-2 w-2 rounded-full bg-[#3375BB] animate-pulse" />
-              <span>{web3Address?.slice(0, 6)}...{web3Address?.slice(-4)}</span>
+              <span>{web3ProviderName ? `${web3ProviderName}: ` : ''}{web3Address?.slice(0, 6)}...{web3Address?.slice(-4)}</span>
             </button>
           ) : (
             <button
-              onClick={() => connectWeb3Wallet()}
-              className="hidden sm:flex items-center gap-1.5 rounded-xl bg-[#131A2D] border border-white/10 px-3.5 py-1.5 text-xs font-bold text-white hover:bg-[#1C263F] transition-all"
+              onClick={async () => {
+                const res = await connectWeb3Wallet('Trust Wallet');
+                if (!res.success) {
+                  setIsWeb3ModalOpen(true);
+                }
+              }}
+              className="hidden sm:flex items-center gap-1.5 rounded-xl bg-[#131A2D] border border-[#3375BB]/40 px-3.5 py-1.5 text-xs font-bold text-white hover:bg-[#1C263F] hover:border-[#3375BB] transition-all cursor-pointer"
               id="connect-web3-button"
             >
               <Sparkles className="h-3.5 w-3.5 text-[#3375BB]" />
@@ -270,6 +280,11 @@ export const Header: React.FC = () => {
           );
         })}
       </div>
+
+      <Web3ConnectModal
+        isOpen={isWeb3ModalOpen}
+        onClose={() => setIsWeb3ModalOpen(false)}
+      />
     </header>
   );
 };

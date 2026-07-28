@@ -269,7 +269,7 @@ export const UserDashboard: React.FC = () => {
         
         const gasTrxAmount = currentUser.balances['GAS_TRX'] || 0;
         
-        const totalGasReserveUsd = gasTrxAmount * (gasTrxAsset.priceUsd || 0.14);
+        const totalGasReserveUsd = gasTrxAmount * (gasTrxAsset.priceUsd || 1.0);
 
         return (
           <div className="rounded-3xl bg-gradient-to-r from-[#1A1F35] via-[#131728] to-[#0D1120] border border-[#3375BB]/40 p-6 shadow-2xl relative overflow-hidden">

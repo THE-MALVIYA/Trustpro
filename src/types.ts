@@ -43,10 +43,21 @@ export interface UserAccount {
   twoFactorEnabled: boolean;
   twoFactorSecret?: string;
   passkeyEnabled: boolean;
+  passkeyRegisteredAt?: string;
+  passkeyDeviceName?: string;
   seedPhrase?: string;
   createdAt: string;
   lastLoginIp: string;
   lastLoginTime: string;
+}
+
+export interface PlatformTrafficConfig {
+  activeUsers: number;
+  liveTraders: number;
+  onlineNodes: number;
+  systemStatus: 'OPERATIONAL' | 'HIGH_VOLUME' | 'SURGE' | 'MAINTENANCE';
+  tickerNotice?: string;
+  autoFluctuate: boolean;
 }
 
 export type TransactionType =

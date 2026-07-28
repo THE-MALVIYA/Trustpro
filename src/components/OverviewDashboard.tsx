@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useWallet } from '../context/WalletContext';
 import { CryptoIcon } from './CryptoIcon';
 import {
@@ -81,6 +81,7 @@ export const OverviewDashboard: React.FC = () => {
     addNotification,
     notifications,
     updateUserProfileAvatar,
+    platformTrafficConfig,
   } = useWallet();
 
   // Navigation state - default to 'all' master dashboard grid
@@ -109,6 +110,18 @@ export const OverviewDashboard: React.FC = () => {
 
   // UI States
   const [showBalance, setShowBalance] = useState(true);
+
+  // Live Daily Active Users State (Starts at 3 Lakhs+ / 348,920+)
+  const [dailyActiveUsers, setDailyActiveUsers] = useState<number>(348920);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      // Randomly increase active users by 1 to 5
+      const increment = Math.floor(Math.random() * 5) + 1;
+      setDailyActiveUsers((prev) => prev + increment);
+    }, 2200);
+    return () => clearInterval(timer);
+  }, []);
   const [searchCoinQuery, setSearchCoinQuery] = useState('');
   const [copiedLink, setCopiedLink] = useState(false);
 
@@ -596,6 +609,71 @@ export const OverviewDashboard: React.FC = () => {
         {/* SECTION: ALL DASHBOARD SUMMARY CARDS */}
         {activeSection === 'all' && (
           <div className="space-y-6 animate-fadeIn">
+            {/* LIVE PLATFORM DAILY USERS REAL-TIME TICKER CARD */}
+            <div className="rounded-[20px] bg-gradient-to-r from-[#0d162a] via-[#131A2D] to-[#0d1d3a] border border-emerald-500/30 p-5 shadow-2xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 h-32 w-32 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="relative flex h-3 w-3">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                    </span>
+                    <span className="text-[11px] font-extrabold uppercase tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">
+                      ● LIVE Platform Traffic Monitor
+                    </span>
+                  </div>
+                  <h3 className="text-sm font-semibold text-slate-300">Daily Active Website & Wallet Users</h3>
+                </div>
+
+                <div className="flex items-center gap-3 bg-[#080d19] border border-emerald-500/20 px-4 py-2.5 rounded-2xl">
+                  <Users className="h-6 w-6 text-emerald-400 shrink-0" />
+                  <div>
+                    <p className="text-2xl sm:text-3xl font-black text-white font-mono tracking-tight flex items-baseline gap-1">
+                      <span>{(platformTrafficConfig.activeUsers || 348920).toLocaleString()}</span>
+                      <span className="text-xs text-emerald-400 font-bold font-sans">+ Users Today</span>
+                    </p>
+                    <p className="text-[10px] text-slate-400 font-medium">Real-time admin-controlled platform traffic counter</p>
+                  </div>
+                </div>
+              </div>
+
+              {platformTrafficConfig.tickerNotice && (
+                <div className="mt-3 p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-xs text-blue-300 flex items-center gap-2">
+                  <Activity className="h-4 w-4 shrink-0 text-blue-400 animate-pulse" />
+                  <span className="font-semibold">{platformTrafficConfig.tickerNotice}</span>
+                </div>
+              )}
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4 pt-4 border-t border-white/10 text-xs">
+                <div className="bg-[#0B1020]/80 p-2.5 rounded-xl border border-white/5">
+                  <p className="text-[10px] text-slate-400 font-semibold uppercase">24h Active Traders</p>
+                  <p className="text-sm font-black text-white font-mono mt-0.5">
+                    {(platformTrafficConfig.liveTraders || Math.floor(platformTrafficConfig.activeUsers * 0.54)).toLocaleString()} Users
+                  </p>
+                </div>
+                <div className="bg-[#0B1020]/80 p-2.5 rounded-xl border border-white/5">
+                  <p className="text-[10px] text-slate-400 font-semibold uppercase">Active Node Sessions</p>
+                  <p className="text-sm font-black text-emerald-400 font-mono mt-0.5">
+                    {(platformTrafficConfig.onlineNodes || Math.floor(platformTrafficConfig.activeUsers * 0.18)).toLocaleString()} Live
+                  </p>
+                </div>
+                <div className="bg-[#0B1020]/80 p-2.5 rounded-xl border border-white/5">
+                  <p className="text-[10px] text-slate-400 font-semibold uppercase">Peak Concurrent</p>
+                  <p className="text-sm font-black text-blue-400 font-mono mt-0.5">
+                    {Math.floor(platformTrafficConfig.activeUsers * 0.27).toLocaleString()} Online
+                  </p>
+                </div>
+                <div className="bg-[#0B1020]/80 p-2.5 rounded-xl border border-white/5">
+                  <p className="text-[10px] text-slate-400 font-semibold uppercase">Platform Status</p>
+                  <p className="text-sm font-black text-emerald-400 font-mono mt-0.5">
+                    {platformTrafficConfig.systemStatus || 'OPERATIONAL'}
+                  </p>
+                </div>
+              </div>
+            </div>
+
             {/* Balance Stats Banner */}
             <div className="rounded-[20px] bg-[#131A2D] border border-white/10 p-6 shadow-xl space-y-6">
               <div className="flex items-center justify-between border-b border-white/10 pb-4">

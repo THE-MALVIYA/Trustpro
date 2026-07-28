@@ -9,6 +9,7 @@ import {
   AppNotification,
   AuditLog,
   FaqItem,
+  PlatformTrafficConfig,
 } from '../types';
 import {
   INITIAL_ASSETS,
@@ -181,7 +182,11 @@ interface WalletContextType {
   setIsNotificationDrawerOpen: (open: boolean) => void;
   isConnectedToWeb3: boolean;
   web3Address: string | null;
-  connectWeb3Wallet: (providerName?: string) => void;
+  web3ChainId: string | null;
+  web3ProviderName: string | null;
+  isWeb3ModalOpen: boolean;
+  setIsWeb3ModalOpen: (open: boolean) => void;
+  connectWeb3Wallet: (providerName?: string, customAddress?: string) => Promise<{ success: boolean; address?: string; error?: string }>;
   disconnectWeb3Wallet: () => void;
 
   // Authentication & OTP & Official Email Gateway
@@ -280,6 +285,8 @@ interface WalletContextType {
   markAllNotificationsAsRead: () => void;
   switchUserRole: (role: 'user' | 'admin') => void;
   updateUserProfileAvatar: (avatarDataUrl: string) => void;
+  platformTrafficConfig: PlatformTrafficConfig;
+  updatePlatformTrafficConfig: (updates: Partial<PlatformTrafficConfig>) => void;
 }
 
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
@@ -296,31 +303,104 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [selectedAssetForModal, setSelectedAssetForModal] = useState<CryptoAsset | null>(null);
   const [isNotificationDrawerOpen, setIsNotificationDrawerOpen] = useState(false);
 
-  // Web3 Connection Provider
-  const [isConnectedToWeb3, setIsConnectedToWeb3] = useState(false);
-  const [web3Address, setWeb3Address] = useState<string | null>(null);
+  // Web3 Connection Provider State
+  const [isConnectedToWeb3, setIsConnectedToWeb3] = useState<boolean>(() => {
+    return localStorage.getItem('trustpro_web3_connected') === 'true';
+  });
+  const [web3Address, setWeb3Address] = useState<string | null>(() => {
+    return localStorage.getItem('trustpro_web3_address') || null;
+  });
+  const [web3ChainId, setWeb3ChainId] = useState<string | null>(null);
+  const [web3ProviderName, setWeb3ProviderName] = useState<string | null>(() => {
+    return localStorage.getItem('trustpro_web3_provider') || 'Trust Wallet';
+  });
+  const [isWeb3ModalOpen, setIsWeb3ModalOpen] = useState(false);
 
-  // Main Data States with LocalStorage Persistence
+  // Live Platform Traffic Monitor Control State
+  const [platformTrafficConfig, setPlatformTrafficConfig] = useState<PlatformTrafficConfig>(() => {
+    const saved = localStorage.getItem('trustpro_traffic_config_v1');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.warn('Failed to parse traffic config');
+      }
+    }
+    return {
+      activeUsers: 348920,
+      liveTraders: 188416,
+      onlineNodes: 62805,
+      systemStatus: 'OPERATIONAL',
+      tickerNotice: 'All Web3 nodes, liquidity pools & cross-chain bridges operating at 100% capacity.',
+      autoFluctuate: true,
+    };
+  });
+
+  const updatePlatformTrafficConfig = (updates: Partial<PlatformTrafficConfig>) => {
+    setPlatformTrafficConfig((prev) => {
+      const next = { ...prev, ...updates };
+      try {
+        localStorage.setItem('trustpro_traffic_config_v1', JSON.stringify(next));
+      } catch (e) {
+        console.warn('Failed to save traffic config:', e);
+      }
+      return next;
+    });
+  };
+
+  // Optional auto-fluctuation timer for traffic counter
+  useEffect(() => {
+    if (!platformTrafficConfig.autoFluctuate) return;
+    const interval = setInterval(() => {
+      setPlatformTrafficConfig((prev) => {
+        if (!prev.autoFluctuate) return prev;
+        const inc = Math.floor(Math.random() * 5) + 1;
+        const nextActive = prev.activeUsers + inc;
+        const nextTraders = Math.floor(nextActive * 0.54);
+        const nextNodes = Math.floor(nextActive * 0.18);
+        return {
+          ...prev,
+          activeUsers: nextActive,
+          liveTraders: nextTraders,
+          onlineNodes: nextNodes,
+        };
+      });
+    }, 2500);
+    return () => clearInterval(interval);
+  }, [platformTrafficConfig.autoFluctuate]);
   const [assets, setAssets] = useState<CryptoAsset[]>(() => {
     const saved = localStorage.getItem('trustpro_assets_v2');
-    let loaded: CryptoAsset[] = INITIAL_ASSETS;
+    const uniqueMap = new Map<string, CryptoAsset>();
+
+    // 1. Load all initial assets (200+ coins)
+    INITIAL_ASSETS.forEach((a) => {
+      if (a && a.id) uniqueMap.set(a.id, a);
+    });
+
+    // 2. Merge saved assets from localStorage if available
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          loaded = parsed;
+        if (Array.isArray(parsed)) {
+          parsed.forEach((a) => {
+            if (a && a.id) {
+              const existing = uniqueMap.get(a.id);
+              uniqueMap.set(a.id, existing ? { ...existing, ...a } : a);
+            }
+          });
         }
       } catch (e) {
         console.warn('Failed to parse saved assets:', e);
       }
     }
-    const uniqueMap = new Map<string, CryptoAsset>();
-    loaded.forEach((a) => {
-      if (a && a.id && !uniqueMap.has(a.id)) {
-        uniqueMap.set(a.id, a);
+
+    const result = Array.from(uniqueMap.values()).map((a) => {
+      if (a.symbol === 'GAS_TRX' && (a.priceUsd === 0.14 || !a.priceUsd)) {
+        return { ...a, priceUsd: 1.0, high24h: 1.0, low24h: 1.0, change24h: 0 };
       }
+      return a;
     });
-    const result = Array.from(uniqueMap.values());
+
     try {
       localStorage.setItem('trustpro_assets_v2', JSON.stringify(result));
     } catch (e) {
@@ -573,21 +653,99 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     );
   };
 
-  const connectWeb3Wallet = (providerName = 'WalletConnect') => {
-    const mockAddr = '0x71C7656EC7ab88b098defB751B7401B5f6d8976F';
-    setIsConnectedToWeb3(true);
-    setWeb3Address(mockAddr);
-    addNotification(
-      currentUser?.id || 'usr_admin',
-      'Wallet Connected',
-      `Connected to ${providerName} (${mockAddr.slice(0, 6)}...${mockAddr.slice(-4)})`,
-      'system'
-    );
+  const connectWeb3Wallet = async (
+    providerName = 'Trust Wallet',
+    customAddress?: string
+  ): Promise<{ success: boolean; address?: string; error?: string }> => {
+    // 1. Direct manual real address connection
+    if (customAddress && customAddress.trim().startsWith('0x') && customAddress.trim().length === 42) {
+      const cleanAddr = customAddress.trim();
+      setIsConnectedToWeb3(true);
+      setWeb3Address(cleanAddr);
+      setWeb3ProviderName(providerName);
+      localStorage.setItem('trustpro_web3_connected', 'true');
+      localStorage.setItem('trustpro_web3_address', cleanAddr);
+      localStorage.setItem('trustpro_web3_provider', providerName);
+      addNotification(
+        currentUser?.id || 'usr_admin',
+        'Web3 Wallet Connected',
+        `Connected to ${providerName} (${cleanAddr.slice(0, 6)}...${cleanAddr.slice(-4)})`,
+        'system'
+      );
+      return { success: true, address: cleanAddr };
+    }
+
+    // 2. Real Browser EIP-1193 Web3 Provider Interaction (Trust Wallet, MetaMask, etc.)
+    const win = window as any;
+    const provider = win.trustwallet?.ethereum || win.ethereum || win.phantom?.ethereum;
+
+    if (provider) {
+      try {
+        const accounts = await provider.request({ method: 'eth_requestAccounts' });
+        if (accounts && accounts.length > 0) {
+          const addr = accounts[0];
+          let chainId = '0x1';
+          try {
+            chainId = await provider.request({ method: 'eth_chainId' });
+          } catch (e) {
+            console.warn('Chain ID request notice:', e);
+          }
+
+          const detectedName = provider.isTrust
+            ? 'Trust Wallet'
+            : provider.isMetaMask
+            ? 'MetaMask'
+            : providerName;
+
+          setIsConnectedToWeb3(true);
+          setWeb3Address(addr);
+          setWeb3ChainId(chainId);
+          setWeb3ProviderName(detectedName);
+
+          localStorage.setItem('trustpro_web3_connected', 'true');
+          localStorage.setItem('trustpro_web3_address', addr);
+          localStorage.setItem('trustpro_web3_provider', detectedName);
+
+          if (typeof provider.on === 'function') {
+            provider.on('accountsChanged', (newAccounts: string[]) => {
+              if (newAccounts && newAccounts.length > 0) {
+                setWeb3Address(newAccounts[0]);
+                localStorage.setItem('trustpro_web3_address', newAccounts[0]);
+              } else {
+                disconnectWeb3Wallet();
+              }
+            });
+            provider.on('chainChanged', (newChainId: string) => {
+              setWeb3ChainId(newChainId);
+            });
+          }
+
+          addNotification(
+            currentUser?.id || 'usr_admin',
+            'Web3 Wallet Connected',
+            `Connected to ${detectedName} (${addr.slice(0, 6)}...${addr.slice(-4)})`,
+            'system'
+          );
+          return { success: true, address: addr };
+        }
+      } catch (err: any) {
+        console.warn('User cancelled or rejected wallet connection:', err);
+        return { success: false, error: err.message || 'Connection request rejected by user' };
+      }
+    }
+
+    // 3. Fallback when no provider is injected
+    return { success: false, error: 'NO_INJECTED_PROVIDER' };
   };
 
   const disconnectWeb3Wallet = () => {
     setIsConnectedToWeb3(false);
     setWeb3Address(null);
+    setWeb3ChainId(null);
+    setWeb3ProviderName(null);
+    localStorage.removeItem('trustpro_web3_connected');
+    localStorage.removeItem('trustpro_web3_address');
+    localStorage.removeItem('trustpro_web3_provider');
   };
 
   // Poll or Fetch Live Prices from Backend Proxy
@@ -625,7 +783,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         // Subtle simulation variation if rate limited
         setAssets((prevAssets) =>
           prevAssets.map((asset) => {
-            if (asset.symbol === 'USDT' || asset.symbol === 'USDC') return asset;
+            if (asset.symbol === 'USDT' || asset.symbol === 'USDC' || asset.symbol === 'GAS_TRX') return asset;
             const variation = (Math.random() - 0.48) * 0.008;
             const newPrice = Number((asset.priceUsd * (1 + variation)).toFixed(2));
             const currentSparkline = asset.sparkline.slice(1);
@@ -1860,6 +2018,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         setIsNotificationDrawerOpen,
         isConnectedToWeb3,
         web3Address,
+        web3ChainId,
+        web3ProviderName,
+        isWeb3ModalOpen,
+        setIsWeb3ModalOpen,
         connectWeb3Wallet,
         disconnectWeb3Wallet,
         registerUser,
@@ -1900,6 +2062,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         markAllNotificationsAsRead,
         switchUserRole,
         updateUserProfileAvatar,
+        platformTrafficConfig,
+        updatePlatformTrafficConfig,
       }}
     >
       {children}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useWallet, getUserReceiveAddress } from '../context/WalletContext';
+import { useWallet, getUserReceiveAddress, isAddressMatchingUser } from '../context/WalletContext';
 import {
   X,
   Send,
@@ -12,6 +12,11 @@ import {
   CheckCircle2,
   Clock,
   Layers,
+  Clipboard,
+  UserCheck,
+  Globe,
+  ChevronDown,
+  Search,
 } from 'lucide-react';
 
 export const SendReceiveModal: React.FC = () => {
@@ -24,6 +29,7 @@ export const SendReceiveModal: React.FC = () => {
     setSelectedAssetForModal,
     assets,
     currentUser,
+    users,
     sendCrypto,
     depositCrypto,
     depositAddresses,
@@ -40,10 +46,20 @@ export const SendReceiveModal: React.FC = () => {
   const [txResult, setTxResult] = useState<{ success: boolean; message: string; txHash?: string } | null>(null);
   const [depositResult, setDepositResult] = useState<{ success: boolean; message: string; txHash?: string } | null>(null);
 
+  // Asset Picker modal state and search
+  const [isAssetPickerOpen, setIsAssetPickerOpen] = useState(false);
+  const [assetSearchQuery, setAssetSearchQuery] = useState('');
+
   const activeAsset = selectedAssetForModal || assets[0];
   const userBalance = currentUser?.balances[activeAsset.symbol] || 0;
   const numAmount = parseFloat(amount) || 0;
   const amountUsd = numAmount * activeAsset.priceUsd;
+
+  const filteredAssetList = assets.filter((a) => {
+    const q = assetSearchQuery.trim().toLowerCase();
+    if (!q) return true;
+    return a.name.toLowerCase().includes(q) || a.symbol.toLowerCase().includes(q);
+  });
 
   // Selected Network for Send or Receive
   const [selectedNetwork, setSelectedNetwork] = useState<string>('TRC-20');
@@ -134,8 +150,9 @@ export const SendReceiveModal: React.FC = () => {
   if (!isSendModalOpen && !isReceiveModalOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
-      {/* SEND MODAL */}
+    <>
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
+        {/* SEND MODAL */}
       {isSendModalOpen && (
         <div className="relative w-full max-w-md rounded-3xl bg-[#0e1015] border border-slate-800 p-6 shadow-2xl">
           <button
@@ -189,23 +206,39 @@ export const SendReceiveModal: React.FC = () => {
             </div>
           ) : (
             <form onSubmit={handleSendSubmit} className="space-y-4">
-              {/* Asset Selector */}
+              {/* Interactive Asset Selector */}
               <div>
-                <label className="block text-[11px] font-semibold text-slate-400 mb-1">Select Asset</label>
-                <select
-                  value={activeAsset.symbol}
-                  onChange={(e) => {
-                    const found = assets.find((a) => a.symbol === e.target.value);
-                    if (found) setSelectedAssetForModal(found);
-                  }}
-                  className="w-full rounded-xl bg-slate-950 border border-slate-800 px-3 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+                <div className="flex justify-between items-center mb-1">
+                  <label className="text-[11px] font-semibold text-slate-400">Select Asset</label>
+                  <span className="text-[10px] text-emerald-400 font-mono font-bold">
+                    {assets.length} Assets Available
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsAssetPickerOpen(true)}
+                  className="w-full flex items-center justify-between rounded-2xl bg-slate-950 border border-slate-800 p-3 hover:border-emerald-500/50 transition-all text-left shadow-inner"
                 >
-                  {assets.map((a) => (
-                    <option key={a.id} value={a.symbol}>
-                      {a.name} ({a.symbol}) — Bal: {currentUser?.balances[a.symbol] || 0}
-                    </option>
-                  ))}
-                </select>
+                  <div className="flex items-center gap-2.5">
+                    <img
+                      src={activeAsset.icon}
+                      alt={activeAsset.name}
+                      className="h-7 w-7 rounded-full bg-slate-900 object-cover border border-slate-700 shrink-0"
+                    />
+                    <div>
+                      <p className="text-xs font-bold text-white leading-tight">
+                        {activeAsset.name} <span className="text-emerald-400 font-mono">({activeAsset.symbol})</span>
+                      </p>
+                      <p className="text-[10px] text-slate-400 font-mono mt-0.5">
+                        Balance: <strong className="text-white">{currentUser?.balances[activeAsset.symbol] || 0} {activeAsset.symbol}</strong> • ${activeAsset.priceUsd.toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold text-emerald-400 hover:bg-slate-800 transition-all">
+                    <span>Change</span>
+                    <ChevronDown className="h-3.5 w-3.5 text-emerald-400" />
+                  </div>
+                </button>
               </div>
 
               {/* Network Standard Option */}
@@ -242,14 +275,62 @@ export const SendReceiveModal: React.FC = () => {
                     </span>
                   )}
                 </div>
-                <input
-                  type="text"
-                  placeholder={`Paste recipient ${activeAsset.symbol} (${currentActiveNetwork}) address...`}
-                  value={toAddress}
-                  onChange={(e) => setToAddress(e.target.value)}
-                  required
-                  className="w-full rounded-xl bg-slate-950 border border-slate-800 px-3 py-2.5 text-xs text-white font-mono focus:outline-none focus:border-emerald-500"
-                />
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder={`Paste recipient ${activeAsset.symbol} (${currentActiveNetwork}) address, email, or user ID...`}
+                    value={toAddress}
+                    onChange={(e) => setToAddress(e.target.value)}
+                    required
+                    className="w-full rounded-xl bg-slate-950 border border-slate-800 pl-3 pr-16 py-2.5 text-xs text-white font-mono focus:outline-none focus:border-emerald-500"
+                  />
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      try {
+                        const text = await navigator.clipboard.readText();
+                        if (text) setToAddress(text.trim());
+                      } catch (err) {
+                        console.warn('Clipboard read failed:', err);
+                      }
+                    }}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[10px] text-emerald-400 font-bold transition-all"
+                  >
+                    <Clipboard className="h-3 w-3" />
+                    <span>Paste</span>
+                  </button>
+                </div>
+
+                {/* Live Recipient Match Detection */}
+                {(() => {
+                  const cleanTo = toAddress.trim().toLowerCase();
+                  if (!cleanTo) return null;
+
+                  const matchedUser = users.find((u) => {
+                    if (currentUser && u.id === currentUser.id) return false;
+                    if (u.email && u.email.toLowerCase() === cleanTo) return true;
+                    if (u.id && u.id.toLowerCase() === cleanTo) return true;
+                    if (u.phone && cleanTo.replace(/\D/g, '').length >= 6 && u.phone.replace(/\D/g, '').endsWith(cleanTo.replace(/\D/g, ''))) return true;
+                    return isAddressMatchingUser(u, cleanTo, activeAsset.symbol, currentActiveNetwork);
+                  });
+
+                  if (matchedUser) {
+                    return (
+                      <div className="mt-1.5 flex items-center gap-1.5 text-[11px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1.5 rounded-lg font-medium animate-fadeIn">
+                        <UserCheck className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                        <span>Instant Direct Internal Transfer to <strong>{matchedUser.name}</strong></span>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <div className="mt-1.5 flex items-center gap-1.5 text-[11px] text-slate-300 bg-slate-900 border border-slate-800 px-2.5 py-1.5 rounded-lg font-medium animate-fadeIn">
+                      <Globe className="h-3.5 w-3.5 text-blue-400 shrink-0" />
+                      <span>On-Chain External Blockchain Settlement</span>
+                    </div>
+                  );
+                })()}
+
                 {withdrawAddresses[activeAsset.symbol] && (
                   <p className="text-[10px] text-slate-400 mt-1">
                     Protocol Withdrawal Gateway: <span className="font-mono text-blue-300">{withdrawAddresses[activeAsset.symbol]}</span>
@@ -354,26 +435,35 @@ export const SendReceiveModal: React.FC = () => {
             </div>
           </div>
 
-          {/* Coin Selector */}
-          {activeAsset.symbol !== 'GAS_TRX' && (
-            <div className="mb-3">
-              <label className="block text-[10px] font-bold text-slate-400 text-left mb-1">Select Coin</label>
-              <select
-                value={activeAsset.symbol}
-                onChange={(e) => {
-                  const found = assets.find((a) => a.symbol === e.target.value);
-                  if (found) setSelectedAssetForModal(found);
-                }}
-                className="w-full rounded-xl bg-slate-950 border border-slate-800 px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 text-center font-bold"
-              >
-                {assets.map((a) => (
-                  <option key={a.id} value={a.symbol}>
-                    {a.name} ({a.symbol})
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
+          {/* Coin Selector (Always Enabled) */}
+          <div className="mb-3 text-left">
+            <label className="block text-[10px] font-bold text-slate-400 mb-1">Select Coin to Deposit</label>
+            <button
+              type="button"
+              onClick={() => setIsAssetPickerOpen(true)}
+              className="w-full flex items-center justify-between rounded-2xl bg-slate-950 border border-slate-800 p-2.5 hover:border-emerald-500/50 transition-all text-left"
+            >
+              <div className="flex items-center gap-2.5">
+                <img
+                  src={activeAsset.icon}
+                  alt={activeAsset.name}
+                  className="h-7 w-7 rounded-full bg-slate-900 object-cover border border-slate-700 shrink-0"
+                />
+                <div>
+                  <p className="text-xs font-bold text-white leading-tight">
+                    {activeAsset.name} <span className="text-emerald-400 font-mono">({activeAsset.symbol})</span>
+                  </p>
+                  <p className="text-[10px] text-slate-400 font-mono mt-0.5">
+                    Rate: ${activeAsset.priceUsd.toLocaleString()} USD
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold text-emerald-400 hover:bg-slate-800 transition-all">
+                <span>Select Coin</span>
+                <ChevronDown className="h-3.5 w-3.5 text-emerald-400" />
+              </div>
+            </button>
+          </div>
 
           {/* Choose Network Standard */}
           {activeAsset.symbol !== 'GAS_TRX' && (
@@ -492,6 +582,107 @@ export const SendReceiveModal: React.FC = () => {
           </div>
         </div>
       )}
-    </div>
+
+      </div>
+
+      {/* SEARCHABLE ASSET PICKER OVERLAY MODAL */}
+      {isAssetPickerOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
+          <div className="relative w-full max-w-md rounded-3xl bg-[#0e1015] border border-slate-800 p-5 shadow-2xl flex flex-col max-h-[85vh]">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div>
+                <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                  <span>Select Crypto Asset</span>
+                  <span className="text-[10px] bg-slate-800 text-emerald-400 px-2 py-0.5 rounded-full font-mono font-bold">
+                    {assets.length} Coins
+                  </span>
+                </h4>
+                <p className="text-[11px] text-slate-400">Choose coin to transfer or receive</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsAssetPickerOpen(false);
+                  setAssetSearchQuery('');
+                }}
+                className="h-8 w-8 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="py-3">
+              <div className="relative">
+                <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
+                <input
+                  type="text"
+                  placeholder="Search by coin name or symbol (e.g. BTC, ETH, USDT)..."
+                  value={assetSearchQuery}
+                  onChange={(e) => setAssetSearchQuery(e.target.value)}
+                  className="w-full rounded-xl bg-slate-950 border border-slate-800 pl-9 pr-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 font-medium"
+                  autoFocus
+                />
+              </div>
+            </div>
+
+            <div className="flex-1 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
+              {filteredAssetList.length === 0 ? (
+                <div className="text-center text-xs text-slate-500 py-8">
+                  <p>No asset matching "{assetSearchQuery}"</p>
+                </div>
+              ) : (
+                filteredAssetList.map((a) => {
+                  const bal = currentUser?.balances[a.symbol] || 0;
+                  const isSelected = activeAsset.symbol === a.symbol;
+                  return (
+                    <button
+                      key={a.id}
+                      type="button"
+                      onClick={() => {
+                        setSelectedAssetForModal(a);
+                        setIsAssetPickerOpen(false);
+                        setAssetSearchQuery('');
+                      }}
+                      className={`w-full flex items-center justify-between p-3 rounded-2xl border transition-all text-left ${
+                        isSelected
+                          ? 'bg-emerald-500/15 border-emerald-500/50 text-white shadow-md shadow-emerald-500/10'
+                          : 'bg-slate-950/70 border-slate-800 hover:bg-slate-900 hover:border-slate-700'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <img
+                          src={a.icon}
+                          alt={a.name}
+                          className="h-8 w-8 rounded-full bg-slate-900 object-cover border border-slate-700 shrink-0"
+                        />
+                        <div>
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-xs font-bold text-white">{a.name}</span>
+                            <span className="text-[10px] font-mono text-emerald-400 font-bold bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800">
+                              {a.symbol}
+                            </span>
+                          </div>
+                          <p className="text-[10px] text-slate-400 font-mono mt-0.5">
+                            Price: ${a.priceUsd.toLocaleString()}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right font-mono">
+                        <p className="text-xs font-bold text-emerald-400">
+                          {bal} {a.symbol}
+                        </p>
+                        <p className="text-[10px] text-slate-500">
+                          ≈ ${(bal * a.priceUsd).toFixed(2)}
+                        </p>
+                      </div>
+                    </button>
+                  );
+                })
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
