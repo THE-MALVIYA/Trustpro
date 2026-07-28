@@ -1,0 +1,129 @@
+@import "tailwindcss";
+
+@layer utilities {
+  .bg-trustpro-dark, .bg-binance-dark {
+    background-color: #0B1020;
+  }
+  .bg-trustpro-secondary {
+    background-color: #0E1528;
+  }
+  .bg-trustpro-card, .bg-binance-card {
+    background-color: #131A2D;
+  }
+  .bg-trustpro-gold, .bg-trustpro-yellow, .bg-binance-yellow {
+    background-color: #3375BB;
+  }
+  .text-trustpro-gold, .text-trustpro-yellow, .text-binance-yellow {
+    color: #3375BB;
+  }
+  .border-trustpro, .border-binance {
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  /* Glassmorphism card utility */
+  .glass-card {
+    background: #131A2D;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+    border-radius: 20px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .glass-card:hover {
+    border-color: rgba(22, 230, 168, 0.35);
+    box-shadow: 0 14px 35px -10px rgba(22, 230, 168, 0.2);
+  }
+
+  /* Primary Green-Blue Gradient Button */
+  .btn-gradient-primary, .btn-cyan, .btn-emerald {
+    background: linear-gradient(135deg, #3375BB 0%, #3375BB 100%);
+    color: #0B1020;
+    font-weight: 800;
+    border-radius: 14px;
+    box-shadow: 0 4px 20px 0 rgba(22, 230, 168, 0.3);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .btn-gradient-primary:hover, .btn-cyan:hover, .btn-emerald:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px 0 rgba(22, 230, 168, 0.45);
+    filter: brightness(1.08);
+  }
+
+  /* Yellow/Gold button gradient utility */
+  .btn-gold {
+    background: linear-gradient(135deg, #3375BB 0%, #3375BB 100%);
+    color: #0B1020;
+    font-weight: 800;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px 0 rgba(245, 197, 66, 0.25);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .btn-gold:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px 0 rgba(245, 197, 66, 0.4);
+    filter: brightness(1.05);
+  }
+
+  /* Secondary Dark Navy Button */
+  .btn-secondary-dark {
+    background-color: #131A2D;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #FFFFFF;
+    font-weight: 700;
+    border-radius: 14px;
+    transition: all 0.2s ease-in-out;
+  }
+  .btn-secondary-dark:hover {
+    background-color: #1C263F;
+    border-color: rgba(22, 230, 168, 0.3);
+  }
+
+  /* Blue Gradient Button */
+  .btn-blue-cyan {
+    background: linear-gradient(135deg, #3375BB 0%, #3375BB 100%);
+    color: #FFFFFF;
+    font-weight: 800;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px 0 rgba(30, 136, 255, 0.3);
+    transition: all 0.25s ease-in-out;
+  }
+  .btn-blue-cyan:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px 0 rgba(30, 136, 255, 0.45);
+    filter: brightness(1.1);
+  }
+
+  /* Hide scrollbar utility */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+body {
+  background-color: #0B1020;
+  color: #FFFFFF;
+  font-family: 'Inter', 'Manrope', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: 200%;
+  animation: marquee 35s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+

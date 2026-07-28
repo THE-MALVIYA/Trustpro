@@ -1,0 +1,6 @@
+{
+  "name": "TrustPro",
+  "description": "Enterprise-grade crypto exchange & Web3 wallet platform with live market tracking, spot & futures trading, multi-chain portfolio, swapping, staking, launchpad, NFTs, and full Super Admin panel.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
