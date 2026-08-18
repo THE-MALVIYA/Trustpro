@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useWallet } from '../context/WalletContext';
+import { useWallet, getUserReceiveAddress } from '../context/WalletContext';
 import { UserAccount, CryptoAsset } from '../types';
+import { CryptoIcon } from './CryptoIcon';
 import {
   ShieldCheck,
   Users,
@@ -38,7 +39,28 @@ import {
   Copy,
   Sliders,
   Fingerprint,
+  QrCode,
+  Sparkles,
+  ExternalLink,
 } from 'lucide-react';
+
+const MANAGED_COIN_CHAINS = [
+  { symbol: 'USDT', network: 'TRC-20', name: 'Tether USD (TRON TRC20)', standard: 'TRC-20' },
+  { symbol: 'USDT', network: 'ERC-20', name: 'Tether USD (Ethereum ERC20)', standard: 'ERC-20' },
+  { symbol: 'USDT', network: 'BEP-20', name: 'Tether USD (BNB Smart Chain)', standard: 'BEP-20' },
+  { symbol: 'USDT', network: 'SOL', name: 'Tether USD (Solana SPL)', standard: 'SOL' },
+  { symbol: 'BTC', network: 'Bitcoin', name: 'Bitcoin (BTC Native SegWit)', standard: 'BTC' },
+  { symbol: 'ETH', network: 'Ethereum', name: 'Ethereum (ERC-20 Mainnet)', standard: 'ERC-20' },
+  { symbol: 'BNB', network: 'BNB Smart Chain', name: 'BNB (BEP-20)', standard: 'BEP-20' },
+  { symbol: 'SOL', network: 'Solana', name: 'Solana (SPL Token)', standard: 'SOL' },
+  { symbol: 'TRX', network: 'TRON', name: 'TRON (TRC-20)', standard: 'TRC-20' },
+  { symbol: 'NEAR', network: 'NEAR Protocol', name: 'NEAR Protocol', standard: 'NEAR' },
+  { symbol: 'XRP', network: 'Ripple', name: 'Ripple (XRP Ledger)', standard: 'XRP' },
+  { symbol: 'DOGE', network: 'Dogecoin', name: 'Dogecoin (Mainnet)', standard: 'DOGE' },
+  { symbol: 'LTC', network: 'Litecoin', name: 'Litecoin (Mainnet)', standard: 'LTC' },
+  { symbol: 'POL', network: 'Polygon', name: 'Polygon (POL / MATIC)', standard: 'POL' },
+  { symbol: 'GAS_TRX', network: 'TRON', name: 'TRX Gas Fee Destination Address', standard: 'TRC-20' },
+];
 
 export const AdminDashboard: React.FC = () => {
   const {
@@ -68,6 +90,8 @@ export const AdminDashboard: React.FC = () => {
     rejectTransaction,
     platformTrafficConfig,
     updatePlatformTrafficConfig,
+    updateUserCustomCoinAddresses,
+    setIsAuthModalOpen,
   } = useWallet();
 
   const isAdminAuthorized =
@@ -76,21 +100,76 @@ export const AdminDashboard: React.FC = () => {
 
   if (!isAdminAuthorized) {
     return (
-      <div className="mx-auto max-w-xl py-20 text-center">
-        <div className="mx-auto h-16 w-16 rounded-full bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-500 mb-4">
+      <div className="mx-auto max-w-xl py-20 px-4 text-center animate-fadeIn">
+        <div className="mx-auto h-16 w-16 rounded-3xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-500 mb-4 shadow-xl">
           <ShieldCheck className="h-8 w-8" />
         </div>
-        <h2 className="text-xl font-bold text-white">Access Denied</h2>
-        <p className="text-xs text-slate-400 mt-2">
-          Admin Portal is strictly restricted to authorized super administrators (<span className="text-emerald-400 font-mono">legendxadmin1999@gmail.com</span>).
+        <h2 className="text-2xl font-black text-white">Super Admin Verification Required</h2>
+        <p className="text-xs text-slate-400 mt-2 max-w-md mx-auto">
+          The Admin Portal is locked and protected. Please sign in with your official Super Administrator credentials (<span className="text-emerald-400 font-mono">legendxadmin1999@gmail.com</span>) to proceed.
         </p>
+        <button
+          onClick={() => setIsAuthModalOpen(true)}
+          className="mt-6 px-6 py-3 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 text-slate-950 font-black text-xs transition-all shadow-xl shadow-amber-500/20 hover:opacity-90"
+        >
+          Sign In as Super Admin
+        </button>
       </div>
     );
   }
 
   const [activeTab, setActiveTab] = useState<
-    'overview' | 'pending_txs' | 'credit_debit' | 'users' | 'traffic' | 'coins' | 'reports' | 'audit'
+    'overview' | 'pending_txs' | 'credit_debit' | 'user_addresses' | 'users' | 'traffic' | 'coins' | 'reports' | 'audit'
   >('pending_txs');
+
+  // User Coin Address Editing State
+  const [selectedUserForAddressEdit, setSelectedUserForAddressEdit] = useState<string>(users[0]?.id || '');
+  const [addressDrafts, setAddressDrafts] = useState<Record<string, string>>({});
+  const [addressSaveFeedback, setAddressSaveFeedback] = useState<{ success: boolean; message: string } | null>(null);
+  const [copiedAddressKey, setCopiedAddressKey] = useState<string | null>(null);
+  const [previewQrModal, setPreviewQrModal] = useState<{ symbol: string; network: string; address: string } | null>(null);
+
+  const currentEditUser = users.find((u) => u.id === selectedUserForAddressEdit) || users[0];
+
+  // Populate address drafts whenever selected user changes
+  useEffect(() => {
+    if (currentEditUser) {
+      const drafts: Record<string, string> = {};
+      MANAGED_COIN_CHAINS.forEach((coin) => {
+        const key = coin.network ? `${coin.symbol}_${coin.network.toUpperCase()}` : coin.symbol;
+        const currentAddr =
+          currentEditUser.customCoinAddresses?.[key] ||
+          currentEditUser.customCoinAddresses?.[coin.symbol] ||
+          getUserReceiveAddress(currentEditUser, coin.symbol, coin.network);
+        drafts[key] = currentAddr;
+      });
+      setAddressDrafts(drafts);
+    }
+  }, [selectedUserForAddressEdit, currentEditUser?.id, currentEditUser?.customCoinAddresses]);
+
+  const handleSaveSingleAddress = (coinKey: string, newAddress: string) => {
+    if (!currentEditUser) return;
+    const cleanAddr = newAddress.trim();
+    if (!cleanAddr) return;
+
+    const res = updateUserCustomCoinAddresses(currentEditUser.id, {
+      [coinKey]: cleanAddr,
+      ...(coinKey === 'USDT_TRC-20' || coinKey === 'USDT_TRON' ? { USDT: cleanAddr } : {}),
+      ...(coinKey === 'BTC_BITCOIN' ? { BTC: cleanAddr } : {}),
+      ...(coinKey === 'ETH_ETHEREUM' ? { ETH: cleanAddr } : {}),
+      ...(coinKey === 'SOL_SOLANA' ? { SOL: cleanAddr } : {}),
+      ...(coinKey === 'TRX_TRON' ? { TRX: cleanAddr } : {}),
+    });
+    setAddressSaveFeedback(res);
+    setTimeout(() => setAddressSaveFeedback(null), 3500);
+  };
+
+  const handleSaveAllAddresses = () => {
+    if (!currentEditUser) return;
+    const res = updateUserCustomCoinAddresses(currentEditUser.id, addressDrafts);
+    setAddressSaveFeedback(res);
+    setTimeout(() => setAddressSaveFeedback(null), 3500);
+  };
 
   // Password Visibility State for User Credentials Inspection
   const [visiblePasswords, setVisiblePasswords] = useState<Record<string, boolean>>({});
@@ -252,6 +331,7 @@ export const AdminDashboard: React.FC = () => {
           { id: 'pending_txs', label: `⏳ Pending Approvals (${transactions.filter((t) => t.status === 'pending').length})`, icon: Clock },
           { id: 'overview', label: 'Dashboard Metrics', icon: BarChart3 },
           { id: 'credit_debit', label: '💳 Balance Credit / Debit', icon: PlusCircle },
+          { id: 'user_addresses', label: '📍 Edit User Coin Addresses', icon: Edit2 },
           { id: 'users', label: 'User Accounts & Credentials', icon: Users },
           { id: 'traffic', label: '🚦 Live Traffic Control', icon: Sliders },
           { id: 'coins', label: 'Coin Management', icon: Coins },
@@ -600,6 +680,259 @@ export const AdminDashboard: React.FC = () => {
         </div>
       )}
 
+      {/* TAB: EDIT USER COIN ADDRESSES */}
+      {activeTab === 'user_addresses' && (
+        <div className="rounded-3xl bg-slate-900/80 border border-slate-800 p-6 space-y-6">
+          {/* Section Header */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+            <div>
+              <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                <Edit2 className="h-5 w-5 text-blue-300" />
+                <span>Custom User Deposit & Receive Coin Addresses</span>
+                <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-[10px] font-mono text-emerald-400 font-bold">
+                  Live Overrides
+                </span>
+              </h2>
+              <p className="text-xs text-slate-400 mt-1">
+                Customize the exact wallet address for any registered user for any cryptocurrency network (USDT TRC20, ERC20, BEP20, BTC, ETH, SOL, TRX, etc.). The user's Trust Wallet Receive tab & QR Code will immediately reflect this address.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleSaveAllAddresses}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 text-black font-black text-xs hover:opacity-95 shadow-lg shadow-emerald-500/20 transition-all"
+              >
+                <Save className="h-4 w-4" />
+                <span>Save All Addresses for User</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Feedback Banner */}
+          {addressSaveFeedback && (
+            <div
+              className={`p-4 rounded-2xl border text-xs font-bold flex items-center gap-2.5 transition-all ${
+                addressSaveFeedback.success
+                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                  : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
+              }`}
+            >
+              {addressSaveFeedback.success ? (
+                <CheckCircle2 className="h-4 w-4 shrink-0" />
+              ) : (
+                <AlertCircle className="h-4 w-4 shrink-0" />
+              )}
+              <span>{addressSaveFeedback.message}</span>
+            </div>
+          )}
+
+          {/* User Selection Control */}
+          <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div className="flex-1 w-full space-y-1.5">
+              <label className="block text-xs font-bold text-slate-300">
+                Select Target User Account to Edit Addresses:
+              </label>
+              <select
+                value={selectedUserForAddressEdit}
+                onChange={(e) => setSelectedUserForAddressEdit(e.target.value)}
+                className="w-full rounded-xl bg-slate-900 border border-slate-700 px-3.5 py-2.5 text-xs text-white font-medium focus:outline-none focus:border-blue-300"
+                id="admin-select-user-address-edit"
+              >
+                {users.map((u) => (
+                  <option key={`addr-user-${u.id}`} value={u.id}>
+                    {u.name} ({u.email}) — ID: {u.id.slice(0, 8)}... [{u.role.toUpperCase()}]
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {currentEditUser && (
+              <div className="flex items-center gap-3 p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80 shrink-0">
+                <div className="h-9 w-9 rounded-full bg-blue-500/20 border border-blue-500/30 flex items-center justify-center font-bold text-blue-300 text-xs">
+                  {currentEditUser.name.slice(0, 2).toUpperCase()}
+                </div>
+                <div className="text-xs">
+                  <p className="font-bold text-white">{currentEditUser.name}</p>
+                  <p className="text-[11px] text-slate-400 font-mono">{currentEditUser.email}</p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Coin Addresses Master Grid */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                <span>Configured Blockchain Networks & Tokens</span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-slate-800 text-slate-300">
+                  {MANAGED_COIN_CHAINS.length} Chains Supported
+                </span>
+              </h3>
+            </div>
+
+            <div className="grid grid-cols-1 gap-3">
+              {MANAGED_COIN_CHAINS.map((coin) => {
+                const key = coin.network ? `${coin.symbol}_${coin.network.toUpperCase()}` : coin.symbol;
+                const draftValue = addressDrafts[key] || '';
+                const isOverridden = currentEditUser?.customCoinAddresses && (
+                  currentEditUser.customCoinAddresses[key] ||
+                  (coin.symbol === 'USDT' && currentEditUser.customCoinAddresses['USDT'])
+                );
+
+                return (
+                  <div
+                    key={`coin-edit-${key}`}
+                    className="p-4 rounded-2xl bg-slate-950 border border-slate-800 hover:border-slate-700 transition-all space-y-3"
+                  >
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <div className="flex items-center gap-3">
+                        <CryptoIcon symbol={coin.symbol} network={coin.network} size={36} />
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-white text-sm">{coin.name}</span>
+                            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500/10 text-blue-300 border border-blue-500/20">
+                              {coin.network || coin.symbol}
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-slate-400">
+                            Symbol: <strong className="text-slate-300">{coin.symbol}</strong> • Standard:{' '}
+                            <span className="text-slate-300">{coin.standard}</span>
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        {isOverridden ? (
+                          <span className="px-2 py-1 rounded-md text-[10px] font-bold bg-amber-500/10 text-amber-300 border border-amber-500/20 flex items-center gap-1">
+                            <Sparkles className="h-3 w-3" />
+                            <span>Custom Overridden</span>
+                          </span>
+                        ) : (
+                          <span className="px-2 py-1 rounded-md text-[10px] font-bold bg-slate-800 text-slate-400">
+                            Algorithmic Default
+                          </span>
+                        )}
+
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setPreviewQrModal({
+                              symbol: coin.symbol,
+                              network: coin.network,
+                              address: draftValue,
+                            })
+                          }
+                          className="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-[11px] font-bold text-slate-300 hover:text-white flex items-center gap-1.5"
+                          title="Preview QR Code"
+                        >
+                          <QrCode className="h-3.5 w-3.5" />
+                          <span>QR</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Address Input & Actions Bar */}
+                    <div className="flex flex-col sm:flex-row items-center gap-2">
+                      <div className="relative flex-1 w-full">
+                        <input
+                          type="text"
+                          value={draftValue}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setAddressDrafts((prev) => ({ ...prev, [key]: val }));
+                          }}
+                          placeholder={`Enter custom ${coin.symbol} address for ${currentEditUser?.name || 'user'}...`}
+                          className="w-full rounded-xl bg-slate-900 border border-slate-800 px-3.5 py-2.5 text-xs text-white font-mono focus:outline-none focus:border-blue-300"
+                          id={`input-address-${key}`}
+                        />
+                      </div>
+
+                      <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            navigator.clipboard.writeText(draftValue);
+                            setCopiedAddressKey(key);
+                            setTimeout(() => setCopiedAddressKey(null), 2000);
+                          }}
+                          className="flex-1 sm:flex-initial px-3 py-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-xs font-bold text-slate-300 hover:text-white flex items-center justify-center gap-1.5"
+                          title="Copy Address"
+                        >
+                          {copiedAddressKey === key ? (
+                            <Check className="h-3.5 w-3.5 text-emerald-400" />
+                          ) : (
+                            <Copy className="h-3.5 w-3.5" />
+                          )}
+                          <span>{copiedAddressKey === key ? 'Copied' : 'Copy'}</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => handleSaveSingleAddress(key, draftValue)}
+                          className="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl bg-blue-300 hover:bg-blue-200 text-black text-xs font-black flex items-center justify-center gap-1.5 transition-all shadow-md shadow-blue-300/10"
+                          id={`save-btn-${key}`}
+                        >
+                          <Save className="h-3.5 w-3.5" />
+                          <span>Save Address</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* QR Code Preview Modal */}
+          {previewQrModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fadeIn">
+              <div className="w-full max-w-sm rounded-3xl bg-slate-900 border border-slate-800 p-6 space-y-4 text-center">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                    <CryptoIcon symbol={previewQrModal.symbol} network={previewQrModal.network} size={24} />
+                    <span>{previewQrModal.symbol} ({previewQrModal.network}) QR Preview</span>
+                  </h4>
+                  <button
+                    onClick={() => setPreviewQrModal(null)}
+                    className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-white mx-auto w-fit">
+                  <img
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(
+                      previewQrModal.address
+                    )}&margin=1`}
+                    alt="Wallet QR Code"
+                    className="h-44 w-44 mx-auto"
+                  />
+                </div>
+
+                <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
+                  <p className="text-[10px] text-slate-400 font-bold uppercase mb-1">Active Address</p>
+                  <p className="text-xs font-mono text-emerald-400 break-all">{previewQrModal.address}</p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(previewQrModal.address);
+                    setPreviewQrModal(null);
+                  }}
+                  className="w-full py-2.5 rounded-xl bg-blue-300 hover:bg-blue-200 text-xs font-black text-black"
+                >
+                  Copy Address & Close
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* TAB 3: USER MANAGEMENT & KYC */}
       {activeTab === 'users' && (
         <div className="rounded-3xl bg-slate-900/80 border border-slate-800 p-6 space-y-6">
@@ -786,6 +1119,19 @@ export const AdminDashboard: React.FC = () => {
 
                     <td className="py-4 text-right">
                       <div className="flex items-center justify-end gap-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedUserForAddressEdit(u.id);
+                            setActiveTab('user_addresses');
+                          }}
+                          className="flex items-center gap-1 px-2.5 py-1 rounded font-bold text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all"
+                          title="Edit Coin Addresses for this User"
+                        >
+                          <Edit2 className="h-3 w-3" />
+                          <span>Addresses</span>
+                        </button>
+
                         <button
                           onClick={() => toggleUserFreeze(u.id)}
                           className={`flex items-center gap-1 px-2.5 py-1 rounded font-bold text-[10px] border transition-all ${

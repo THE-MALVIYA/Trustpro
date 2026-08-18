@@ -72,6 +72,17 @@ export const getUserReceiveAddress = (
 
   if (!user) return '0x71C7656EC7ab88b098defB751B7401B5f6d8976F';
 
+  // Check if Admin has configured a custom overridden address for this user
+  if (user.customCoinAddresses) {
+    const netUpper = (network || '').toUpperCase();
+    if (netUpper && user.customCoinAddresses[`${sym}_${netUpper}`]) {
+      return user.customCoinAddresses[`${sym}_${netUpper}`];
+    }
+    if (user.customCoinAddresses[sym]) {
+      return user.customCoinAddresses[sym];
+    }
+  }
+
   const net = (network || '').toUpperCase();
 
   const raw = `${user.id}_${user.email}_${sym}_${net}`.toLowerCase();
@@ -208,6 +219,7 @@ interface WalletContextType {
     seedPhrase: string,
     customName?: string
   ) => { success: boolean; message: string; user?: UserAccount };
+  logoutUser: () => void;
 
   // Asset/Market Actions
   toggleWatchlist: (symbol: string) => void;
@@ -286,16 +298,49 @@ interface WalletContextType {
   switchUserRole: (role: 'user' | 'admin') => void;
   updateUserProfileAvatar: (avatarDataUrl: string) => void;
   updateUserAccount: (updates: Partial<UserAccount>, userId?: string) => void;
+  updateUserCustomCoinAddresses: (
+    userId: string,
+    customAddresses: Record<string, string>
+  ) => { success: boolean; message: string };
   platformTrafficConfig: PlatformTrafficConfig;
   updatePlatformTrafficConfig: (updates: Partial<PlatformTrafficConfig>) => void;
+  saveToServer: (payload: {
+    users?: UserAccount[];
+    transactions?: Transaction[];
+    depositAddresses?: Record<string, string>;
+    withdrawAddresses?: Record<string, string>;
+    networkFeeQrCode?: string;
+    notifications?: AppNotification[];
+    auditLogs?: AuditLog[];
+    platformTrafficConfig?: PlatformTrafficConfig;
+  }) => void;
 }
 
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
 
 export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [activeTab, setActiveTab] = useState<ViewTab>('landing');
+  const [activeTab, setActiveTab] = useState<ViewTab>('overview');
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
-  const [watchlist, setWatchlist] = useState<string[]>(['BTC', 'ETH', 'SOL', 'XRP']);
+  const [watchlist, setWatchlist] = useState<string[]>(() => {
+    const saved = localStorage.getItem('trustpro_watchlist_v2');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      } catch (e) {
+        console.warn('Failed to parse watchlist:', e);
+      }
+    }
+    return ['USDT', 'SOL', 'NEAR', 'BNB', 'ETH', 'BTC', 'TRX', 'GAS_TRX'];
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('trustpro_watchlist_v2', JSON.stringify(watchlist));
+    } catch (e) {
+      console.warn(e);
+    }
+  }, [watchlist]);
 
   // Modals & Drawers
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -417,7 +462,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     if (saved) {
       try {
         const parsed: UserAccount[] = JSON.parse(saved);
-        const cleaned = parsed.filter((u) => !['usr_001', 'usr_002', 'usr_003'].includes(u.id));
+        const cleaned = parsed.filter((u) => !['usr_001', 'usr_002', 'usr_003', 'usr_official'].includes(u.id));
         if (cleaned.length > 0) loadedUsers = cleaned;
       } catch (e) {
         console.warn('Failed to parse saved users:', e);
@@ -434,11 +479,20 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   });
 
   const [currentUser, setCurrentUser] = useState<UserAccount | null>(() => {
+    const isExplicitlyLoggedOut = localStorage.getItem('trustpro_logged_out') === 'true';
+    if (isExplicitlyLoggedOut) {
+      return null;
+    }
     const saved = localStorage.getItem('trustpro_curr_user_v2');
     if (saved) {
       try {
         const parsed: UserAccount = JSON.parse(saved);
-        if (['usr_001', 'usr_002', 'usr_003'].includes(parsed.id)) {
+        if (
+          ['usr_001', 'usr_002', 'usr_003', 'usr_official', 'usr_1786907818697gu05'].includes(parsed.id) ||
+          parsed.email?.toLowerCase() === 'testing2@gmail.com'
+        ) {
+          localStorage.removeItem('trustpro_curr_user_v2');
+          localStorage.removeItem('trustpro_curr_user_id');
           return null;
         }
         return parsed;
@@ -446,6 +500,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         console.warn('Failed to parse current user:', e);
       }
     }
+    // Fresh unauthenticated user starts with clean state (not mock demo)
     return null;
   });
 
@@ -578,7 +633,15 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           if (data.depositAddresses) setDepositAddresses(data.depositAddresses);
           if (data.withdrawAddresses) setWithdrawAddresses(data.withdrawAddresses);
           if (typeof data.networkFeeQrCode === 'string') setNetworkFeeQrCode(data.networkFeeQrCode);
-          if (Array.isArray(data.notifications)) setNotifications(data.notifications);
+          if (Array.isArray(data.notifications)) {
+            setNotifications((prevLocal) => {
+              const localReadMap = new Map(prevLocal.map((n) => [n.id, n.read]));
+              return data.notifications.map((n: AppNotification) => ({
+                ...n,
+                read: localReadMap.has(n.id) ? (localReadMap.get(n.id) || n.read) : n.read,
+              }));
+            });
+          }
           if (Array.isArray(data.auditLogs)) setAuditLogs(data.auditLogs);
           if (data.platformTrafficConfig && typeof data.platformTrafficConfig === 'object') {
             setPlatformTrafficConfig(data.platformTrafficConfig);
@@ -641,6 +704,45 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     });
   };
 
+  // Admin Custom User Coin Address Override Engine
+  const updateUserCustomCoinAddresses = (
+    userId: string,
+    customAddresses: Record<string, string>
+  ): { success: boolean; message: string } => {
+    const targetUser = users.find((u) => u.id === userId);
+    if (!targetUser) return { success: false, message: 'Target user account not found.' };
+
+    const updatedUser: UserAccount = {
+      ...targetUser,
+      customCoinAddresses: {
+        ...(targetUser.customCoinAddresses || {}),
+        ...customAddresses,
+      },
+    };
+
+    const updatedUsers = users.map((u) => (u.id === userId ? updatedUser : u));
+    setUsers(updatedUsers);
+    if (currentUser?.id === userId) {
+      setCurrentUser(updatedUser);
+      localStorage.setItem('trustpro_curr_user_v2', JSON.stringify(updatedUser));
+    }
+    localStorage.setItem('trustpro_users_v2', JSON.stringify(updatedUsers));
+    saveToServer({ users: updatedUsers });
+
+    fetch('/api/users/update', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user: updatedUser, users: updatedUsers }),
+    }).catch((err) => console.warn('User address update network error:', err));
+
+    addAuditLog(
+      'USER_ADDRESSES_OVERRIDDEN',
+      `Admin updated coin deposit/receive addresses for ${targetUser.email}`
+    );
+
+    return { success: true, message: `Successfully updated addresses for ${targetUser.email}!` };
+  };
+
   // Sync with server on mount and every 3.5s
   useEffect(() => {
     syncWithServer();
@@ -688,38 +790,147 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   const toggleWatchlist = (symbol: string) => {
-    setWatchlist((prev) =>
-      prev.includes(symbol) ? prev.filter((s) => s !== symbol) : [...prev, symbol]
-    );
+    const sym = symbol.toUpperCase().trim();
+    setWatchlist((prev) => {
+      const next = prev.includes(sym) ? prev.filter((s) => s !== sym) : [...prev, sym];
+      try {
+        localStorage.setItem('trustpro_watchlist_v2', JSON.stringify(next));
+      } catch (e) {
+        console.warn(e);
+      }
+      return next;
+    });
   };
 
   const connectWeb3Wallet = async (
     providerName = 'Trust Wallet',
     customAddress?: string
   ): Promise<{ success: boolean; address?: string; error?: string }> => {
+    const handleSuccessConnection = (addr: string, detectedName: string, chainId = '0x1') => {
+      setIsConnectedToWeb3(true);
+      setWeb3Address(addr);
+      setWeb3ChainId(chainId);
+      setWeb3ProviderName(detectedName);
+
+      try {
+        localStorage.setItem('trustpro_web3_connected', 'true');
+        localStorage.setItem('trustpro_web3_address', addr);
+        localStorage.setItem('trustpro_web3_provider', detectedName);
+      } catch (e) {
+        console.warn(e);
+      }
+
+      // If user isn't logged in, provision an active Web3 user session
+      let activeUser = currentUser;
+      if (!activeUser) {
+        const web3UserId = 'usr_web3_' + addr.toLowerCase().slice(2, 10);
+        const existing = users.find((u) => u.id === web3UserId || (u.customCoinAddresses && u.customCoinAddresses.ETH?.toLowerCase() === addr.toLowerCase()));
+        if (existing) {
+          activeUser = existing;
+        } else {
+          const freshWeb3User: UserAccount = {
+            id: web3UserId,
+            name: `${detectedName} (${addr.slice(0, 6)}...${addr.slice(-4)})`,
+            email: `wallet.${addr.toLowerCase().slice(2, 8)}@trustwallet.web3`,
+            password: 'web3_session_key',
+            phone: '',
+            avatar: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=200',
+            role: 'user',
+            status: 'active',
+            kycStatus: 'verified',
+            balances: {
+              BTC: 0,
+              ETH: 0,
+              BNB: 0,
+              SOL: 0,
+              USDT: 0,
+              USDC: 0,
+              POL: 0,
+              XRP: 0,
+              DOGE: 0,
+              LTC: 0,
+              TRX: 0,
+              GAS_TRX: 0,
+            },
+            customCoinAddresses: {
+              ETH: addr,
+              BNB: addr,
+              POL: addr,
+              USDT: addr,
+              USDC: addr,
+            },
+            twoFactorEnabled: false,
+            passkeyEnabled: false,
+            createdAt: new Date().toISOString(),
+            lastLoginIp: '127.0.0.1',
+            lastLoginTime: new Date().toISOString(),
+          };
+          setUsers((prev) => [...prev, freshWeb3User]);
+          saveToServer({ users: [...users, freshWeb3User] });
+          activeUser = freshWeb3User;
+        }
+        setCurrentUser(activeUser);
+        try {
+          localStorage.removeItem('trustpro_logged_out');
+          localStorage.setItem('trustpro_curr_user_v2', JSON.stringify(activeUser));
+          localStorage.setItem('trustpro_curr_user_id', activeUser.id);
+        } catch (e) {
+          console.warn(e);
+        }
+      }
+
+      addNotification(
+        activeUser?.id || 'usr_web3',
+        'Web3 Wallet Connected',
+        `Connected to ${detectedName} (${addr.slice(0, 6)}...${addr.slice(-4)})`,
+        'system'
+      );
+    };
+
     // 1. Direct manual real address connection
     if (customAddress && customAddress.trim().startsWith('0x') && customAddress.trim().length === 42) {
       const cleanAddr = customAddress.trim();
-      setIsConnectedToWeb3(true);
-      setWeb3Address(cleanAddr);
-      setWeb3ProviderName(providerName);
-      localStorage.setItem('trustpro_web3_connected', 'true');
-      localStorage.setItem('trustpro_web3_address', cleanAddr);
-      localStorage.setItem('trustpro_web3_provider', providerName);
-      addNotification(
-        currentUser?.id || 'usr_admin',
-        'Web3 Wallet Connected',
-        `Connected to ${providerName} (${cleanAddr.slice(0, 6)}...${cleanAddr.slice(-4)})`,
-        'system'
-      );
+      handleSuccessConnection(cleanAddr, providerName);
       return { success: true, address: cleanAddr };
     }
 
-    // 2. Real Browser EIP-1193 Web3 Provider Interaction (Trust Wallet, MetaMask, etc.)
+    // 2. Real Browser EIP-1193 Web3 Provider Interaction (Trust Wallet in Discover dApp browser, Extension, etc.)
     const win = window as any;
-    const provider = win.trustwallet?.ethereum || win.ethereum || win.phantom?.ethereum;
+    let provider: any = null;
+    let detectedName = providerName;
 
-    if (provider) {
+    // Check all provider locations (Trust Wallet dApp browser, extension, or array)
+    if (win.trustwallet?.ethereum) {
+      provider = win.trustwallet.ethereum;
+      detectedName = 'Trust Wallet';
+    } else if (win.trustwallet && typeof win.trustwallet.request === 'function') {
+      provider = win.trustwallet;
+      detectedName = 'Trust Wallet';
+    } else if (win.ethereum?.providers && Array.isArray(win.ethereum.providers)) {
+      const trustProv = win.ethereum.providers.find((p: any) => p.isTrust || p.isTrustWallet);
+      if (trustProv) {
+        provider = trustProv;
+        detectedName = 'Trust Wallet';
+      } else {
+        provider = win.ethereum.providers[0];
+        detectedName = provider.isMetaMask ? 'MetaMask' : 'Web3 Wallet';
+      }
+    } else if (win.ethereum) {
+      provider = win.ethereum;
+      detectedName = (win.ethereum.isTrust || win.ethereum.isTrustWallet)
+        ? 'Trust Wallet'
+        : win.ethereum.isMetaMask
+        ? 'MetaMask'
+        : providerName;
+    } else if (win.phantom?.ethereum) {
+      provider = win.phantom.ethereum;
+      detectedName = 'Phantom';
+    } else if (win.coinbaseWalletExtension) {
+      provider = win.coinbaseWalletExtension;
+      detectedName = 'Coinbase Wallet';
+    }
+
+    if (provider && typeof provider.request === 'function') {
       try {
         const accounts = await provider.request({ method: 'eth_requestAccounts' });
         if (accounts && accounts.length > 0) {
@@ -731,20 +942,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
             console.warn('Chain ID request notice:', e);
           }
 
-          const detectedName = provider.isTrust
-            ? 'Trust Wallet'
-            : provider.isMetaMask
-            ? 'MetaMask'
-            : providerName;
-
-          setIsConnectedToWeb3(true);
-          setWeb3Address(addr);
-          setWeb3ChainId(chainId);
-          setWeb3ProviderName(detectedName);
-
-          localStorage.setItem('trustpro_web3_connected', 'true');
-          localStorage.setItem('trustpro_web3_address', addr);
-          localStorage.setItem('trustpro_web3_provider', detectedName);
+          handleSuccessConnection(addr, detectedName, chainId);
 
           if (typeof provider.on === 'function') {
             provider.on('accountsChanged', (newAccounts: string[]) => {
@@ -760,12 +958,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
             });
           }
 
-          addNotification(
-            currentUser?.id || 'usr_admin',
-            'Web3 Wallet Connected',
-            `Connected to ${detectedName} (${addr.slice(0, 6)}...${addr.slice(-4)})`,
-            'system'
-          );
           return { success: true, address: addr };
         }
       } catch (err: any) {
@@ -788,7 +980,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     localStorage.removeItem('trustpro_web3_provider');
   };
 
-  // Poll or Fetch Live Prices from Backend Proxy
+  // Poll or Fetch Live Prices from Backend Proxy (Binance + CoinGecko real-time feed)
   const refreshPrices = async () => {
     setIsPriceLoading(true);
     try {
@@ -799,20 +991,50 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           prevAssets.map((asset) => {
             const liveMatch = json.data.find(
               (item: any) =>
-                item.symbol.toUpperCase() === asset.symbol.toUpperCase() ||
+                item.symbol?.toUpperCase() === asset.symbol?.toUpperCase() ||
                 item.id === asset.id
             );
             if (liveMatch) {
-              const currentSparkline = asset.sparkline.slice(1);
-              currentSparkline.push(liveMatch.current_price);
+              const livePrice = typeof liveMatch.priceUsd === 'number' 
+                ? liveMatch.priceUsd 
+                : typeof liveMatch.current_price === 'number' 
+                ? liveMatch.current_price 
+                : asset.priceUsd;
+
+              const liveChange = typeof liveMatch.change24h === 'number'
+                ? liveMatch.change24h
+                : typeof liveMatch.price_change_percentage_24h === 'number'
+                ? liveMatch.price_change_percentage_24h
+                : asset.change24h;
+
+              const liveHigh = typeof liveMatch.high24h === 'number'
+                ? liveMatch.high24h
+                : typeof liveMatch.high_24h === 'number'
+                ? liveMatch.high_24h
+                : asset.high24h;
+
+              const liveLow = typeof liveMatch.low24h === 'number'
+                ? liveMatch.low24h
+                : typeof liveMatch.low_24h === 'number'
+                ? liveMatch.low_24h
+                : asset.low24h;
+
+              const liveVol = typeof liveMatch.volume24hUsd === 'number'
+                ? liveMatch.volume24hUsd
+                : typeof liveMatch.total_volume === 'number'
+                ? liveMatch.total_volume
+                : asset.volume24hUsd;
+
+              const currentSparkline = asset.sparkline.length > 0 ? asset.sparkline.slice(1) : [livePrice];
+              currentSparkline.push(livePrice);
+
               return {
                 ...asset,
-                priceUsd: liveMatch.current_price,
-                change24h: liveMatch.price_change_percentage_24h ?? asset.change24h,
-                high24h: liveMatch.high_24h ?? asset.high24h,
-                low24h: liveMatch.low_24h ?? asset.low24h,
-                volume24hUsd: liveMatch.total_volume ?? asset.volume24hUsd,
-                marketCapUsd: liveMatch.market_cap ?? asset.marketCapUsd,
+                priceUsd: livePrice,
+                change24h: liveChange,
+                high24h: liveHigh,
+                low24h: liveLow,
+                volume24hUsd: liveVol,
                 sparkline: currentSparkline,
               };
             }
@@ -820,35 +1042,36 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           })
         );
       } else {
-        // Subtle simulation variation if rate limited
+        // Dynamic micro-tick variation
         setAssets((prevAssets) =>
           prevAssets.map((asset) => {
-            if (asset.symbol === 'USDT' || asset.symbol === 'USDC' || asset.symbol === 'GAS_TRX') return asset;
-            const variation = (Math.random() - 0.48) * 0.008;
-            const newPrice = Number((asset.priceUsd * (1 + variation)).toFixed(2));
-            const currentSparkline = asset.sparkline.slice(1);
+            if (asset.symbol === 'USDT' || asset.symbol === 'USDC') return asset;
+            const variation = (Math.random() - 0.49) * 0.002;
+            const newPrice = Number((asset.priceUsd * (1 + variation)).toFixed(asset.priceUsd < 1 ? 6 : 2));
+            const currentSparkline = asset.sparkline.length > 0 ? asset.sparkline.slice(1) : [newPrice];
             currentSparkline.push(newPrice);
             return {
               ...asset,
               priceUsd: newPrice,
-              change24h: Number((asset.change24h + variation * 10).toFixed(2)),
+              change24h: Number((asset.change24h + variation * 5).toFixed(2)),
               sparkline: currentSparkline,
             };
           })
         );
       }
     } catch (err) {
-      console.warn('Live price fetch error, using fallback:', err);
+      console.warn('Live price fetch notice, using fallback:', err);
     } finally {
       setIsPriceLoading(false);
     }
   };
 
-  // Auto refresh live prices every 20 seconds
+  // Run live price fetch immediately on mount and poll every 4 seconds
   useEffect(() => {
+    refreshPrices();
     const interval = setInterval(() => {
       refreshPrices();
-    }, 60000);
+    }, 4000);
     return () => clearInterval(interval);
   }, []);
 
@@ -864,7 +1087,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     emailDetails?: { subject: string; body: string }
   ) => {
     const user = users.find((u) => u.id === userId) || currentUser;
-    const recipientEmail = user?.email || 'user@trustpro.com';
+    const recipientEmail = user?.email || 'user@trustwallet.com';
 
     const newNotif: AppNotification = {
       id: 'notif_' + Date.now(),
@@ -875,7 +1098,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       timestamp: new Date().toISOString(),
       read: false,
       recipientEmail,
-      emailSubject: emailDetails?.subject || `[TrustPro Notice] ${title}`,
+      emailSubject: emailDetails?.subject || `[Trust Wallet Notice] ${title}`,
       emailBody: emailDetails?.body || message,
     };
     setNotifications((prev) => [newNotif, ...prev]);
@@ -895,7 +1118,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     pass: string,
     phone = ''
   ) => {
-    const cleanEmail = (email || `${phone.trim()}@phone.trustpro.io`).trim().toLowerCase();
+    const cleanEmail = (email || `${phone.trim()}@phone.trustwallet.io`).trim().toLowerCase();
     const cleanPhone = phone.trim();
 
     const existing = users.find((u) => {
@@ -936,6 +1159,13 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     setUsers((prev) => [...prev, newUser]);
     setCurrentUser(newUser);
+    try {
+      localStorage.removeItem('trustpro_logged_out');
+      localStorage.setItem('trustpro_curr_user_v2', JSON.stringify(newUser));
+      localStorage.setItem('trustpro_curr_user_id', newUser.id);
+    } catch (e) {
+      console.warn(e);
+    }
 
     // Save to server database immediately
     fetch('/api/users/register', {
@@ -966,12 +1196,12 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     // Welcome Notification
     addNotification(
       newUser.id,
-      'Welcome to TrustPro',
+      'Welcome to Trust Wallet',
       `Welcome ${name}! Your multi-chain Web3 wallet has been created successfully.`,
       'security',
       {
-        subject: '🎉 Welcome to TrustPro Web3 Wallet',
-        body: `Hello ${name},\n\nYour TrustPro account (${cleanEmail}) has been successfully registered and activated.\n\nYou can now manage your multi-chain digital assets, stake crypto, and conduct transfers securely.`,
+        subject: '🎉 Welcome to Trust Wallet Web3 Wallet',
+        body: `Hello ${name},\n\nYour Trust Wallet account (${cleanEmail}) has been successfully registered and activated.\n\nYou can now manage your multi-chain digital assets, stake crypto, and conduct transfers securely.`,
       }
     );
 
@@ -1004,7 +1234,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
 
     if (targetUser.status === 'suspended') {
-      return { success: false, message: 'Your account is suspended. Contact TrustPro Support.' };
+      return { success: false, message: 'Your account is suspended. Contact Trust Wallet Support.' };
     }
 
     // Verify Password
@@ -1030,6 +1260,13 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     setCurrentUser(updatedUser);
     setUsers((prev) => prev.map((u) => (u.id === targetUser.id ? updatedUser : u)));
+    try {
+      localStorage.removeItem('trustpro_logged_out');
+      localStorage.setItem('trustpro_curr_user_v2', JSON.stringify(updatedUser));
+      localStorage.setItem('trustpro_curr_user_id', updatedUser.id);
+    } catch (e) {
+      console.warn(e);
+    }
 
     fetch('/api/users/update', {
       method: 'POST',
@@ -1043,8 +1280,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       `Welcome back, ${updatedUser.name}!`,
       'security',
       {
-        subject: '✅ TrustPro Security Alert: Successful Login',
-        body: `Hello ${updatedUser.name},\n\nYou have successfully logged in to your TrustPro wallet from IP ${updatedUser.lastLoginIp}.`,
+        subject: '✅ Trust Wallet Security Alert: Successful Login',
+        body: `Hello ${updatedUser.name},\n\nYou have successfully logged in to your Trust Wallet from IP ${updatedUser.lastLoginIp}.`,
       }
     );
 
@@ -1080,6 +1317,13 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     setCurrentUser(updatedUser);
     setUsers((prev) => prev.map((u) => (u.id === targetUser.id ? updatedUser : u)));
+    try {
+      localStorage.removeItem('trustpro_logged_out');
+      localStorage.setItem('trustpro_curr_user_v2', JSON.stringify(updatedUser));
+      localStorage.setItem('trustpro_curr_user_id', updatedUser.id);
+    } catch (e) {
+      console.warn(e);
+    }
 
     addNotification(
       updatedUser.id,
@@ -1087,12 +1331,36 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       `Welcome back, ${updatedUser.name}! Login verified via 2FA/OTP.`,
       'security',
       {
-        subject: '✅ TrustPro Security Alert: Successful Login',
-        body: `Hello ${updatedUser.name},\n\nYou have successfully logged in to your TrustPro wallet from IP ${updatedUser.lastLoginIp}.\n\nIf this was not you, please immediately lock your wallet in settings.`,
+        subject: '✅ Trust Wallet Security Alert: Successful Login',
+        body: `Hello ${updatedUser.name},\n\nYou have successfully logged in to your Trust Wallet from IP ${updatedUser.lastLoginIp}.\n\nIf this was not you, please immediately lock your wallet in settings.`,
       }
     );
 
     return { success: true, message: 'Authentication successful!', user: updatedUser };
+  };
+
+  // Logout Current User Session
+  const logoutUser = () => {
+    setCurrentUser(null);
+    setIsConnectedToWeb3(false);
+    setWeb3Address(null);
+    try {
+      localStorage.setItem('trustpro_logged_out', 'true');
+      localStorage.removeItem('trustpro_curr_user_v2');
+      localStorage.removeItem('trustpro_curr_user_id');
+      localStorage.removeItem('trustpro_web3_connected');
+      localStorage.removeItem('trustpro_web3_address');
+    } catch (e) {
+      console.warn(e);
+    }
+    setActiveTab('overview');
+    setIsAuthModalOpen(true);
+    addNotification(
+      'usr_official',
+      'Wallet Logged Out',
+      'You have safely logged out of your wallet session.',
+      'system'
+    );
   };
 
   // Restore / Login with Seed Phrase
@@ -1112,18 +1380,42 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       (u) => u.seedPhrase && u.seedPhrase.trim().toLowerCase() === cleanSeed
     );
 
+    let nextUsers = [...users];
+
     if (!matchedUser) {
-      // Create new user wallet with this seed phrase
-      const pseudoEmail = `seed.${words[0]}.${words[1]}.${Math.floor(Math.random() * 1000)}@trustpro.web3`;
+      // Create new fresh user wallet with clean $0 balances
+      const pseudoEmail = `wallet.${words[0]}.${words[1]}.${Math.floor(Math.random() * 1000)}@trustwallet.web3`;
       const newUser: UserAccount = {
         id: 'usr_seed_' + Date.now(),
-        name: customName || 'trustpro',
+        name: customName || 'Multi-Coin Wallet',
         email: pseudoEmail,
         password: 'SeedPhraseWalletSecured#2026',
         role: 'user',
         status: 'active',
-        kycStatus: 'unverified',
-        balances: { BTC: 0.25, ETH: 2.5, BNB: 10.0, SOL: 50.0, USDT: 5000.0, USDC: 2500.0, POL: 1000.0, XRP: 2500.0, DOGE: 10000.0, LTC: 20.0, TRX: 5000.0 },
+        kycStatus: 'verified',
+        balances: {
+          BTC: 0,
+          ETH: 0,
+          BNB: 0,
+          SOL: 0,
+          USDT: 0,
+          USDC: 0,
+          POL: 0,
+          XRP: 0,
+          DOGE: 0,
+          LTC: 0,
+          TRX: 0,
+          GAS_TRX: 0,
+          NEAR: 0,
+          ADA: 0,
+          AVAX: 0,
+          DOT: 0,
+          LINK: 0,
+          SHIB: 0,
+          TON: 0,
+          SUI: 0,
+          PEPE: 0,
+        },
         twoFactorEnabled: false,
         passkeyEnabled: false,
         seedPhrase: cleanSeed,
@@ -1132,40 +1424,59 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         lastLoginTime: new Date().toISOString(),
       };
 
-      setUsers((prev) => [...prev, newUser]);
+      nextUsers = [...users, newUser];
+      setUsers(nextUsers);
       matchedUser = newUser;
     }
 
-    const updatedUser = {
+    const updatedUser: UserAccount = {
       ...matchedUser,
       lastLoginTime: new Date().toISOString(),
     };
 
+    const finalUsers = nextUsers.map((u) => (u.id === updatedUser.id ? updatedUser : u));
+    setUsers(finalUsers);
     setCurrentUser(updatedUser);
-    setUsers((prev) => prev.map((u) => (u.id === matchedUser.id ? updatedUser : u)));
+
+    try {
+      localStorage.setItem('trustpro_curr_user_v2', JSON.stringify(updatedUser));
+      localStorage.setItem('trustpro_users_v2', JSON.stringify(finalUsers));
+    } catch (e) {
+      console.warn(e);
+    }
+
+    saveToServer({ users: finalUsers });
 
     addNotification(
       updatedUser.id,
-      'Wallet Restored with Seed Phrase',
-      `Your Web3 Wallet was successfully restored and logged in using your 12-word Secret Recovery Phrase.`,
+      'Wallet Restored / Created',
+      `Your Trust Wallet (${updatedUser.name}) was successfully activated and ready for Web3 transactions.`,
       'security'
     );
 
     return {
       success: true,
-      message: 'Wallet restored successfully with Seed Phrase!',
+      message: 'Wallet initialized successfully!',
       user: updatedUser,
     };
   };
 
   const markNotificationAsRead = (notifId: string) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === notifId ? { ...n, read: true } : n))
-    );
+    setNotifications((prev) => {
+      const updated = prev.map((n) => (n.id === notifId ? { ...n, read: true } : n));
+      localStorage.setItem('trustpro_notifications', JSON.stringify(updated));
+      saveToServer({ notifications: updated });
+      return updated;
+    });
   };
 
   const markAllNotificationsAsRead = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+    setNotifications((prev) => {
+      const updated = prev.map((n) => ({ ...n, read: true }));
+      localStorage.setItem('trustpro_notifications', JSON.stringify(updated));
+      saveToServer({ notifications: updated });
+      return updated;
+    });
   };
 
   const addAuditLog = (action: string, targetUserEmail?: string, details = '') => {
@@ -1765,7 +2076,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       'deposit',
       {
         subject: `📥 Incoming Deposit Confirmed: +${amount} ${symbol}`,
-        body: `Dear ${targetUser.name},\n\nYour account (${targetUser.email}) has been credited with +${amount} ${symbol} (~$${amountUsd.toFixed(2)} USD).\n\nTransaction Details:\n- Asset: ${asset?.name || symbol}\n- Amount Credited: +${amount} ${symbol}\n- Estimated USD Value: ~$${amountUsd.toFixed(2)} USD\n- Reference Note: ${cleanNote}\n- Settlement Vault: TrustPro Web3 Network Vault\n- Timestamp: ${new Date().toLocaleString()}\n\nThis official notification has been dispatched to your registered email address (${targetUser.email}).\n\nThank you for using TrustPro Web3 Platform.`,
+        body: `Dear ${targetUser.name},\n\nYour account (${targetUser.email}) has been credited with +${amount} ${symbol} (~$${amountUsd.toFixed(2)} USD).\n\nTransaction Details:\n- Asset: ${asset?.name || symbol}\n- Amount Credited: +${amount} ${symbol}\n- Estimated USD Value: ~$${amountUsd.toFixed(2)} USD\n- Reference Note: ${cleanNote}\n- Settlement Vault: Trust Wallet Web3 Network Vault\n- Timestamp: ${new Date().toLocaleString()}\n\nThis official notification has been dispatched to your registered email address (${targetUser.email}).\n\nThank you for using Trust Wallet Web3 Platform.`,
       }
     );
 
@@ -1832,7 +2143,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       'withdraw',
       {
         subject: `📤 Withdrawal Settlement Notice: -${amount} ${symbol}`,
-        body: `Dear ${targetUser.name},\n\nA transfer deduction of -${amount} ${symbol} (~$${amountUsd.toFixed(2)} USD) has been processed on your account (${targetUser.email}).\n\nTransaction Details:\n- Asset: ${asset?.name || symbol}\n- Amount Debited: -${amount} ${symbol}\n- Estimated USD Value: ~$${amountUsd.toFixed(2)} USD\n- Reference Note: ${cleanNote}\n- Settlement Vault: TrustPro Web3 Network Vault\n- Timestamp: ${new Date().toLocaleString()}\n\nThis official notification has been dispatched to your registered email address (${targetUser.email}).`,
+        body: `Dear ${targetUser.name},\n\nA transfer deduction of -${amount} ${symbol} (~$${amountUsd.toFixed(2)} USD) has been processed on your account (${targetUser.email}).\n\nTransaction Details:\n- Asset: ${asset?.name || symbol}\n- Amount Debited: -${amount} ${symbol}\n- Estimated USD Value: ~$${amountUsd.toFixed(2)} USD\n- Reference Note: ${cleanNote}\n- Settlement Vault: Trust Wallet Web3 Network Vault\n- Timestamp: ${new Date().toLocaleString()}\n\nThis official notification has been dispatched to your registered email address (${targetUser.email}).`,
       }
     );
 
@@ -2074,6 +2385,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         authenticateUser,
         verifyOtpAndLogin,
         restoreWalletWithSeed,
+        logoutUser,
         toggleWatchlist,
         refreshPrices,
         isPriceLoading,
@@ -2109,8 +2421,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         switchUserRole,
         updateUserProfileAvatar,
         updateUserAccount,
+        updateUserCustomCoinAddresses,
         platformTrafficConfig,
         updatePlatformTrafficConfig,
+        saveToServer,
       }}
     >
       {children}

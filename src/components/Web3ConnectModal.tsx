@@ -15,11 +15,14 @@ import {
 import { useWallet } from '../context/WalletContext';
 
 interface Web3ConnectModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
-export const Web3ConnectModal: React.FC<Web3ConnectModalProps> = ({ isOpen, onClose }) => {
+export const Web3ConnectModal: React.FC<Web3ConnectModalProps> = ({
+  isOpen: propsIsOpen,
+  onClose: propsOnClose,
+}) => {
   const {
     isConnectedToWeb3,
     web3Address,
@@ -27,7 +30,12 @@ export const Web3ConnectModal: React.FC<Web3ConnectModalProps> = ({ isOpen, onCl
     web3ProviderName,
     connectWeb3Wallet,
     disconnectWeb3Wallet,
+    isWeb3ModalOpen,
+    setIsWeb3ModalOpen,
   } = useWallet();
+
+  const isModalOpen = propsIsOpen !== undefined ? propsIsOpen : isWeb3ModalOpen;
+  const handleClose = propsOnClose || (() => setIsWeb3ModalOpen(false));
 
   const [activeTab, setActiveTab] = useState<'wallets' | 'manual' | 'qr'>('wallets');
   const [manualAddress, setManualAddress] = useState('');
@@ -35,7 +43,7 @@ export const Web3ConnectModal: React.FC<Web3ConnectModalProps> = ({ isOpen, onCl
   const [errorMessage, setErrorMessage] = useState('');
   const [copiedAddress, setCopiedAddress] = useState(false);
 
-  if (!isOpen) return null;
+  if (!isModalOpen) return null;
 
   const handleWalletSelect = async (providerName: string) => {
     setIsConnecting(true);
@@ -45,12 +53,12 @@ export const Web3ConnectModal: React.FC<Web3ConnectModalProps> = ({ isOpen, onCl
       const res = await connectWeb3Wallet(providerName);
       if (res.success) {
         setIsConnecting(false);
-        onClose();
+        handleClose();
       } else {
         setIsConnecting(false);
         if (res.error === 'NO_INJECTED_PROVIDER') {
           setErrorMessage(
-            `No browser extension found for ${providerName}. You can enter your real wallet address manually below, or open in Trust Wallet dApp.`
+            `No injected browser extension found for ${providerName}. You can open directly in Trust Wallet Mobile App or enter your address below.`
           );
           setActiveTab('manual');
         } else {
@@ -81,7 +89,7 @@ export const Web3ConnectModal: React.FC<Web3ConnectModalProps> = ({ isOpen, onCl
     setIsConnecting(false);
 
     if (res.success) {
-      onClose();
+      handleClose();
     } else {
       setErrorMessage(res.error || 'Failed to connect address');
     }
@@ -133,7 +141,7 @@ export const Web3ConnectModal: React.FC<Web3ConnectModalProps> = ({ isOpen, onCl
           </div>
 
           <button
-            onClick={onClose}
+            onClick={handleClose}
             className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition-colors"
           >
             <X className="h-4 w-4" />
@@ -196,7 +204,7 @@ export const Web3ConnectModal: React.FC<Web3ConnectModalProps> = ({ isOpen, onCl
               </button>
               <button
                 type="button"
-                onClick={onClose}
+                onClick={handleClose}
                 className="w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition-all"
               >
                 Done

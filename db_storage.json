@@ -1,0 +1,84 @@
+{
+  "users": [
+    {
+      "id": "usr_admin",
+      "name": "Platform Super Admin",
+      "email": "legendxadmin1999@gmail.com",
+      "password": "Joshi$12legend",
+      "phone": "+91 9876543210",
+      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200",
+      "role": "admin",
+      "status": "active",
+      "kycStatus": "verified",
+      "balances": {
+        "BTC": 2.5,
+        "ETH": 25,
+        "BNB": 100,
+        "SOL": 350,
+        "USDT": 100000,
+        "USDC": 50000,
+        "POL": 10000,
+        "XRP": 15000,
+        "DOGE": 50000,
+        "LTC": 100,
+        "TRX": 50000
+      },
+      "twoFactorEnabled": false,
+      "passkeyEnabled": false,
+      "createdAt": "2025-01-10T10:00:00Z",
+      "lastLoginIp": "192.168.1.101",
+      "lastLoginTime": "2026-08-16T18:58:31.877Z"
+    }
+  ],
+  "transactions": [],
+  "depositAddresses": {
+    "DEFAULT": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+    "BTC": "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+    "ETH": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+    "BNB": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+    "SOL": "7v9W1nvm23284910294192401928401928401928",
+    "USDT": "TB7zZxcAr6NKR6nF231t2ZWYPTu1TUrDE6",
+    "USDC": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+    "POL": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+    "XRP": "rEb8TK3gBg1xnvdbK84p2iB3e2z",
+    "DOGE": "D9zX8127391273912739127",
+    "LTC": "L12398127391273912739127",
+    "TRX": "TB7zZxcAr6NKR6nF231t2ZWYPTu1TUrDE6",
+    "GAS_TRX": "TB7zZxcAr6NKR6nF231t2ZWYPTu1TUrDE6"
+  },
+  "withdrawAddresses": {
+    "BTC": "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+    "ETH": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+    "BNB": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+    "SOL": "7v9W1nvm23284910294192401928401928401928",
+    "USDT": "TB7zZxcAr6NKR6nF231t2ZWYPTu1TUrDE6",
+    "USDC": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+    "POL": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+    "XRP": "rEb8TK3gBg1xnvdbK84p2iB3e2z",
+    "DOGE": "D9zX8127391273912739127",
+    "LTC": "L12398127391273912739127",
+    "TRX": "TB7zZxcAr6NKR6nF231t2ZWYPTu1TUrDE6"
+  },
+  "networkFeeQrCode": "",
+  "notifications": [
+    {
+      "id": "notif_1786907818697",
+      "userId": "usr_1786907818697gu05",
+      "title": "Welcome to TrustPro Web3 Vault",
+      "message": "Welcome USDT! Your account has been created and saved to TrustPro Server.",
+      "type": "security",
+      "timestamp": "2026-08-16T19:16:58.697Z",
+      "read": true,
+      "recipientEmail": "testing2@gmail.com"
+    }
+  ],
+  "auditLogs": [],
+  "platformTrafficConfig": {
+    "activeUsers": 348920,
+    "liveTraders": 188416,
+    "onlineNodes": 62805,
+    "systemStatus": "OPERATIONAL",
+    "tickerNotice": "All Web3 nodes, liquidity pools & cross-chain bridges operating at 100% capacity.",
+    "autoFluctuate": true
+  }
+}

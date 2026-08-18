@@ -228,7 +228,7 @@ export const MarketsView: React.FC = () => {
                             }`}
                           />
                         </button>
-                        <img src={coin.icon} alt={coin.name} className="h-8 w-8 rounded-full" />
+                        <CryptoIcon symbol={coin.symbol} src={coin.icon} network={coin.network} size="sm" />
                         <div>
                           <p className="font-bold text-white group-hover:text-[#FCD535] transition-colors">
                             {coin.name}
@@ -299,7 +299,7 @@ export const MarketsView: React.FC = () => {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-6 mb-6">
               <div className="flex items-center gap-4">
-                <CryptoIcon symbol={selectedCoin.symbol} src={selectedCoin.icon} size="lg" />
+                <CryptoIcon symbol={selectedCoin.symbol} src={selectedCoin.icon} network={selectedCoin.network} size="lg" />
                 <div>
                   <div className="flex items-center gap-2">
                     <h2 className="text-2xl font-black text-white">{selectedCoin.name}</h2>

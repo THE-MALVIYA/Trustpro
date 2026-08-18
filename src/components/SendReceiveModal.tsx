@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useWallet, getUserReceiveAddress, isAddressMatchingUser } from '../context/WalletContext';
+import { CryptoIcon } from './CryptoIcon';
 import {
   X,
   Send,
@@ -220,10 +221,11 @@ export const SendReceiveModal: React.FC = () => {
                   className="w-full flex items-center justify-between rounded-2xl bg-slate-950 border border-slate-800 p-3 hover:border-emerald-500/50 transition-all text-left shadow-inner"
                 >
                   <div className="flex items-center gap-2.5">
-                    <img
+                    <CryptoIcon
+                      symbol={activeAsset.symbol}
                       src={activeAsset.icon}
-                      alt={activeAsset.name}
-                      className="h-7 w-7 rounded-full bg-slate-900 object-cover border border-slate-700 shrink-0"
+                      name={activeAsset.name}
+                      size="sm"
                     />
                     <div>
                       <p className="text-xs font-bold text-white leading-tight">
@@ -444,10 +446,11 @@ export const SendReceiveModal: React.FC = () => {
               className="w-full flex items-center justify-between rounded-2xl bg-slate-950 border border-slate-800 p-2.5 hover:border-emerald-500/50 transition-all text-left"
             >
               <div className="flex items-center gap-2.5">
-                <img
+                <CryptoIcon
+                  symbol={activeAsset.symbol}
                   src={activeAsset.icon}
-                  alt={activeAsset.name}
-                  className="h-7 w-7 rounded-full bg-slate-900 object-cover border border-slate-700 shrink-0"
+                  name={activeAsset.name}
+                  size="sm"
                 />
                 <div>
                   <p className="text-xs font-bold text-white leading-tight">
@@ -650,10 +653,11 @@ export const SendReceiveModal: React.FC = () => {
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <img
+                        <CryptoIcon
+                          symbol={a.symbol}
                           src={a.icon}
-                          alt={a.name}
-                          className="h-8 w-8 rounded-full bg-slate-900 object-cover border border-slate-700 shrink-0"
+                          name={a.name}
+                          size="sm"
                         />
                         <div>
                           <div className="flex items-center gap-1.5">

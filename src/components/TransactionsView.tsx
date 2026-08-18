@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useWallet } from '../context/WalletContext';
+import { CryptoIcon } from './CryptoIcon';
 import {
   History,
   Search,
@@ -334,6 +335,7 @@ export const TransactionsView: React.FC = () => {
                       <td className="py-4 px-4">{getCleanTypeBadge(tx.type)}</td>
                       <td className="py-4 px-4 font-bold text-white font-sans">
                         <div className="flex items-center gap-2">
+                          <CryptoIcon symbol={tx.assetSymbol} network={tx.network} size="xs" />
                           <span className="px-2 py-0.5 rounded-lg bg-slate-800 text-[11px]">
                             {tx.assetSymbol}
                           </span>

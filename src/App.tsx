@@ -14,7 +14,9 @@ import { AdminDashboard } from './components/AdminDashboard';
 import { OverviewDashboard } from './components/OverviewDashboard';
 import { AuthModal } from './components/AuthModal';
 import { SendReceiveModal } from './components/SendReceiveModal';
+import { Web3ConnectModal } from './components/Web3ConnectModal';
 import { NotificationDrawer } from './components/NotificationDrawer';
+import { MobileBottomNav } from './components/MobileBottomNav';
 
 const MainContent: React.FC = () => {
   const { activeTab, theme, currentUser } = useWallet();
@@ -40,7 +42,7 @@ const MainContent: React.FC = () => {
         </div>
       )}
 
-      <main className="pb-16">
+      <main className="pb-28 md:pb-12">
         {activeTab === 'overview' && <OverviewDashboard />}
         {activeTab === 'landing' && <LandingPage />}
         {activeTab === 'portfolio' && <UserDashboard />}
@@ -56,7 +58,9 @@ const MainContent: React.FC = () => {
 
       <AuthModal />
       <SendReceiveModal />
+      <Web3ConnectModal />
       <NotificationDrawer />
+      <MobileBottomNav />
     </div>
   );
 };

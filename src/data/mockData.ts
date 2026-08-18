@@ -2008,7 +2008,7 @@ export const INITIAL_USERS: UserAccount[] = [
     passkeyEnabled: false,
     createdAt: '2025-01-10T10:00:00Z',
     lastLoginIp: '192.168.1.101',
-    lastLoginTime: '2026-07-23T14:00:00Z',
+    lastLoginTime: '2026-08-15T12:54:31Z',
   },
 ];
 

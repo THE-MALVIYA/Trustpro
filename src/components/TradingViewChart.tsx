@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useWallet } from '../context/WalletContext';
 import { CryptoAsset } from '../types';
+import { CryptoIcon } from './CryptoIcon';
 import {
   TrendingUp,
   TrendingDown,
@@ -21,17 +22,49 @@ interface TradingViewChartProps {
 
 // Map crypto symbol to TradingView ticker format
 const getTradingViewSymbol = (symbol: string): string => {
-  const clean = symbol.toUpperCase().replace('USDT', '').replace('USD', '');
+  const clean = symbol.toUpperCase().replace('USDT', '').replace('USD', '').trim();
   if (clean === 'BTC') return 'BINANCE:BTCUSDT';
   if (clean === 'ETH') return 'BINANCE:ETHUSDT';
   if (clean === 'SOL') return 'BINANCE:SOLUSDT';
   if (clean === 'BNB') return 'BINANCE:BNBUSDT';
+  if (clean === 'TRX' || clean === 'GAS_TRX') return 'BINANCE:TRXUSDT';
+  if (clean === 'NEAR') return 'BINANCE:NEARUSDT';
   if (clean === 'XRP') return 'BINANCE:XRPUSDT';
   if (clean === 'ADA') return 'BINANCE:ADAUSDT';
   if (clean === 'AVAX') return 'BINANCE:AVAXUSDT';
   if (clean === 'DOGE') return 'BINANCE:DOGEUSDT';
   if (clean === 'DOT') return 'BINANCE:DOTUSDT';
   if (clean === 'LINK') return 'BINANCE:LINKUSDT';
+  if (clean === 'SHIB') return 'BINANCE:SHIBUSDT';
+  if (clean === 'TON') return 'BINANCE:TONUSDT';
+  if (clean === 'LTC') return 'BINANCE:LTCUSDT';
+  if (clean === 'SUI') return 'BINANCE:SUIUSDT';
+  if (clean === 'PEPE') return 'BINANCE:PEPEUSDT';
+  if (clean === 'POL' || clean === 'MATIC') return 'BINANCE:POLUSDT';
+  if (clean === 'USDC') return 'BINANCE:USDCUSDT';
+  if (clean === 'APT') return 'BINANCE:APTUSDT';
+  if (clean === 'ARB') return 'BINANCE:ARBUSDT';
+  if (clean === 'OP') return 'BINANCE:OPUSDT';
+  if (clean === 'UNI') return 'BINANCE:UNIUSDT';
+  if (clean === 'INJ') return 'BINANCE:INJUSDT';
+  if (clean === 'TIA') return 'BINANCE:TIAUSDT';
+  if (clean === 'FET') return 'BINANCE:FETUSDT';
+  if (clean === 'FIL') return 'BINANCE:FILUSDT';
+  if (clean === 'HBAR') return 'BINANCE:HBARUSDT';
+  if (clean === 'ICP') return 'BINANCE:ICPUSDT';
+  if (clean === 'SEI') return 'BINANCE:SEIUSDT';
+  if (clean === 'JUP') return 'BINANCE:JUPUSDT';
+  if (clean === 'WLD') return 'BINANCE:WLDUSDT';
+  if (clean === 'RUNE') return 'BINANCE:RUNEUSDT';
+  if (clean === 'ETC') return 'BINANCE:ETCUSDT';
+  if (clean === 'ALGO') return 'BINANCE:ALGOUSDT';
+  if (clean === 'VET') return 'BINANCE:VETUSDT';
+  if (clean === 'TAO') return 'BINANCE:TAOUSDT';
+  if (clean === 'KAS') return 'BINANCE:KASUSDT';
+  if (clean === 'WIF') return 'BINANCE:WIFUSDT';
+  if (clean === 'BONK') return 'BINANCE:BONKUSDT';
+  if (clean === 'FLOKI') return 'BINANCE:FLOKIUSDT';
+  if (!clean || clean === 'USDT') return 'BINANCE:BTCUSDT';
   return `BINANCE:${clean}USDT`;
 };
 
@@ -172,7 +205,7 @@ export const TradingViewChart: React.FC<TradingViewChartProps> = ({
     <div className="space-y-6">
       {/* PAIRS BAR */}
       <div className="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar">
-        {assets.slice(0, 10).map((coin) => {
+        {assets.slice(0, 25).map((coin) => {
           const isSelected = coin.symbol === activeAsset.symbol;
           return (
             <button
@@ -184,7 +217,7 @@ export const TradingViewChart: React.FC<TradingViewChartProps> = ({
                   : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
               }`}
             >
-              <img src={coin.icon} alt={coin.name} className="h-4 w-4 rounded-full" />
+              <CryptoIcon symbol={coin.symbol} src={coin.icon} size="xs" />
               <span>{coin.symbol}/USDT</span>
               <span className={`text-[10px] ${coin.change24h >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
                 {coin.change24h >= 0 ? '+' : ''}{coin.change24h}%
@@ -201,7 +234,7 @@ export const TradingViewChart: React.FC<TradingViewChartProps> = ({
           {/* Header Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800/80 pb-3 mb-3">
             <div className="flex items-center gap-3">
-              <img src={activeAsset.icon} alt={activeAsset.name} className="h-8 w-8 rounded-full" />
+              <CryptoIcon symbol={activeAsset.symbol} src={activeAsset.icon} size="md" />
               <div>
                 <div className="flex items-center gap-2">
                   <h3 className="text-base font-extrabold text-white">{activeAsset.symbol}/USDT</h3>

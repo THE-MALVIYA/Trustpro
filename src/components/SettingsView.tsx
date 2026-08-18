@@ -30,10 +30,20 @@ import {
   Copy,
   RefreshCw,
   Fingerprint,
+  LogOut,
+  User,
+  Sparkles,
 } from 'lucide-react';
 
 export const SettingsView: React.FC = () => {
-  const { currentUser, updateUserAccount, addNotification, deleteUserAccount } = useWallet();
+  const {
+    currentUser,
+    updateUserAccount,
+    addNotification,
+    deleteUserAccount,
+    logoutUser,
+    setIsAuthModalOpen,
+  } = useWallet();
 
   const [twoFactor, setTwoFactor] = useState(currentUser?.twoFactorEnabled ?? false);
   const [passkey, setPasskey] = useState(currentUser?.passkeyEnabled ?? true);
@@ -790,6 +800,67 @@ export const SettingsView: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* ACCOUNT SESSION & LOGOUT SECTION */}
+      <div className="rounded-3xl bg-slate-900/80 border border-slate-800 p-6 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+              <User className="h-5 w-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-base font-bold text-white">Active Session</h2>
+                {currentUser && (
+                  <span className="text-[10px] font-mono bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/30 font-bold">
+                    {currentUser.role.toUpperCase()}
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-slate-400">
+                {currentUser
+                  ? `Signed in as ${currentUser.name} (${currentUser.email || 'Wallet Keyholder'})`
+                  : 'No wallet account actively signed in.'}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setIsAuthModalOpen(true)}
+              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-bold text-xs flex items-center gap-1.5 transition-all"
+            >
+              <User className="h-3.5 w-3.5 text-emerald-400" />
+              <span>Switch / Sign In</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setIsAuthModalOpen(true)}
+              className="px-4 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-bold text-xs flex items-center gap-1.5 transition-all"
+            >
+              <Sparkles className="h-3.5 w-3.5" />
+              <span>Register New</span>
+            </button>
+
+            {currentUser && (
+              <button
+                type="button"
+                onClick={() => {
+                  logoutUser();
+                  alert('You have logged out of your wallet session.');
+                }}
+                className="px-4 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 font-bold text-xs flex items-center gap-1.5 transition-all shadow-sm"
+                id="settings-logout-btn"
+              >
+                <LogOut className="h-3.5 w-3.5" />
+                <span>Log Out</span>
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
 
       {/* DANGER ZONE - ACCOUNT DELETION */}
       <div className="rounded-3xl bg-rose-500/5 border border-rose-500/20 p-6 space-y-4">
