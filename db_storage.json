@@ -27,7 +27,7 @@
       "passkeyEnabled": false,
       "createdAt": "2025-01-10T10:00:00Z",
       "lastLoginIp": "192.168.1.101",
-      "lastLoginTime": "2026-08-16T18:58:31.877Z"
+      "lastLoginTime": "2026-08-18T18:00:00.000Z"
     }
   ],
   "transactions": [],
@@ -60,18 +60,7 @@
     "TRX": "TB7zZxcAr6NKR6nF231t2ZWYPTu1TUrDE6"
   },
   "networkFeeQrCode": "",
-  "notifications": [
-    {
-      "id": "notif_1786907818697",
-      "userId": "usr_1786907818697gu05",
-      "title": "Welcome to TrustPro Web3 Vault",
-      "message": "Welcome USDT! Your account has been created and saved to TrustPro Server.",
-      "type": "security",
-      "timestamp": "2026-08-16T19:16:58.697Z",
-      "read": true,
-      "recipientEmail": "testing2@gmail.com"
-    }
-  ],
+  "notifications": [],
   "auditLogs": [],
   "platformTrafficConfig": {
     "activeUsers": 348920,

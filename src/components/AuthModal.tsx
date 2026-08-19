@@ -261,7 +261,7 @@ export const AuthModal: React.FC = () => {
         return;
       }
 
-      const res = authenticateUser(cleanEmail, password);
+      const res = await authenticateUser(cleanEmail, password);
       setIsSubmitting(false);
 
       if (!res.success) {

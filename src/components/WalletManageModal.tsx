@@ -29,7 +29,8 @@ export const WalletManageModal: React.FC<WalletManageModalProps> = ({ isOpen, on
   const {
     currentUser,
     setCurrentUser,
-    users,
+    deviceWallets,
+    removeDeviceWallet,
     setIsAuthModalOpen,
     restoreWalletWithSeed,
     logoutUser,
@@ -46,17 +47,21 @@ export const WalletManageModal: React.FC<WalletManageModalProps> = ({ isOpen, on
 
   if (!isOpen) return null;
 
-  // Filter out super admin from public wallet selector so admin is 100% hidden and only accessible via email/pass login
-  const displayWallets = users.filter((u) => u.email.toLowerCase() !== 'legendxadmin1999@gmail.com');
+  // Filter out super admin and strictly show only this user's device wallets
+  const rawList = (deviceWallets && deviceWallets.length > 0)
+    ? deviceWallets
+    : (currentUser ? [currentUser] : []);
 
-  const handleExecuteImport = (e: React.FormEvent) => {
+  const displayWallets = rawList.filter((u) => u.email?.toLowerCase() !== 'legendxadmin1999@gmail.com');
+
+  const handleExecuteImport = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!importSeedInput.trim()) {
       setFeedbackMsg({ success: false, text: 'Please enter a valid 12-word seed phrase or private key' });
       return;
     }
 
-    const res = restoreWalletWithSeed(importSeedInput.trim(), importNameInput);
+    const res = await restoreWalletWithSeed(importSeedInput.trim(), importNameInput);
     if (res.success && res.user) {
       setCurrentUser(res.user);
       setFeedbackMsg({ success: true, text: 'Wallet imported successfully!' });

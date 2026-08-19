@@ -2012,110 +2012,9 @@ export const INITIAL_USERS: UserAccount[] = [
   },
 ];
 
-export const INITIAL_TRANSACTIONS: Transaction[] = [
-  {
-    id: 'tx_98231',
-    userId: 'usr_admin',
-    type: 'receive',
-    assetSymbol: 'BTC',
-    assetName: 'Bitcoin',
-    amount: 0.15,
-    amountUsd: 13117.5,
-    fromAddress: 'bc1q9v83xkl0294mcnzq83ka723p09qwer',
-    toAddress: 'bc1qtrustpro9928371928301293847120',
-    txHash: '0x8f9c2d1e3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d',
-    network: 'Bitcoin Native',
-    feeUsd: 3.5,
-    timestamp: '2026-07-23T12:40:00Z',
-    status: 'completed',
-  },
-  {
-    id: 'tx_98230',
-    userId: 'usr_admin',
-    type: 'swap',
-    assetSymbol: 'USDT',
-    assetName: 'Tether USD',
-    amount: 2500.0,
-    amountUsd: 2500.0,
-    toAddress: 'Swap -> ETH (0.748 ETH)',
-    txHash: '0x1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b',
-    network: 'Ethereum',
-    feeUsd: 4.2,
-    timestamp: '2026-07-23T10:15:00Z',
-    status: 'completed',
-  },
-  {
-    id: 'tx_98229',
-    userId: 'usr_admin',
-    type: 'stake',
-    assetSymbol: 'SOL',
-    assetName: 'Solana',
-    amount: 20.0,
-    amountUsd: 3968.0,
-    txHash: '4xJkL92mP81nQ72rS63tU54vW32xY10zA98bC77dE66f',
-    network: 'Solana',
-    feeUsd: 0.05,
-    timestamp: '2026-07-22T18:30:00Z',
-    status: 'completed',
-  },
-  {
-    id: 'tx_98228',
-    userId: 'usr_admin',
-    type: 'deposit',
-    assetSymbol: 'USDT',
-    assetName: 'Tether USD',
-    amount: 500.0,
-    amountUsd: 500.0,
-    txHash: '0xa7b4c9e81d2f3a4b5c6d7e8f901234567890abcdef1234567890abcdef123456',
-    network: 'TRC20 / TRON Network',
-    feeUsd: 0.0,
-    timestamp: '2026-07-21T15:00:00Z',
-    status: 'completed',
-    note: 'Web3 Vault Settlement Credit',
-  },
-];
+export const INITIAL_TRANSACTIONS: Transaction[] = [];
 
-export const INITIAL_STAKING: StakingPosition[] = [
-  {
-    id: 'stake_01',
-    userId: 'usr_admin',
-    assetSymbol: 'ETH',
-    assetName: 'Ethereum Native Staking',
-    stakedAmount: 4.0,
-    stakedAmountUsd: 13362.0,
-    apy: 4.8,
-    earnedRewards: 0.042,
-    startDate: '2026-06-01T00:00:00Z',
-    status: 'active',
-    lockDays: 30,
-  },
-  {
-    id: 'stake_02',
-    userId: 'usr_admin',
-    assetSymbol: 'SOL',
-    assetName: 'Solana High Yield Stake',
-    stakedAmount: 35.0,
-    stakedAmountUsd: 6944.0,
-    apy: 7.2,
-    earnedRewards: 0.48,
-    startDate: '2026-06-15T00:00:00Z',
-    status: 'active',
-    lockDays: 14,
-  },
-  {
-    id: 'stake_03',
-    userId: 'usr_admin',
-    assetSymbol: 'BNB',
-    assetName: 'BNB Vault Staking',
-    stakedAmount: 10.0,
-    stakedAmountUsd: 6428.0,
-    apy: 5.6,
-    earnedRewards: 0.12,
-    startDate: '2026-07-01T00:00:00Z',
-    status: 'active',
-    lockDays: 30,
-  },
-];
+export const INITIAL_STAKING: StakingPosition[] = [];
 
 export const INITIAL_NFTS: NFTItem[] = [
   {
@@ -2233,35 +2132,7 @@ export const INITIAL_DEFI: DeFiPosition[] = [
   },
 ];
 
-export const INITIAL_NOTIFICATIONS: AppNotification[] = [
-  {
-    id: 'notif_01',
-    userId: 'usr_admin',
-    title: 'Deposit Confirmed',
-    message: 'Your deposit of 0.15 BTC ($13,117.50) has been confirmed on the Bitcoin network.',
-    type: 'deposit',
-    timestamp: '2026-07-23T12:42:00Z',
-    read: false,
-  },
-  {
-    id: 'notif_02',
-    userId: 'usr_admin',
-    title: 'XRP Surges +12.4%',
-    message: 'Price Alert: XRP reached a new 24h high of $2.28.',
-    type: 'price',
-    timestamp: '2026-07-23T09:10:00Z',
-    read: false,
-  },
-  {
-    id: 'notif_03',
-    userId: 'usr_admin',
-    title: 'New Login Detected',
-    message: 'Security Alert: Login from IP 192.168.1.101 (Chrome / macOS).',
-    type: 'security',
-    timestamp: '2026-07-23T08:00:00Z',
-    read: true,
-  },
-];
+export const INITIAL_NOTIFICATIONS: AppNotification[] = [];
 
 export const INITIAL_NEWS: MarketNews[] = [
   {
@@ -2360,23 +2231,4 @@ export const FAQ_ITEMS: FaqItem[] = [
   },
 ];
 
-export const INITIAL_AUDIT_LOGS: AuditLog[] = [
-  {
-    id: 'log_101',
-    adminEmail: 'admin@trustpro.com',
-    action: 'USER_BALANCE_CREDIT',
-    targetUserEmail: 'alex.rivera@crypto.io',
-    details: 'Credited +500 USDT (Web3 Reserve Settlement Credit)',
-    timestamp: '2026-07-21T15:00:00Z',
-    ipAddress: '192.168.1.101',
-  },
-  {
-    id: 'log_102',
-    adminEmail: 'admin@trustpro.com',
-    action: 'USER_SUSPEND',
-    targetUserEmail: 'mvance@fintech.co',
-    details: 'Suspended account due to KYC verification mismatch',
-    timestamp: '2026-07-10T09:15:00Z',
-    ipAddress: '192.168.1.101',
-  },
-];
+export const INITIAL_AUDIT_LOGS: AuditLog[] = [];
