@@ -84,7 +84,7 @@ export const TokenSearchModal: React.FC<TokenSearchModalProps> = ({
             placeholder="Search token name or contract address..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full rounded-2xl bg-[#1A1C20] border border-white/10 pl-10 pr-4 py-3 text-sm text-white placeholder-slate-500 focus:border-[#05D686] focus:outline-none transition-colors"
+            className="w-full rounded-2xl bg-[#1A1C20] border border-white/10 pl-10 pr-4 py-3 text-sm text-white placeholder-slate-500 focus:border-[#3862FB] focus:outline-none transition-colors"
             autoFocus
           />
           {query && (
@@ -105,7 +105,7 @@ export const TokenSearchModal: React.FC<TokenSearchModalProps> = ({
               onClick={() => setSelectedNetwork(net.id)}
               className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
                 selectedNetwork === net.id
-                  ? 'bg-[#05D686] text-black shadow-sm'
+                  ? 'bg-[#3862FB] text-white shadow-sm'
                   : 'bg-[#1E2024] text-slate-400 hover:text-white border border-white/5'
               }`}
             >
@@ -122,7 +122,7 @@ export const TokenSearchModal: React.FC<TokenSearchModalProps> = ({
               <p className="text-sm font-medium">No tokens found for "{query}"</p>
               <button
                 onClick={() => setCustomTokenOpen(true)}
-                className="mt-3 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#05D686] text-black text-xs font-bold"
+                className="mt-3 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#3862FB] text-white text-xs font-bold"
               >
                 <Plus className="h-4 w-4" />
                 <span>Add Custom Token</span>
@@ -145,7 +145,7 @@ export const TokenSearchModal: React.FC<TokenSearchModalProps> = ({
                   }}
                   className={`flex items-center justify-between p-3 rounded-2xl border cursor-pointer transition-all active:scale-[0.99] ${
                     isEnabled
-                      ? 'bg-[#181C24] border-[#05D686]/30 shadow-sm'
+                      ? 'bg-[#181C24] border-[#3862FB]/40 shadow-sm'
                       : 'bg-[#14161B] border-white/5 hover:bg-[#1A1D24]'
                   }`}
                 >
@@ -160,7 +160,7 @@ export const TokenSearchModal: React.FC<TokenSearchModalProps> = ({
                         <span>${asset.priceUsd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</span>
                         <span
                           className={`font-semibold ${
-                            asset.change24h >= 0 ? 'text-[#05D686]' : 'text-[#F6465D]'
+                            asset.change24h >= 0 ? 'text-[#38B6FF]' : 'text-[#F6465D]'
                           }`}
                         >
                           {asset.change24h >= 0 ? '+' : ''}
@@ -177,7 +177,7 @@ export const TokenSearchModal: React.FC<TokenSearchModalProps> = ({
                       toggleWatchlist(asset.symbol);
                     }}
                     className={`relative h-6 w-11 rounded-full transition-colors ${
-                      isEnabled ? 'bg-[#05D686]' : 'bg-[#2A2D35]'
+                      isEnabled ? 'bg-[#3862FB]' : 'bg-[#2A2D35]'
                     }`}
                   >
                     <span
@@ -201,7 +201,7 @@ export const TokenSearchModal: React.FC<TokenSearchModalProps> = ({
               placeholder="Contract Address (0x... / T...)"
               value={customContract}
               onChange={(e) => setCustomContract(e.target.value)}
-              className="w-full rounded-xl bg-[#1A1C20] border border-white/10 px-3 py-2 text-xs text-white focus:outline-none focus:border-[#05D686]"
+              className="w-full rounded-xl bg-[#1A1C20] border border-white/10 px-3 py-2 text-xs text-white focus:outline-none focus:border-[#3862FB]"
             />
             <div className="grid grid-cols-2 gap-2">
               <input
@@ -233,7 +233,7 @@ export const TokenSearchModal: React.FC<TokenSearchModalProps> = ({
                     setCustomTokenOpen(false);
                   }
                 }}
-                className="flex-1 py-2 rounded-xl bg-[#05D686] text-xs text-black font-bold"
+                className="flex-1 py-2 rounded-xl bg-[#3862FB] text-xs text-white font-bold"
               >
                 Import Token
               </button>

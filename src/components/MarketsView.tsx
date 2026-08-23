@@ -313,7 +313,7 @@ export const MarketsView: React.FC = () => {
                 <p className="text-3xl font-black text-white font-mono">
                   ${selectedCoin.priceUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 })}
                 </p>
-                <span className={`inline-block font-bold text-sm ${selectedCoin.change24h >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                <span className={`inline-block font-bold text-sm ${selectedCoin.change24h >= 0 ? 'text-[#00D182]' : 'text-[#FF4A5A]'}`}>
                   {selectedCoin.change24h >= 0 ? '+' : ''}{selectedCoin.change24h}% (24h)
                 </span>
               </div>
@@ -327,7 +327,7 @@ export const MarketsView: React.FC = () => {
                     key={tf}
                     onClick={() => setSelectedTimeframe(tf)}
                     className={`px-3 py-1 text-xs font-bold rounded-lg ${
-                      selectedTimeframe === tf ? 'bg-emerald-500 text-black' : 'text-slate-400 hover:text-white'
+                      selectedTimeframe === tf ? 'bg-[#3862FB] text-white' : 'text-slate-400 hover:text-white'
                     }`}
                   >
                     {tf}
@@ -341,7 +341,7 @@ export const MarketsView: React.FC = () => {
                     type="checkbox"
                     checked={showEma}
                     onChange={(e) => setShowEma(e.target.checked)}
-                    className="rounded text-emerald-500"
+                    className="rounded text-[#3862FB] focus:ring-[#3862FB]"
                   />
                   <span>EMA (20)</span>
                 </label>
@@ -350,7 +350,7 @@ export const MarketsView: React.FC = () => {
                     type="checkbox"
                     checked={showRsi}
                     onChange={(e) => setShowRsi(e.target.checked)}
-                    className="rounded text-emerald-500"
+                    className="rounded text-[#3862FB] focus:ring-[#3862FB]"
                   />
                   <span>RSI</span>
                 </label>
@@ -363,8 +363,8 @@ export const MarketsView: React.FC = () => {
                 <AreaChart data={generateChartData(selectedCoin)}>
                   <defs>
                     <linearGradient id="priceGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.4} />
-                      <stop offset="95%" stopColor="#10b981" stopOpacity={0.0} />
+                      <stop offset="5%" stopColor="#3862FB" stopOpacity={0.4} />
+                      <stop offset="95%" stopColor="#3862FB" stopOpacity={0.0} />
                     </linearGradient>
                   </defs>
                   <XAxis dataKey="time" stroke="#475569" fontSize={11} />
@@ -375,7 +375,7 @@ export const MarketsView: React.FC = () => {
                   <Area
                     type="monotone"
                     dataKey="Price"
-                    stroke="#10b981"
+                    stroke="#38B6FF"
                     strokeWidth={2}
                     fillOpacity={1}
                     fill="url(#priceGradient)"
@@ -401,7 +401,7 @@ export const MarketsView: React.FC = () => {
               </div>
               <div>
                 <p className="text-slate-500 font-medium">Network Standard</p>
-                <p className="text-sm font-bold font-mono text-emerald-400 mt-0.5">{selectedCoin.network}</p>
+                <p className="text-sm font-bold font-mono text-[#38B6FF] mt-0.5">{selectedCoin.network}</p>
               </div>
             </div>
 
@@ -415,7 +415,7 @@ export const MarketsView: React.FC = () => {
                     onClick={() => handleCopyContract(selectedCoin.contractAddress)}
                     className="p-1 rounded bg-slate-800 text-slate-300 hover:text-white"
                   >
-                    {copiedContract ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
+                    {copiedContract ? <Check className="h-3.5 w-3.5 text-[#38B6FF]" /> : <Copy className="h-3.5 w-3.5" />}
                   </button>
                 </div>
               </div>
@@ -429,7 +429,7 @@ export const MarketsView: React.FC = () => {
                   setSelectedCoin(null);
                   setActiveViewMode('chart');
                 }}
-                className="flex-1 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-300 py-3 text-xs font-bold text-black hover:opacity-90 transition-all text-center"
+                className="flex-1 rounded-xl bg-gradient-to-r from-[#3862FB] to-[#38B6FF] py-3 text-xs font-bold text-white hover:opacity-90 transition-all text-center shadow-lg shadow-[#3862FB]/20"
               >
                 Trade {selectedCoin.symbol} on TradingView Chart
               </button>

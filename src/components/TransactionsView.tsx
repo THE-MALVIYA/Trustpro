@@ -97,7 +97,7 @@ export const TransactionsView: React.FC = () => {
   const renderStatusBadge = (status: string, tx: any) => {
     if (status === 'completed') {
       return (
-        <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
+        <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#38B6FF] bg-[#3862FB]/10 px-2.5 py-1 rounded-full border border-[#3862FB]/20">
           <CheckCircle2 className="h-3.5 w-3.5" />
           Confirmed
         </span>
@@ -155,7 +155,7 @@ export const TransactionsView: React.FC = () => {
 
     if (isIncome) {
       return (
-        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2.5 py-1 text-[11px] font-bold text-emerald-400 border border-emerald-500/20">
+        <span className="inline-flex items-center gap-1 rounded-full bg-[#3862FB]/10 px-2.5 py-1 text-[11px] font-bold text-[#38B6FF] border border-[#3862FB]/20">
           <ArrowDownLeft className="h-3 w-3" />
           Deposit
         </span>
@@ -217,13 +217,13 @@ export const TransactionsView: React.FC = () => {
       {/* Header Banner */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 rounded-3xl bg-slate-900/80 border border-slate-800 p-6">
         <div className="flex items-center gap-4">
-          <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-blue-300 flex items-center justify-center text-white shadow-lg shadow-emerald-500/20">
+          <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-[#3862FB] to-[#38B6FF] flex items-center justify-center text-white shadow-lg shadow-[#3862FB]/20">
             <History className="h-6 w-6" />
           </div>
           <div>
             <h1 className="text-xl font-bold text-white flex items-center gap-2">
               <span>Transaction History & Audit Ledger</span>
-              <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-mono text-emerald-400">
+              <span className="px-2.5 py-0.5 rounded-full bg-[#3862FB]/10 border border-[#3862FB]/20 text-[10px] font-mono text-[#38B6FF]">
                 Verified Ledger
               </span>
             </h1>
@@ -238,7 +238,7 @@ export const TransactionsView: React.FC = () => {
           className="flex items-center justify-center gap-2 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 px-4 py-2.5 text-xs font-bold text-white transition-all shadow-md"
           id="export-csv-btn"
         >
-          <FileSpreadsheet className="h-4 w-4 text-emerald-400" />
+          <FileSpreadsheet className="h-4 w-4 text-[#38B6FF]" />
           <span>Export CSV Statement</span>
         </button>
       </div>
@@ -254,7 +254,7 @@ export const TransactionsView: React.FC = () => {
               placeholder="Search by coin symbol, Tx hash, or note..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full rounded-2xl bg-slate-950 border border-slate-800 pl-10 pr-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500 transition-colors"
+              className="w-full rounded-2xl bg-slate-950 border border-slate-800 pl-10 pr-4 py-2.5 text-xs text-white focus:outline-none focus:border-[#3862FB] transition-colors"
             />
           </div>
 
@@ -263,7 +263,7 @@ export const TransactionsView: React.FC = () => {
             <select
               value={selectedAsset}
               onChange={(e) => setSelectedAsset(e.target.value)}
-              className="rounded-2xl bg-slate-950 border border-slate-800 px-4 py-2.5 text-xs font-semibold text-slate-200 focus:outline-none focus:border-emerald-500"
+              className="rounded-2xl bg-slate-950 border border-slate-800 px-4 py-2.5 text-xs font-semibold text-slate-200 focus:outline-none focus:border-[#3862FB]"
             >
               <option value="all">All Cryptos</option>
               {assets.map((a) => (
@@ -289,7 +289,7 @@ export const TransactionsView: React.FC = () => {
               onClick={() => setSelectedType(tab.id)}
               className={`rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all ${
                 selectedType === tab.id
-                  ? 'bg-emerald-500 text-black shadow-md shadow-emerald-500/20'
+                  ? 'bg-[#3862FB] text-white shadow-md shadow-[#3862FB]/20'
                   : 'bg-slate-950 text-slate-400 hover:text-white border border-slate-800'
               }`}
             >
@@ -346,7 +346,7 @@ export const TransactionsView: React.FC = () => {
                         <span
                           className={
                             isIncome
-                              ? 'text-emerald-400'
+                              ? 'text-[#38B6FF]'
                               : isOutgoing
                               ? 'text-rose-400'
                               : 'text-white'
@@ -362,7 +362,7 @@ export const TransactionsView: React.FC = () => {
                       <td className="py-4 px-4 text-[11px]">
                         {tx.toAddress ? (
                           <div className="flex items-center gap-1.5">
-                            <span className="text-emerald-400 font-bold truncate max-w-[140px]" title={tx.toAddress}>
+                            <span className="text-[#38B6FF] font-bold truncate max-w-[140px]" title={tx.toAddress}>
                               {tx.toAddress}
                             </span>
                             <button
@@ -371,7 +371,7 @@ export const TransactionsView: React.FC = () => {
                               title="Copy Address"
                             >
                               {copiedId === `to_${tx.id}` ? (
-                                <Check className="h-3 w-3 text-emerald-400" />
+                                <Check className="h-3 w-3 text-[#38B6FF]" />
                               ) : (
                                 <Copy className="h-3 w-3" />
                               )}
@@ -394,7 +394,7 @@ export const TransactionsView: React.FC = () => {
                       </td>
                       <td className="py-4 px-4 text-[11px]">
                         <div className="flex items-center gap-2">
-                          <span className="text-emerald-400 truncate max-w-[120px]">
+                          <span className="text-[#38B6FF] truncate max-w-[120px]">
                             {tx.txHash}
                           </span>
                           <button
@@ -403,7 +403,7 @@ export const TransactionsView: React.FC = () => {
                             title="Copy Hash"
                           >
                             {copiedId === tx.id ? (
-                              <Check className="h-3.5 w-3.5 text-emerald-400" />
+                              <Check className="h-3.5 w-3.5 text-[#38B6FF]" />
                             ) : (
                               <Copy className="h-3.5 w-3.5" />
                             )}

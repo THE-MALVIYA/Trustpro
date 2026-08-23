@@ -20,7 +20,7 @@ export const DefiView: React.FC = () => {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-extrabold text-white flex items-center gap-2">
-          <Landmark className="h-6 w-6 text-emerald-400" />
+          <Landmark className="h-6 w-6 text-[#38B6FF]" />
           <span>DeFi Yield & Liquidity Aggregator</span>
         </h1>
         <p className="text-xs text-slate-400 mt-1">
@@ -33,12 +33,12 @@ export const DefiView: React.FC = () => {
         <div className="rounded-3xl bg-slate-900/80 border border-slate-800 p-6">
           <p className="text-xs text-slate-400 font-medium">Total Liquidity Supplied</p>
           <p className="text-3xl font-black text-white font-mono mt-1">${totalLiquidity.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-          <span className="text-[10px] text-emerald-400 font-bold mt-2 inline-block">Across {userPositions.length} Protocol Pools</span>
+          <span className="text-[10px] text-[#38B6FF] font-bold mt-2 inline-block">Across {userPositions.length} Protocol Pools</span>
         </div>
 
         <div className="rounded-3xl bg-slate-900/80 border border-slate-800 p-6">
           <p className="text-xs text-slate-400 font-medium">Average Net Yield APY</p>
-          <p className="text-3xl font-black text-emerald-400 font-mono mt-1">{avgApy.toFixed(2)}%</p>
+          <p className="text-3xl font-black text-[#38B6FF] font-mono mt-1">{avgApy.toFixed(2)}%</p>
           <span className="text-[10px] text-slate-400 mt-2 inline-block">Compound Interest Auto-Reinvested</span>
         </div>
 
@@ -52,7 +52,7 @@ export const DefiView: React.FC = () => {
       {/* Positions Table */}
       <div className="rounded-3xl bg-slate-900/80 border border-slate-800 p-6 space-y-4">
         <h2 className="text-base font-bold text-white flex items-center gap-2">
-          <Zap className="h-4 w-4 text-emerald-400" />
+          <Zap className="h-4 w-4 text-[#38B6FF]" />
           <span>Active Liquidity Positions</span>
         </h2>
 
@@ -94,7 +94,7 @@ export const DefiView: React.FC = () => {
 
                     <td className="py-4 font-mono font-bold text-white">${pos.userLiquidityUsd.toLocaleString()}</td>
 
-                    <td className="py-4 font-bold text-emerald-400">{pos.apy}%</td>
+                    <td className="py-4 font-bold text-[#38B6FF]">{pos.apy}%</td>
 
                     <td className="py-4 text-right font-mono font-bold text-blue-300">+${pos.dailyEarningsUsd.toFixed(2)}</td>
                   </tr>

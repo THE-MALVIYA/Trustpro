@@ -273,7 +273,7 @@ export const SettingsView: React.FC = () => {
     <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
       <div>
         <h1 className="text-2xl font-extrabold text-white flex items-center gap-2">
-          <Zap className="h-6 w-6 text-emerald-400" />
+          <Zap className="h-6 w-6 text-[#38B6FF]" />
           <span>Wallet Settings & Preferences</span>
         </h1>
         <p className="text-xs text-slate-400 mt-1">
@@ -282,17 +282,17 @@ export const SettingsView: React.FC = () => {
       </div>
 
       {savedMsg && (
-        <div className="rounded-2xl bg-emerald-500/10 border border-emerald-500/30 p-4 text-xs font-bold text-emerald-400 flex items-center gap-2">
+        <div className="rounded-2xl bg-[#3862FB]/10 border border-[#3862FB]/30 p-4 text-xs font-bold text-[#38B6FF] flex items-center gap-2">
           <Check className="h-4 w-4" />
           <span>Security preferences updated successfully!</span>
         </div>
       )}
 
       {/* KYC IDENTITY VERIFICATION SECTION */}
-      <div className="rounded-3xl bg-slate-900/80 border border-slate-800 p-6 space-y-5 shadow-xl shadow-emerald-500/5">
+      <div className="rounded-3xl bg-slate-900/80 border border-slate-800 p-6 space-y-5 shadow-xl shadow-[#3862FB]/5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="p-2.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+            <div className="p-2.5 rounded-2xl bg-[#3862FB]/10 border border-[#3862FB]/20 text-[#38B6FF]">
               <FileCheck className="h-5 w-5" />
             </div>
             <div>
@@ -304,7 +304,7 @@ export const SettingsView: React.FC = () => {
           {/* KYC Status Badge */}
           <div>
             {currentUser?.kycStatus === 'verified' && (
-              <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold">
+              <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#3862FB]/10 border border-[#3862FB]/30 text-[#38B6FF] text-xs font-bold">
                 <BadgeCheck className="h-4 w-4" />
                 <span>KYC Verified</span>
               </span>
@@ -331,7 +331,7 @@ export const SettingsView: React.FC = () => {
         </div>
 
         {kycSubmitSuccess && (
-          <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-400 font-bold flex items-center gap-2">
+          <div className="p-4 rounded-2xl bg-[#3862FB]/10 border border-[#3862FB]/30 text-xs text-[#38B6FF] font-bold flex items-center gap-2">
             <Check className="h-4 w-4 shrink-0" />
             <span>KYC Documents successfully submitted! Status is now Pending Review.</span>
           </div>
@@ -347,7 +347,7 @@ export const SettingsView: React.FC = () => {
                 value={kycLegalName}
                 onChange={(e) => setKycLegalName(e.target.value)}
                 required
-                className="w-full rounded-xl bg-slate-950 border border-slate-800 px-3 py-2.5 text-white focus:outline-none focus:border-emerald-500"
+                className="w-full rounded-xl bg-slate-950 border border-slate-800 px-3 py-2.5 text-white focus:outline-none focus:border-[#3862FB]"
               />
             </div>
 
@@ -358,7 +358,7 @@ export const SettingsView: React.FC = () => {
                 value={kycDob}
                 onChange={(e) => setKycDob(e.target.value)}
                 required
-                className="w-full rounded-xl bg-slate-950 border border-slate-800 px-3 py-2.5 text-white focus:outline-none focus:border-emerald-500"
+                className="w-full rounded-xl bg-slate-950 border border-slate-800 px-3 py-2.5 text-white focus:outline-none focus:border-[#3862FB]"
               />
             </div>
 
@@ -367,7 +367,7 @@ export const SettingsView: React.FC = () => {
               <select
                 value={kycDocType}
                 onChange={(e) => setKycDocType(e.target.value)}
-                className="w-full rounded-xl bg-slate-950 border border-slate-800 px-3 py-2.5 text-white focus:outline-none focus:border-emerald-500"
+                className="w-full rounded-xl bg-slate-950 border border-slate-800 px-3 py-2.5 text-white focus:outline-none focus:border-[#3862FB]"
               >
                 <option value="aadhaar">Aadhaar Card</option>
                 <option value="passport">Passport</option>
@@ -385,7 +385,7 @@ export const SettingsView: React.FC = () => {
                 value={kycDocNum}
                 onChange={(e) => setKycDocNum(e.target.value)}
                 required
-                className="w-full rounded-xl bg-slate-950 border border-slate-800 px-3 py-2.5 text-white focus:outline-none focus:border-emerald-500 font-mono"
+                className="w-full rounded-xl bg-slate-950 border border-slate-800 px-3 py-2.5 text-white focus:outline-none focus:border-[#3862FB] font-mono"
               />
             </div>
           </div>
@@ -397,7 +397,7 @@ export const SettingsView: React.FC = () => {
               placeholder="Full Street Address, City, Pin Code, Country"
               value={kycAddress}
               onChange={(e) => setKycAddress(e.target.value)}
-              className="w-full rounded-xl bg-slate-950 border border-slate-800 px-3 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+              className="w-full rounded-xl bg-slate-950 border border-slate-800 px-3 py-2.5 text-xs text-white focus:outline-none focus:border-[#3862FB]"
             />
           </div>
 
@@ -416,7 +416,7 @@ export const SettingsView: React.FC = () => {
               />
               <label
                 htmlFor="kyc-front-upload"
-                className="inline-block cursor-pointer px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-emerald-400 font-semibold hover:border-emerald-500 text-[11px]"
+                className="inline-block cursor-pointer px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-[#38B6FF] font-semibold hover:border-[#3862FB] text-[11px]"
               >
                 {kycFrontFile ? '✓ Front Uploaded' : 'Choose Front File'}
               </label>
@@ -435,7 +435,7 @@ export const SettingsView: React.FC = () => {
               />
               <label
                 htmlFor="kyc-back-upload"
-                className="inline-block cursor-pointer px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-emerald-400 font-semibold hover:border-emerald-500 text-[11px]"
+                className="inline-block cursor-pointer px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-[#38B6FF] font-semibold hover:border-[#3862FB] text-[11px]"
               >
                 {kycBackFile ? '✓ Back Uploaded' : 'Choose Back File'}
               </label>
@@ -444,7 +444,7 @@ export const SettingsView: React.FC = () => {
 
           <button
             type="submit"
-            className="w-full rounded-xl bg-gradient-to-r from-emerald-500 to-blue-300 py-3 text-xs font-bold text-black hover:opacity-90 transition-all shadow-md shadow-emerald-500/20"
+            className="w-full rounded-xl bg-gradient-to-r from-[#3862FB] to-[#38B6FF] py-3 text-xs font-bold text-white hover:opacity-90 transition-all shadow-md shadow-[#3862FB]/20"
             id="submit-kyc-btn"
           >
             Submit KYC Document for Compliance Review
@@ -456,7 +456,7 @@ export const SettingsView: React.FC = () => {
         {/* Profile Details */}
         <div className="rounded-3xl bg-slate-900/80 border border-slate-800 p-6 space-y-4">
           <h2 className="text-base font-bold text-white flex items-center gap-2">
-            <ShieldCheck className="h-4 w-4 text-emerald-400" />
+            <ShieldCheck className="h-4 w-4 text-[#38B6FF]" />
             <span>Profile Credentials</span>
           </h2>
 
@@ -466,7 +466,7 @@ export const SettingsView: React.FC = () => {
               <input
                 type="text"
                 defaultValue={currentUser?.name || ''}
-                className="w-full rounded-xl bg-slate-950 border border-slate-800 px-3 py-2 text-white focus:outline-none focus:border-emerald-500"
+                className="w-full rounded-xl bg-slate-950 border border-slate-800 px-3 py-2 text-white focus:outline-none focus:border-[#3862FB]"
               />
             </div>
 
@@ -475,7 +475,7 @@ export const SettingsView: React.FC = () => {
               <input
                 type="email"
                 defaultValue={currentUser?.email || ''}
-                className="w-full rounded-xl bg-slate-950 border border-slate-800 px-3 py-2 text-white focus:outline-none focus:border-emerald-500"
+                className="w-full rounded-xl bg-slate-950 border border-slate-800 px-3 py-2 text-white focus:outline-none focus:border-[#3862FB]"
               />
             </div>
           </div>
@@ -485,12 +485,12 @@ export const SettingsView: React.FC = () => {
         <div className="rounded-3xl bg-slate-900/80 border border-slate-800 p-6 space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-base font-bold text-white flex items-center gap-2">
-              <Lock className="h-4 w-4 text-emerald-400" />
+              <Lock className="h-4 w-4 text-[#38B6FF]" />
               <span>Security & Real 2FA Authenticator</span>
             </h2>
 
             {currentUser?.twoFactorEnabled && currentUser?.twoFactorSecret ? (
-              <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold">
+              <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#3862FB]/10 border border-[#3862FB]/30 text-[#38B6FF] text-xs font-bold">
                 <BadgeCheck className="h-4 w-4" />
                 <span>2FA Authenticator Active</span>
               </span>
@@ -507,7 +507,7 @@ export const SettingsView: React.FC = () => {
             <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3 text-xs">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-start gap-3">
-                  <div className="p-2.5 rounded-xl bg-gradient-to-br from-emerald-500/20 to-blue-300/20 text-emerald-400 shrink-0">
+                  <div className="p-2.5 rounded-xl bg-gradient-to-br from-[#3862FB]/20 to-[#38B6FF]/20 text-[#38B6FF] shrink-0">
                     <Smartphone className="h-5 w-5" />
                   </div>
                   <div>
@@ -530,7 +530,7 @@ export const SettingsView: React.FC = () => {
                   <button
                     type="button"
                     onClick={handleStart2FASetup}
-                    className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-400 to-blue-300 text-black font-bold hover:opacity-90 transition-all shadow-md shadow-emerald-500/10 shrink-0 flex items-center gap-1.5"
+                    className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#3862FB] to-[#38B6FF] text-white font-bold hover:opacity-90 transition-all shadow-md shadow-[#3862FB]/10 shrink-0 flex items-center gap-1.5"
                     id="setup-2fa-btn"
                   >
                     <QrCode className="h-4 w-4" />
@@ -552,7 +552,7 @@ export const SettingsView: React.FC = () => {
                       <p className="font-bold text-white text-sm">Biometric Passkey & Fingerprint Authentication</p>
                       <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase font-mono ${
                         currentUser?.passkeyEnabled
-                          ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
+                          ? 'bg-[#3862FB]/10 text-[#38B6FF] border border-[#3862FB]/30'
                           : 'bg-slate-800 text-slate-400 border border-slate-700'
                       }`}>
                         {currentUser?.passkeyEnabled ? 'Active' : 'Disabled'}
@@ -579,7 +579,7 @@ export const SettingsView: React.FC = () => {
               {passkeyMsg && (
                 <div className={`p-3 rounded-xl border text-xs font-bold flex items-center gap-2 ${
                   passkeyMsg.type === 'success'
-                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                    ? 'bg-[#3862FB]/10 border-[#3862FB]/30 text-[#38B6FF]'
                     : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
                 }`}>
                   <Check className="h-4 w-4 shrink-0" />
@@ -635,10 +635,10 @@ export const SettingsView: React.FC = () => {
             </div>
 
             {/* 12-WORD SECRET RECOVERY SEED PHRASE CARD */}
-            <div className="p-4 rounded-2xl bg-slate-950 border border-emerald-500/30 space-y-3 text-xs">
+            <div className="p-4 rounded-2xl bg-slate-950 border border-[#3862FB]/30 space-y-3 text-xs">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  <div className="p-2 rounded-xl bg-[#3862FB]/10 text-[#38B6FF] border border-[#3862FB]/20">
                     <KeyRound className="h-5 w-5" />
                   </div>
                   <div>
@@ -652,7 +652,7 @@ export const SettingsView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setShowSeedPhrase(!showSeedPhrase)}
-                  className="px-3.5 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-bold hover:bg-emerald-500/20 transition-all text-xs shrink-0 flex items-center gap-1.5"
+                  className="px-3.5 py-1.5 rounded-xl bg-[#3862FB]/10 border border-[#3862FB]/30 text-[#38B6FF] font-bold hover:bg-[#3862FB]/20 transition-all text-xs shrink-0 flex items-center gap-1.5"
                   id="toggle-seed-phrase-btn"
                 >
                   <KeyRound className="h-3.5 w-3.5" />
@@ -673,9 +673,9 @@ export const SettingsView: React.FC = () => {
                           setCopiedSeed(true);
                           setTimeout(() => setCopiedSeed(false), 2000);
                         }}
-                        className="text-emerald-400 hover:underline flex items-center gap-1"
+                        className="text-[#38B6FF] hover:underline flex items-center gap-1"
                       >
-                        {copiedSeed ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
+                        {copiedSeed ? <Check className="h-3.5 w-3.5 text-[#38B6FF]" /> : <Copy className="h-3.5 w-3.5" />}
                         <span>{copiedSeed ? 'Copied to Clipboard!' : 'Copy Seed Phrase'}</span>
                       </button>
                     </div>
@@ -689,7 +689,7 @@ export const SettingsView: React.FC = () => {
                             className="p-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-200 flex items-center gap-1.5"
                           >
                             <span className="text-[10px] text-slate-500 select-none">{idx + 1}.</span>
-                            <span className="font-bold text-emerald-400">{word}</span>
+                            <span className="font-bold text-[#38B6FF]">{word}</span>
                           </div>
                         ))}
                     </div>
@@ -707,7 +707,7 @@ export const SettingsView: React.FC = () => {
 
         <button
           type="submit"
-          className="rounded-xl bg-emerald-500 px-6 py-3 text-xs font-bold text-black hover:bg-emerald-400 transition-all shadow-lg"
+          className="rounded-xl bg-[#3862FB] px-6 py-3 text-xs font-bold text-white hover:bg-[#3862FB]/90 transition-all shadow-lg"
           id="save-settings-btn"
         >
           Save All Security Preferences
@@ -727,7 +727,7 @@ export const SettingsView: React.FC = () => {
             </button>
 
             <div className="text-center space-y-2">
-              <div className="mx-auto h-12 w-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+              <div className="mx-auto h-12 w-12 rounded-2xl bg-[#3862FB]/10 border border-[#3862FB]/20 flex items-center justify-center text-[#38B6FF]">
                 <QrCode className="h-6 w-6" />
               </div>
               <h3 className="text-lg font-extrabold text-white">Setup Real Google Authenticator 2FA</h3>
@@ -746,7 +746,7 @@ export const SettingsView: React.FC = () => {
 
               <div className="space-y-1">
                 <p className="text-[11px] text-slate-400 font-semibold">Or enter this Secret Key manually:</p>
-                <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 font-mono text-emerald-400 font-bold text-xs">
+                <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 font-mono text-[#38B6FF] font-bold text-xs">
                   <span>{totpSecret}</span>
                   <button
                     type="button"
@@ -758,7 +758,7 @@ export const SettingsView: React.FC = () => {
                     className="p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white transition-colors"
                     title="Copy Key"
                   >
-                    {copiedSecret ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
+                    {copiedSecret ? <Check className="h-3.5 w-3.5 text-[#38B6FF]" /> : <Copy className="h-3.5 w-3.5" />}
                   </button>
                 </div>
               </div>
@@ -784,14 +784,14 @@ export const SettingsView: React.FC = () => {
                   onChange={(e) => setTotpVerifyCode(e.target.value)}
                   placeholder="123456"
                   required
-                  className="w-full text-center text-xl font-mono tracking-widest py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-emerald-400 focus:outline-none focus:border-emerald-500"
+                  className="w-full text-center text-xl font-mono tracking-widest py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-[#38B6FF] focus:outline-none focus:border-[#3862FB]"
                   id="totp-setup-verify-input"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full rounded-xl bg-emerald-500 py-3 text-xs font-bold text-black hover:bg-emerald-400 transition-all shadow-lg shadow-emerald-500/20"
+                className="w-full rounded-xl bg-[#3862FB] py-3 text-xs font-bold text-white hover:bg-[#3862FB]/90 transition-all shadow-lg shadow-[#3862FB]/20"
                 id="activate-2fa-btn"
               >
                 Verify Code & Activate Google Authenticator 2FA
@@ -805,14 +805,14 @@ export const SettingsView: React.FC = () => {
       <div className="rounded-3xl bg-slate-900/80 border border-slate-800 p-6 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+            <div className="p-2.5 rounded-2xl bg-[#3862FB]/10 border border-[#3862FB]/30 text-[#38B6FF]">
               <User className="h-5 w-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-base font-bold text-white">Active Session</h2>
                 {currentUser && (
-                  <span className="text-[10px] font-mono bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/30 font-bold">
+                  <span className="text-[10px] font-mono bg-[#3862FB]/20 text-[#38B6FF] px-2 py-0.5 rounded-full border border-[#3862FB]/30 font-bold">
                     {currentUser.role.toUpperCase()}
                   </span>
                 )}
@@ -831,14 +831,14 @@ export const SettingsView: React.FC = () => {
               onClick={() => setIsAuthModalOpen(true)}
               className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-bold text-xs flex items-center gap-1.5 transition-all"
             >
-              <User className="h-3.5 w-3.5 text-emerald-400" />
+              <User className="h-3.5 w-3.5 text-[#38B6FF]" />
               <span>Switch / Sign In</span>
             </button>
 
             <button
               type="button"
               onClick={() => setIsAuthModalOpen(true)}
-              className="px-4 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-bold text-xs flex items-center gap-1.5 transition-all"
+              className="px-4 py-2 rounded-xl bg-[#3862FB]/10 hover:bg-[#3862FB]/20 border border-[#3862FB]/30 text-[#38B6FF] font-bold text-xs flex items-center gap-1.5 transition-all"
             >
               <Sparkles className="h-3.5 w-3.5" />
               <span>Register New</span>

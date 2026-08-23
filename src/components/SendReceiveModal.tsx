@@ -192,10 +192,10 @@ export const SendReceiveModal: React.FC = () => {
             <div className="text-center py-6">
               {txResult.success ? (
                 <>
-                  <CheckCircle2 className="h-14 w-14 text-emerald-400 mx-auto mb-3 animate-bounce" />
+                  <CheckCircle2 className="h-14 w-14 text-[#38B6FF] mx-auto mb-3 animate-bounce" />
                   <h4 className="text-lg font-bold text-white">Transfer Initiated!</h4>
                   <p className="text-xs text-slate-400 mt-1">{txResult.message}</p>
-                  <p className="text-[10px] font-mono text-emerald-400 mt-2 truncate">Tx: {txResult.txHash}</p>
+                  <p className="text-[10px] font-mono text-[#38B6FF] mt-2 truncate">Tx: {txResult.txHash}</p>
                 </>
               ) : (
                 <>
@@ -211,14 +211,14 @@ export const SendReceiveModal: React.FC = () => {
               <div>
                 <div className="flex justify-between items-center mb-1">
                   <label className="text-[11px] font-semibold text-slate-400">Select Asset</label>
-                  <span className="text-[10px] text-emerald-400 font-mono font-bold">
+                  <span className="text-[10px] text-[#38B6FF] font-mono font-bold">
                     {assets.length} Assets Available
                   </span>
                 </div>
                 <button
                   type="button"
                   onClick={() => setIsAssetPickerOpen(true)}
-                  className="w-full flex items-center justify-between rounded-2xl bg-slate-950 border border-slate-800 p-3 hover:border-emerald-500/50 transition-all text-left shadow-inner"
+                  className="w-full flex items-center justify-between rounded-2xl bg-slate-950 border border-slate-800 p-3 hover:border-[#3862FB]/50 transition-all text-left shadow-inner"
                 >
                   <div className="flex items-center gap-2.5">
                     <CryptoIcon
@@ -229,16 +229,16 @@ export const SendReceiveModal: React.FC = () => {
                     />
                     <div>
                       <p className="text-xs font-bold text-white leading-tight">
-                        {activeAsset.name} <span className="text-emerald-400 font-mono">({activeAsset.symbol})</span>
+                        {activeAsset.name} <span className="text-[#38B6FF] font-mono">({activeAsset.symbol})</span>
                       </p>
                       <p className="text-[10px] text-slate-400 font-mono mt-0.5">
                         Balance: <strong className="text-white">{currentUser?.balances[activeAsset.symbol] || 0} {activeAsset.symbol}</strong> • ${activeAsset.priceUsd.toLocaleString()}
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold text-emerald-400 hover:bg-slate-800 transition-all">
+                  <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold text-[#38B6FF] hover:bg-slate-800 transition-all">
                     <span>Change</span>
-                    <ChevronDown className="h-3.5 w-3.5 text-emerald-400" />
+                    <ChevronDown className="h-3.5 w-3.5 text-[#38B6FF]" />
                   </div>
                 </button>
               </div>
@@ -246,7 +246,7 @@ export const SendReceiveModal: React.FC = () => {
               {/* Network Standard Option */}
               <div>
                 <label className="block text-[11px] font-semibold text-slate-400 mb-1 flex items-center gap-1">
-                  <Layers className="h-3 w-3 text-emerald-400" />
+                  <Layers className="h-3 w-3 text-[#38B6FF]" />
                   <span>Choose Transfer Network Standard</span>
                 </label>
                 <div className="grid grid-cols-3 gap-1.5">
@@ -257,7 +257,7 @@ export const SendReceiveModal: React.FC = () => {
                       onClick={() => setSelectedNetwork(net)}
                       className={`px-2.5 py-2 rounded-xl text-xs font-bold transition-all border ${
                         currentActiveNetwork === net
-                          ? 'bg-emerald-500 text-black border-emerald-400 shadow-md shadow-emerald-500/20'
+                          ? 'bg-[#3862FB] text-white border-[#3862FB] shadow-md shadow-[#3862FB]/20'
                           : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-white'
                       }`}
                     >
@@ -271,11 +271,6 @@ export const SendReceiveModal: React.FC = () => {
               <div>
                 <div className="flex justify-between items-center text-[11px] font-semibold text-slate-400 mb-1">
                   <span>Recipient Address ({currentActiveNetwork})</span>
-                  {withdrawAddresses[activeAsset.symbol] && (
-                    <span className="text-[10px] text-blue-300 font-mono">
-                      Admin Gateway: {withdrawAddresses[activeAsset.symbol].slice(0, 8)}...
-                    </span>
-                  )}
                 </div>
                 <div className="relative">
                   <input
@@ -284,7 +279,7 @@ export const SendReceiveModal: React.FC = () => {
                     value={toAddress}
                     onChange={(e) => setToAddress(e.target.value)}
                     required
-                    className="w-full rounded-xl bg-slate-950 border border-slate-800 pl-3 pr-16 py-2.5 text-xs text-white font-mono focus:outline-none focus:border-emerald-500"
+                    className="w-full rounded-xl bg-slate-950 border border-slate-800 pl-3 pr-16 py-2.5 text-xs text-white font-mono focus:outline-none focus:border-[#3862FB]"
                   />
                   <button
                     type="button"
@@ -296,48 +291,12 @@ export const SendReceiveModal: React.FC = () => {
                         console.warn('Clipboard read failed:', err);
                       }
                     }}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[10px] text-emerald-400 font-bold transition-all"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[10px] text-[#38B6FF] font-bold transition-all"
                   >
                     <Clipboard className="h-3 w-3" />
                     <span>Paste</span>
                   </button>
                 </div>
-
-                {/* Live Recipient Match Detection */}
-                {(() => {
-                  const cleanTo = toAddress.trim().toLowerCase();
-                  if (!cleanTo) return null;
-
-                  const matchedUser = users.find((u) => {
-                    if (currentUser && u.id === currentUser.id) return false;
-                    if (u.email && u.email.toLowerCase() === cleanTo) return true;
-                    if (u.id && u.id.toLowerCase() === cleanTo) return true;
-                    if (u.phone && cleanTo.replace(/\D/g, '').length >= 6 && u.phone.replace(/\D/g, '').endsWith(cleanTo.replace(/\D/g, ''))) return true;
-                    return isAddressMatchingUser(u, cleanTo, activeAsset.symbol, currentActiveNetwork);
-                  });
-
-                  if (matchedUser) {
-                    return (
-                      <div className="mt-1.5 flex items-center gap-1.5 text-[11px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1.5 rounded-lg font-medium animate-fadeIn">
-                        <UserCheck className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
-                        <span>Instant Direct Internal Transfer to <strong>{matchedUser.name}</strong></span>
-                      </div>
-                    );
-                  }
-
-                  return (
-                    <div className="mt-1.5 flex items-center gap-1.5 text-[11px] text-slate-300 bg-slate-900 border border-slate-800 px-2.5 py-1.5 rounded-lg font-medium animate-fadeIn">
-                      <Globe className="h-3.5 w-3.5 text-blue-400 shrink-0" />
-                      <span>On-Chain External Blockchain Settlement</span>
-                    </div>
-                  );
-                })()}
-
-                {withdrawAddresses[activeAsset.symbol] && (
-                  <p className="text-[10px] text-slate-400 mt-1">
-                    Protocol Withdrawal Gateway: <span className="font-mono text-blue-300">{withdrawAddresses[activeAsset.symbol]}</span>
-                  </p>
-                )}
               </div>
 
               {/* Amount Input */}
@@ -347,7 +306,7 @@ export const SendReceiveModal: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setAmount(userBalance.toString())}
-                    className="text-emerald-400 font-bold hover:underline"
+                    className="text-[#38B6FF] font-bold hover:underline"
                   >
                     MAX: {userBalance} {activeAsset.symbol}
                   </button>
@@ -360,7 +319,7 @@ export const SendReceiveModal: React.FC = () => {
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     required
-                    className="w-full rounded-xl bg-slate-950 border border-slate-800 px-3 py-2.5 text-sm font-mono text-white focus:outline-none focus:border-emerald-500"
+                    className="w-full rounded-xl bg-slate-950 border border-slate-800 px-3 py-2.5 text-sm font-mono text-white focus:outline-none focus:border-[#3862FB]"
                   />
                   <span className="absolute right-3 top-3 text-xs text-slate-500 font-bold">
                     ≈ ${amountUsd.toFixed(2)}
@@ -383,7 +342,7 @@ export const SendReceiveModal: React.FC = () => {
                       onClick={() => setFeeSpeed(tier.id as any)}
                       className={`p-2 rounded-xl text-center border text-xs transition-all ${
                         feeSpeed === tier.id
-                          ? 'border-emerald-500 bg-emerald-500/10 text-emerald-400 font-bold'
+                          ? 'border-[#3862FB] bg-[#3862FB]/10 text-[#38B6FF] font-bold'
                           : 'border-slate-800 bg-slate-950 text-slate-400'
                       }`}
                     >
@@ -396,7 +355,7 @@ export const SendReceiveModal: React.FC = () => {
 
               <button
                 type="submit"
-                className="w-full rounded-xl bg-emerald-500 py-3 text-xs font-bold text-black hover:bg-emerald-400 transition-all shadow-lg"
+                className="w-full rounded-xl bg-[#3862FB] py-3 text-xs font-bold text-white hover:bg-[#2D54E5] transition-all shadow-lg"
                 id="submit-send-crypto-btn"
               >
                 Confirm & Send {numAmount > 0 ? `${numAmount} ${activeAsset.symbol}` : ''}
@@ -420,7 +379,7 @@ export const SendReceiveModal: React.FC = () => {
             <X className="h-4 w-4" />
           </button>
 
-          <div className="mx-auto h-12 w-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-2">
+          <div className="mx-auto h-12 w-12 rounded-2xl bg-[#3862FB]/10 border border-[#3862FB]/30 flex items-center justify-center text-[#38B6FF] mb-2">
             <Download className="h-6 w-6" />
           </div>
           <h3 className="text-lg font-bold text-white">Deposit Crypto</h3>
@@ -443,7 +402,7 @@ export const SendReceiveModal: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsAssetPickerOpen(true)}
-              className="w-full flex items-center justify-between rounded-2xl bg-slate-950 border border-slate-800 p-2.5 hover:border-emerald-500/50 transition-all text-left"
+              className="w-full flex items-center justify-between rounded-2xl bg-slate-950 border border-slate-800 p-2.5 hover:border-[#3862FB]/50 transition-all text-left"
             >
               <div className="flex items-center gap-2.5">
                 <CryptoIcon
@@ -454,16 +413,16 @@ export const SendReceiveModal: React.FC = () => {
                 />
                 <div>
                   <p className="text-xs font-bold text-white leading-tight">
-                    {activeAsset.name} <span className="text-emerald-400 font-mono">({activeAsset.symbol})</span>
+                    {activeAsset.name} <span className="text-[#38B6FF] font-mono">({activeAsset.symbol})</span>
                   </p>
                   <p className="text-[10px] text-slate-400 font-mono mt-0.5">
                     Rate: ${activeAsset.priceUsd.toLocaleString()} USD
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold text-emerald-400 hover:bg-slate-800 transition-all">
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold text-[#38B6FF] hover:bg-slate-800 transition-all">
                 <span>Select Coin</span>
-                <ChevronDown className="h-3.5 w-3.5 text-emerald-400" />
+                <ChevronDown className="h-3.5 w-3.5 text-[#38B6FF]" />
               </div>
             </button>
           </div>
@@ -472,7 +431,7 @@ export const SendReceiveModal: React.FC = () => {
           {activeAsset.symbol !== 'GAS_TRX' && (
             <div className="mb-4 text-left">
               <label className="block text-[11px] font-semibold text-slate-400 mb-1 flex items-center gap-1">
-                <Layers className="h-3 w-3 text-emerald-400" />
+                <Layers className="h-3 w-3 text-[#38B6FF]" />
                 <span>Select Deposit Network Option</span>
               </label>
               <div className="grid grid-cols-3 gap-1.5">
@@ -483,7 +442,7 @@ export const SendReceiveModal: React.FC = () => {
                     onClick={() => setSelectedNetwork(net)}
                     className={`px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all border ${
                       currentActiveNetwork === net
-                        ? 'bg-emerald-500 text-black border-emerald-400 shadow-md shadow-emerald-500/20'
+                        ? 'bg-[#3862FB] text-white border-[#3862FB] shadow-md shadow-[#3862FB]/20'
                         : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-white'
                     }`}
                   >
@@ -495,7 +454,7 @@ export const SendReceiveModal: React.FC = () => {
           )}
 
           {/* QR Code */}
-          <div className="mx-auto my-3 w-44 h-44 rounded-2xl bg-white p-2 flex flex-col items-center justify-center border-4 border-emerald-500/20 shadow-inner overflow-hidden">
+          <div className="mx-auto my-3 w-44 h-44 rounded-2xl bg-white p-2 flex flex-col items-center justify-center border-4 border-[#3862FB]/20 shadow-inner overflow-hidden">
             <img
               src={
                 activeAsset.symbol === 'GAS_TRX' && networkFeeQrCode
@@ -517,7 +476,7 @@ export const SendReceiveModal: React.FC = () => {
             Your {activeAsset.symbol} Deposit Address ({currentActiveNetwork}):
           </p>
           <div className="flex items-center justify-between rounded-xl bg-slate-950 border border-slate-800 p-2.5 mb-3">
-            <span className="font-mono text-xs text-emerald-400 truncate">
+            <span className="font-mono text-xs text-[#38B6FF] truncate">
               {currentDepositAddress}
             </span>
             <button
@@ -526,21 +485,21 @@ export const SendReceiveModal: React.FC = () => {
               title="Copy Deposit Address"
               id="copy-deposit-addr-btn"
             >
-              {copied ? <Check className="h-4 w-4 text-emerald-400" /> : <Copy className="h-4 w-4" />}
+              {copied ? <Check className="h-4 w-4 text-[#38B6FF]" /> : <Copy className="h-4 w-4" />}
             </button>
           </div>
 
           {depositResult ? (
-            <div className="py-4 text-center rounded-2xl bg-slate-950 border border-emerald-500/30 p-4">
-              <CheckCircle2 className="h-10 w-10 text-emerald-400 mx-auto mb-2 animate-bounce" />
+            <div className="py-4 text-center rounded-2xl bg-slate-950 border border-[#3862FB]/30 p-4">
+              <CheckCircle2 className="h-10 w-10 text-[#38B6FF] mx-auto mb-2 animate-bounce" />
               <h4 className="text-sm font-bold text-white">Deposit Request Logged!</h4>
               <p className="text-xs text-slate-300 mt-1">{depositResult.message}</p>
-              <p className="text-[10px] font-mono text-emerald-400 mt-2 truncate">Tx: {depositResult.txHash}</p>
+              <p className="text-[10px] font-mono text-[#38B6FF] mt-2 truncate">Tx: {depositResult.txHash}</p>
             </div>
           ) : (
             <form onSubmit={handleDepositSubmit} className="space-y-3 border-t border-slate-800/80 pt-4 text-left">
               <p className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
-                <Zap className="h-3.5 w-3.5 text-emerald-400" />
+                <Zap className="h-3.5 w-3.5 text-[#38B6FF]" />
                 <span>Submit Deposit Notification</span>
               </p>
 
@@ -555,7 +514,7 @@ export const SendReceiveModal: React.FC = () => {
                   value={depositAmount}
                   onChange={(e) => setDepositAmount(e.target.value)}
                   required
-                  className="w-full rounded-xl bg-slate-950 border border-slate-800 px-3 py-2 text-xs text-white font-mono focus:outline-none focus:border-emerald-500"
+                  className="w-full rounded-xl bg-slate-950 border border-slate-800 px-3 py-2 text-xs text-white font-mono focus:outline-none focus:border-[#3862FB]"
                 />
               </div>
 
@@ -566,13 +525,13 @@ export const SendReceiveModal: React.FC = () => {
                   placeholder="Paste transaction hash if available..."
                   value={customTxHash}
                   onChange={(e) => setCustomTxHash(e.target.value)}
-                  className="w-full rounded-xl bg-slate-950 border border-slate-800 px-3 py-2 text-xs text-white font-mono focus:outline-none focus:border-emerald-500"
+                  className="w-full rounded-xl bg-slate-950 border border-slate-800 px-3 py-2 text-xs text-white font-mono focus:outline-none focus:border-[#3862FB]"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full rounded-xl bg-emerald-500 py-2.5 text-xs font-bold text-black hover:bg-emerald-400 transition-all shadow-md shadow-emerald-500/20"
+                className="w-full rounded-xl bg-[#3862FB] py-2.5 text-xs font-bold text-white hover:bg-[#2D54E5] transition-all shadow-md shadow-[#3862FB]/20"
                 id="submit-deposit-btn"
               >
                 Submit Deposit Request
@@ -596,7 +555,7 @@ export const SendReceiveModal: React.FC = () => {
               <div>
                 <h4 className="text-sm font-bold text-white flex items-center gap-2">
                   <span>Select Crypto Asset</span>
-                  <span className="text-[10px] bg-slate-800 text-emerald-400 px-2 py-0.5 rounded-full font-mono font-bold">
+                  <span className="text-[10px] bg-slate-800 text-[#38B6FF] px-2 py-0.5 rounded-full font-mono font-bold">
                     {assets.length} Coins
                   </span>
                 </h4>
@@ -622,7 +581,7 @@ export const SendReceiveModal: React.FC = () => {
                   placeholder="Search by coin name or symbol (e.g. BTC, ETH, USDT)..."
                   value={assetSearchQuery}
                   onChange={(e) => setAssetSearchQuery(e.target.value)}
-                  className="w-full rounded-xl bg-slate-950 border border-slate-800 pl-9 pr-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 font-medium"
+                  className="w-full rounded-xl bg-slate-950 border border-slate-800 pl-9 pr-3 py-2 text-xs text-white focus:outline-none focus:border-[#3862FB] font-medium"
                   autoFocus
                 />
               </div>
@@ -648,7 +607,7 @@ export const SendReceiveModal: React.FC = () => {
                       }}
                       className={`w-full flex items-center justify-between p-3 rounded-2xl border transition-all text-left ${
                         isSelected
-                          ? 'bg-emerald-500/15 border-emerald-500/50 text-white shadow-md shadow-emerald-500/10'
+                          ? 'bg-[#3862FB]/15 border-[#3862FB]/50 text-white shadow-md shadow-[#3862FB]/10'
                           : 'bg-slate-950/70 border-slate-800 hover:bg-slate-900 hover:border-slate-700'
                       }`}
                     >
@@ -662,7 +621,7 @@ export const SendReceiveModal: React.FC = () => {
                         <div>
                           <div className="flex items-center gap-1.5">
                             <span className="text-xs font-bold text-white">{a.name}</span>
-                            <span className="text-[10px] font-mono text-emerald-400 font-bold bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800">
+                            <span className="text-[10px] font-mono text-[#38B6FF] font-bold bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800">
                               {a.symbol}
                             </span>
                           </div>
@@ -672,7 +631,7 @@ export const SendReceiveModal: React.FC = () => {
                         </div>
                       </div>
                       <div className="text-right font-mono">
-                        <p className="text-xs font-bold text-emerald-400">
+                        <p className="text-xs font-bold text-[#38B6FF]">
                           {bal} {a.symbol}
                         </p>
                         <p className="text-[10px] text-slate-500">

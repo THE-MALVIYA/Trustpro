@@ -37,7 +37,7 @@ const PROMO_ADS: PromoAd[] = [
     title: 'Trust Wallet Launchpool: Stake BNB / TWT to farm free tokens',
     actionText: 'Stake now',
     targetTab: 'staking',
-    gradientRing: 'from-[#F3BA2F] via-[#05D686] to-[#38B6FF]',
+    gradientRing: 'from-[#F3BA2F] via-[#3862FB] to-[#38B6FF]',
     icon: <Coins className="h-5 w-5 text-[#F3BA2F]" />,
     badge: 'Airdrop',
   },
@@ -46,8 +46,8 @@ const PROMO_ADS: PromoAd[] = [
     title: 'Native Liquid Staking: Earn up to 18.5% APY on SOL & ETH',
     actionText: 'Earn APY',
     targetTab: 'staking',
-    gradientRing: 'from-[#14F195] via-[#00C2FF] to-[#9945FF]',
-    icon: <TrendingUp className="h-5 w-5 text-[#00EC96]" />,
+    gradientRing: 'from-[#3862FB] via-[#38B6FF] to-[#9945FF]',
+    icon: <TrendingUp className="h-5 w-5 text-[#38B6FF]" />,
     badge: '18.5% APY',
   },
   {
@@ -55,7 +55,7 @@ const PROMO_ADS: PromoAd[] = [
     title: 'Swap 10,000+ tokens across 100+ chains with zero extra gas',
     actionText: 'Swap now',
     targetTab: 'swap',
-    gradientRing: 'from-[#38B6FF] via-[#05D686] to-[#F3BA2F]',
+    gradientRing: 'from-[#38B6FF] via-[#3862FB] to-[#F3BA2F]',
     icon: <Repeat className="h-5 w-5 text-[#38B6FF]" />,
     badge: 'Zero Slippage',
   },
@@ -64,8 +64,8 @@ const PROMO_ADS: PromoAd[] = [
     title: 'Trust Wallet Security Shield: 24/7 Web3 Scam Protection active',
     actionText: 'Learn more',
     targetTab: 'settings',
-    gradientRing: 'from-[#05D686] via-[#38B6FF] to-[#9945FF]',
-    icon: <ShieldCheck className="h-5 w-5 text-[#05D686]" />,
+    gradientRing: 'from-[#3862FB] via-[#38B6FF] to-[#9945FF]',
+    icon: <ShieldCheck className="h-5 w-5 text-[#3862FB]" />,
     badge: 'Protected',
   },
 ];
@@ -96,7 +96,7 @@ export const PromoBannerCarousel: React.FC = () => {
 
   return (
     <div
-      className="relative mt-2 mb-5 overflow-hidden rounded-2xl bg-[#1A1C20] border border-white/10 p-3.5 shadow-md group transition-all"
+      className="relative mt-2 mb-5 overflow-hidden rounded-2xl bg-[#121622] border border-[#1E2536] p-3.5 shadow-md group transition-all"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       id={`promo-ad-${currentAd.id}`}
@@ -111,7 +111,7 @@ export const PromoBannerCarousel: React.FC = () => {
           <div
             className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-tr ${currentAd.gradientRing} p-0.5 shadow-lg transition-transform group-hover:scale-105`}
           >
-            <div className="flex h-full w-full items-center justify-center rounded-full bg-[#121418]">
+            <div className="flex h-full w-full items-center justify-center rounded-full bg-[#0B0E14]">
               {currentAd.icon}
             </div>
           </div>
@@ -123,7 +123,7 @@ export const PromoBannerCarousel: React.FC = () => {
                 {currentAd.title}
               </h4>
             </div>
-            <div className="flex items-center gap-1 text-[12px] font-bold text-[#05D686] hover:text-[#00EC96] transition-colors mt-0.5">
+            <div className="flex items-center gap-1 text-[12px] font-bold text-[#3862FB] hover:text-[#2D54E5] transition-colors mt-0.5">
               <span>{currentAd.actionText}</span>
               <ChevronRight className="h-3.5 w-3.5" />
             </div>
@@ -133,7 +133,7 @@ export const PromoBannerCarousel: React.FC = () => {
         {/* Right Controls: Dots & Close Button */}
         <div className="flex items-center gap-2.5 shrink-0">
           {/* Dot Indicators */}
-          <div className="hidden sm:flex items-center gap-1 bg-[#121418]/80 px-2 py-1 rounded-full border border-white/5">
+          <div className="hidden sm:flex items-center gap-1 bg-[#0B0E14]/80 px-2 py-1 rounded-full border border-white/5">
             {PROMO_ADS.map((ad, idx) => (
               <button
                 key={ad.id}
@@ -141,8 +141,8 @@ export const PromoBannerCarousel: React.FC = () => {
                   e.stopPropagation();
                   setCurrentIndex(idx);
                 }}
-                className={`h-1.5 rounded-full transition-all ${
-                  idx === currentIndex ? 'w-4 bg-[#05D686]' : 'w-1.5 bg-white/20 hover:bg-white/40'
+                className={`h-1.5 rounded-full transition-all cursor-pointer ${
+                  idx === currentIndex ? 'w-4 bg-[#3862FB]' : 'w-1.5 bg-white/20 hover:bg-white/40'
                 }`}
                 title={`Ad ${idx + 1}`}
               />
@@ -156,7 +156,7 @@ export const PromoBannerCarousel: React.FC = () => {
               e.stopPropagation();
               setIsDismissed(true);
             }}
-            className="flex h-7 w-7 items-center justify-center rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+            className="flex h-7 w-7 items-center justify-center rounded-full text-[#8290A4] hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
             title="Dismiss Announcement"
             id="close-promo-banner-btn"
           >

@@ -105,11 +105,61 @@ export const OverviewDashboard: React.FC = () => {
     });
 
   // Specific token display mapping
+  const formatUsdDisplay = (val: number): string => {
+    if (val === 0) return '$0.00';
+    const abs = Math.abs(val);
+    if (abs >= 1000) {
+      return `$${val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+    if (abs >= 1) {
+      return `$${val.toFixed(2)}`;
+    }
+    if (abs >= 0.001) {
+      return `$${val.toFixed(4)}`;
+    }
+    if (abs >= 0.00001) {
+      return `$${val.toFixed(6)}`;
+    }
+    return `$${val.toFixed(8)}`;
+  };
+
+  const formatPnlChangeDisplay = (changeUsd: number, isPositive: boolean, changePercent: number): { text: string; colorClass: string } => {
+    const abs = Math.abs(changeUsd);
+    if (abs < 0.000000001 || Math.abs(changePercent) < 0.0001) {
+      return { text: '$0.00', colorClass: 'text-[#8290A4]' };
+    }
+
+    const sign = isPositive ? '+' : '-';
+    const colorClass = isPositive ? 'text-[#00D182]' : 'text-[#FF4A5A]';
+
+    let valStr = '';
+    if (abs >= 1000) {
+      valStr = abs.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    } else if (abs >= 1) {
+      valStr = abs.toFixed(2);
+    } else if (abs >= 0.001) {
+      valStr = abs.toFixed(4);
+    } else if (abs >= 0.00001) {
+      valStr = abs.toFixed(6);
+    } else {
+      valStr = abs.toFixed(8);
+    }
+
+    return {
+      text: `${sign}$${valStr}`,
+      colorClass,
+    };
+  };
+
   const getTokenDisplayData = (asset: CryptoAsset) => {
     const rawBal = currentUser?.balances?.[asset.symbol] || 0;
     const bal = rawBal;
-    const usdVal = bal * asset.priceUsd;
-    const change = usdVal * (asset.change24h / 100);
+
+    // If user holds balance, show total USD value of holdings; otherwise show token's live unit price!
+    const usdVal = bal > 0 ? bal * asset.priceUsd : asset.priceUsd;
+    
+    // 24h change in USD: if holding > 0, show holding change, otherwise show coin's per-unit price change in USD
+    const change = bal > 0 ? usdVal * (asset.change24h / 100) : asset.priceUsd * (asset.change24h / 100);
 
     let formattedBal = '0';
     if (bal > 0) {
@@ -122,6 +172,7 @@ export const OverviewDashboard: React.FC = () => {
       balanceFormatted: `${formattedBal} ${asset.symbol}`,
       usdValue: usdVal,
       changeUsd: change,
+      hasBalance: bal > 0,
     };
   };
 
@@ -146,11 +197,11 @@ export const OverviewDashboard: React.FC = () => {
     currentUser?.role === 'admin';
 
   return (
-    <div className="min-h-screen bg-[#121418] text-white pb-28 pt-2 select-none">
+    <div className="min-h-screen bg-[#0B0E14] text-white pb-28 pt-2 select-none">
       <div className="mx-auto max-w-md px-4 sm:px-6">
-        {/* TOP BAR: [ 🛡️ Official ▾ ] on Left, [ ⏱️ ] and [ ⛶ ] on Right */}
+        {/* TOP BAR: [ 💳 Official ▾ ] on Left, [ ⏱️ ] and [ ⛶ ] on Right */}
         <div className="flex items-center justify-between py-3">
-          {/* Wallet Selector Pill */}
+          {/* Wallet Selector Pill (Exact Trust Wallet UI) */}
           <button
             onClick={() => {
               if (!currentUser) {
@@ -159,16 +210,16 @@ export const OverviewDashboard: React.FC = () => {
                 setIsWalletManageOpen(true);
               }
             }}
-            className="flex items-center gap-2 rounded-full bg-[#1E2024] hover:bg-[#25282E] border border-white/10 px-3.5 py-1.5 transition-all active:scale-95 shadow-sm"
+            className="flex items-center gap-2.5 rounded-full bg-[#181D28] hover:bg-[#202738] border border-[#232A3B] px-3.5 py-1.5 transition-all active:scale-95 shadow-sm"
             id="wallet-selector-pill"
           >
-            <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#05D686]/20 text-[#05D686]">
-              <Shield className="h-3.5 w-3.5 fill-[#05D686]" />
+            <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#3862FB] text-white shadow-sm">
+              <Wallet className="h-3.5 w-3.5 stroke-[2.2]" />
             </div>
             <span className="text-sm font-bold text-white tracking-tight">
-              {currentUser?.name || 'Main Web3'}
+              {currentUser?.name || 'Official'}
             </span>
-            <ChevronDown className="h-3.5 w-3.5 text-slate-400" />
+            <ChevronDown className="h-3.5 w-3.5 text-[#8290A4]" />
           </button>
 
           {/* Right Action Icons: History & QR Scanner */}
@@ -193,17 +244,17 @@ export const OverviewDashboard: React.FC = () => {
                   setActiveTab('history');
                 }
               }}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-[#1E2024] hover:bg-[#25282E] text-slate-300 hover:text-white border border-white/10 transition-all active:scale-90"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-[#181D28] hover:bg-[#202738] text-white border border-[#232A3B] transition-all active:scale-90"
               title="Transaction History"
               id="header-history-btn"
             >
               <History className="h-4 w-4" />
             </button>
 
-            {/* Scan / Web3 Connect Button */}
+            {/* Scan / QR Scanner Button */}
             <button
               onClick={() => setIsWeb3ModalOpen(true)}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-[#1E2024] hover:bg-[#25282E] text-slate-300 hover:text-white border border-white/10 transition-all active:scale-90"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-[#181D28] hover:bg-[#202738] text-white border border-[#232A3B] transition-all active:scale-90"
               title="Scan QR / Connect Web3"
               id="header-scan-btn"
             >
@@ -214,11 +265,11 @@ export const OverviewDashboard: React.FC = () => {
 
         {/* ONBOARDING HERO FOR FRESH VISITORS */}
         {!currentUser && (
-          <div className="relative mt-1 mb-4 overflow-hidden rounded-2xl bg-gradient-to-r from-[#132B21] via-[#16222B] to-[#121418] border border-[#05D686]/40 p-4 shadow-xl">
+          <div className="relative mt-1 mb-4 overflow-hidden rounded-2xl bg-gradient-to-r from-[#12192A] via-[#161E33] to-[#0B0E14] border border-[#3862FB]/30 p-4 shadow-xl">
             <div className="flex items-start justify-between">
               <div className="space-y-1">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-[#05D686]">
-                  <ShieldCheck className="h-4 w-4 fill-[#05D686]/20" />
+                <div className="flex items-center gap-1.5 text-xs font-bold text-[#3862FB]">
+                  <ShieldCheck className="h-4 w-4 fill-[#3862FB]/20" />
                   <span>Trust Wallet Web3 Hub</span>
                 </div>
                 <h3 className="text-sm font-extrabold text-white">
@@ -232,15 +283,15 @@ export const OverviewDashboard: React.FC = () => {
             <div className="flex items-center gap-2 mt-3.5 pt-3 border-t border-white/10">
               <button
                 onClick={() => setIsAuthModalOpen(true)}
-                className="flex-1 rounded-xl bg-[#05D686] hover:bg-[#00EC96] text-black py-2 text-xs font-extrabold transition-all text-center shadow-md shadow-[#05D686]/20"
+                className="flex-1 rounded-xl bg-[#3862FB] hover:bg-[#2D54E5] text-white py-2 text-xs font-bold transition-all text-center shadow-md shadow-[#3862FB]/30"
               >
                 + Register Account
               </button>
               <button
                 onClick={() => setIsWeb3ModalOpen(true)}
-                className="flex-1 rounded-xl bg-[#24272D] hover:bg-[#2C3038] border border-white/10 text-white py-2 text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5"
+                className="flex-1 rounded-xl bg-[#181D2A] hover:bg-[#202738] border border-[#232A3B] text-white py-2 text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5"
               >
-                <Wallet className="h-3.5 w-3.5 text-[#38B6FF]" />
+                <Wallet className="h-3.5 w-3.5 text-[#3862FB]" />
                 <span>Connect Trust Web3</span>
               </button>
             </div>
@@ -268,7 +319,7 @@ export const OverviewDashboard: React.FC = () => {
             {/* Eye Toggle Icon */}
             <div className="p-1 rounded-full text-slate-400 group-hover:text-white transition-colors">
               {isBalanceHidden ? (
-                <EyeOff className="h-5 w-5 text-[#05D686]" />
+                <EyeOff className="h-5 w-5 text-[#3862FB]" />
               ) : (
                 <Eye className="h-5 w-5" />
               )}
@@ -283,26 +334,26 @@ export const OverviewDashboard: React.FC = () => {
             {isBalanceHidden ? (
               <span className="text-slate-500 font-mono text-xs tracking-widest">••••••</span>
             ) : display24hPnlUsd >= 0 ? (
-              <span className="text-[#05D686] flex items-center gap-1">
+              <span className="text-[#00D182] flex items-center gap-1">
                 ▲ +${display24hPnlUsd.toFixed(4)} ({display24hPnlPercent.toFixed(2)}%)
               </span>
             ) : (
-              <span className="text-[#F6465D] flex items-center gap-1">
+              <span className="text-[#FF4A5A] flex items-center gap-1">
                 ▼ -${Math.abs(display24hPnlUsd).toFixed(4)} ({Math.abs(display24hPnlPercent).toFixed(2)}%)
               </span>
             )}
           </div>
         </div>
 
-        {/* 4 CORE ACTION BUTTONS: [ Send ], [ Receive ], [ Swap ], [ Buy ] */}
+        {/* 4 CORE ACTION BUTTONS: [ Send ], [ Receive ], [ Swap ], [ Buy ] (Exact Screenshot 4 Colors) */}
         <div className="flex items-center justify-between my-6 px-2 sm:px-4">
           {/* Send */}
           <button
             onClick={() => handleActionClick('send')}
-            className="flex flex-col items-center focus:outline-none group"
+            className="flex flex-col items-center focus:outline-none group cursor-pointer"
             id="trust-action-send"
           >
-            <div className="w-[66px] h-[52px] sm:w-[74px] sm:h-[56px] rounded-[22px] bg-[#24272D] hover:bg-[#2C3038] text-white flex items-center justify-center transition-all duration-150 active:scale-95 shadow-sm">
+            <div className="w-[66px] h-[52px] sm:w-[74px] sm:h-[56px] rounded-[22px] bg-[#181D2A] hover:bg-[#202738] text-white flex items-center justify-center border border-white/5 transition-all duration-150 active:scale-95 shadow-sm">
               <ArrowUpRight className="h-6 w-6 stroke-[2.4]" />
             </div>
             <span className="text-sm font-bold text-white tracking-normal mt-2">Send</span>
@@ -311,22 +362,22 @@ export const OverviewDashboard: React.FC = () => {
           {/* Receive */}
           <button
             onClick={() => handleActionClick('receive')}
-            className="flex flex-col items-center focus:outline-none group"
+            className="flex flex-col items-center focus:outline-none group cursor-pointer"
             id="trust-action-receive"
           >
-            <div className="w-[66px] h-[52px] sm:w-[74px] sm:h-[56px] rounded-[22px] bg-[#24272D] hover:bg-[#2C3038] text-white flex items-center justify-center transition-all duration-150 active:scale-95 shadow-sm">
+            <div className="w-[66px] h-[52px] sm:w-[74px] sm:h-[56px] rounded-[22px] bg-[#181D2A] hover:bg-[#202738] text-white flex items-center justify-center border border-white/5 transition-all duration-150 active:scale-95 shadow-sm">
               <ArrowDown className="h-6 w-6 stroke-[2.4]" />
             </div>
             <span className="text-sm font-bold text-white tracking-normal mt-2">Receive</span>
           </button>
 
-          {/* Swap */}
+          {/* Swap (Trust Signature Electric Royal Blue) */}
           <button
             onClick={() => handleActionClick('swap')}
-            className="flex flex-col items-center focus:outline-none group"
+            className="flex flex-col items-center focus:outline-none group cursor-pointer"
             id="trust-action-swap"
           >
-            <div className="w-[66px] h-[52px] sm:w-[74px] sm:h-[56px] rounded-[22px] bg-[#05D686] hover:bg-[#04c47b] text-[#121418] flex items-center justify-center transition-all duration-150 active:scale-95 shadow-md shadow-[#05D686]/20">
+            <div className="w-[66px] h-[52px] sm:w-[74px] sm:h-[56px] rounded-[22px] bg-[#3862FB] hover:bg-[#2D54E5] text-white flex items-center justify-center transition-all duration-150 active:scale-95 shadow-lg shadow-[#3862FB]/30">
               <Repeat className="h-6 w-6 stroke-[2.4]" />
             </div>
             <span className="text-sm font-bold text-white tracking-normal mt-2">Swap</span>
@@ -335,10 +386,10 @@ export const OverviewDashboard: React.FC = () => {
           {/* Buy */}
           <button
             onClick={() => handleActionClick('buy')}
-            className="flex flex-col items-center focus:outline-none group"
+            className="flex flex-col items-center focus:outline-none group cursor-pointer"
             id="trust-action-buy"
           >
-            <div className="w-[66px] h-[52px] sm:w-[74px] sm:h-[56px] rounded-[22px] bg-[#24272D] hover:bg-[#2C3038] text-white flex items-center justify-center transition-all duration-150 active:scale-95 shadow-sm">
+            <div className="w-[66px] h-[52px] sm:w-[74px] sm:h-[56px] rounded-[22px] bg-[#181D2A] hover:bg-[#202738] text-white flex items-center justify-center border border-white/5 transition-all duration-150 active:scale-95 shadow-sm">
               <Plus className="h-6 w-6 stroke-[2.4]" />
             </div>
             <span className="text-sm font-bold text-white tracking-normal mt-2">Buy</span>
@@ -349,16 +400,16 @@ export const OverviewDashboard: React.FC = () => {
         <div className="flex items-center justify-between pt-3 pb-2">
           <button
             onClick={() => setIsTokenSearchOpen(true)}
-            className="flex items-center gap-1 text-base font-bold text-white hover:text-[#05D686] transition-colors group"
+            className="flex items-center gap-1.5 text-lg font-bold text-white hover:text-[#3862FB] transition-colors group cursor-pointer"
             id="tokens-header-btn"
           >
             <span>Tokens</span>
-            <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-[#05D686] group-hover:translate-x-0.5 transition-transform" />
+            <ChevronRight className="h-4 w-4 text-[#8290A4] group-hover:text-white group-hover:translate-x-0.5 transition-transform" />
           </button>
 
           <button
             onClick={() => setIsTokenSearchOpen(true)}
-            className="text-xs font-semibold text-slate-400 hover:text-white flex items-center gap-1"
+            className="text-xs font-semibold text-[#8290A4] hover:text-white flex items-center gap-1 cursor-pointer"
           >
             <SlidersHorizontal className="h-3.5 w-3.5" />
             <span>Manage</span>
@@ -385,6 +436,8 @@ export const OverviewDashboard: React.FC = () => {
                 ? 'SOL'
                 : asset.symbol === 'NEAR'
                 ? 'NEAR'
+                : asset.symbol === 'AVAX'
+                ? 'AVAX'
                 : asset.symbol === 'POL' || asset.symbol === 'MATIC'
                 ? 'POL'
                 : asset.symbol === 'BTC'
@@ -399,14 +452,22 @@ export const OverviewDashboard: React.FC = () => {
                 ? 'SOL'
                 : null;
 
+            // Proper label matching Trust Wallet (e.g. "Tether USDT", "Solana", "NEAR", "Tron", "Avalanche")
+            const displayName =
+              asset.symbol === 'USDT'
+                ? 'Tether USDT'
+                : asset.symbol === 'GAS_TRX'
+                ? 'Gas fee TRX'
+                : asset.name;
+
             return (
               <div
                 key={asset.id}
                 onClick={() => setSelectedCoinForDetail(asset)}
-                className="flex items-center justify-between py-3 px-2 rounded-2xl hover:bg-[#1A1C20] cursor-pointer transition-colors group"
+                className="flex items-center justify-between py-3 px-2 rounded-2xl hover:bg-[#121622] cursor-pointer transition-colors group"
                 id={`token-row-${asset.symbol}`}
               >
-                {/* Left: Official Icon with Network Badge + Token Name & Live Price */}
+                {/* Left: Official Icon with Network Badge + Token Name & Balance */}
                 <div className="flex items-center gap-3 min-w-0">
                   <CryptoIcon
                     symbol={asset.symbol}
@@ -417,45 +478,30 @@ export const OverviewDashboard: React.FC = () => {
                   />
                   <div className="min-w-0">
                     <div className="flex items-center gap-1.5">
-                      <span className="text-sm font-bold text-white truncate group-hover:text-[#05D686] transition-colors">
-                        {asset.symbol === 'USDT' ? 'Tether' : asset.symbol === 'GAS_TRX' ? 'Gas fee TRX' : asset.name}
+                      <span className="text-[15px] font-bold text-white truncate group-hover:text-[#3862FB] transition-colors">
+                        {displayName}
                       </span>
-                      {networkTag && (
-                        <span className="text-[10px] font-bold font-mono px-1.5 py-0.2 rounded-md bg-[#24272E] text-slate-400 border border-white/5">
-                          {networkTag}
-                        </span>
-                      )}
                     </div>
-                    {/* Live Unit Price & 24h Change % */}
-                    <div className="text-xs text-slate-400 font-mono flex items-center gap-1.5 mt-0.5">
-                      <span>
-                        ${asset.priceUsd < 0.01
-                          ? asset.priceUsd.toFixed(6)
-                          : asset.priceUsd < 1
-                          ? asset.priceUsd.toFixed(4)
-                          : asset.priceUsd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                      </span>
-                      <span
-                        className={`font-semibold text-[11px] ${
-                          isChangePositive ? 'text-[#05D686]' : 'text-[#F6465D]'
-                        }`}
-                      >
-                        {isChangePositive ? '+' : ''}{asset.change24h.toFixed(2)}%
-                      </span>
+                    {/* Holding Quantity */}
+                    <div className="text-xs text-[#8290A4] font-mono mt-0.5">
+                      {isBalanceHidden ? '••••••' : balanceFormatted}
                     </div>
                   </div>
                 </div>
 
-                {/* Right: Holding USD Value & Holding Quantity */}
+                {/* Right: Holding USD Value & 24h PnL USD change */}
                 <div className="text-right shrink-0">
-                  <div className="text-sm font-bold text-white font-mono">
-                    {isBalanceHidden
-                      ? '••••••'
-                      : `$${usdValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}`}
+                  <div className="text-[15px] font-bold text-white font-mono">
+                    {isBalanceHidden ? '••••••' : formatUsdDisplay(usdValue)}
                   </div>
-                  <div className="text-xs text-slate-400 font-mono truncate">
-                    {isBalanceHidden ? '••••••' : balanceFormatted}
-                  </div>
+                  {(() => {
+                    const pnl = formatPnlChangeDisplay(changeUsd, isChangePositive, asset.change24h);
+                    return (
+                      <div className={`text-xs font-semibold font-mono mt-0.5 ${pnl.colorClass}`}>
+                        {isBalanceHidden ? '••••••' : pnl.text}
+                      </div>
+                    );
+                  })()}
                 </div>
               </div>
             );
@@ -466,10 +512,10 @@ export const OverviewDashboard: React.FC = () => {
         <div className="pt-6 pb-4 text-center">
           <button
             onClick={() => setIsTokenSearchOpen(true)}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#1E2024] hover:bg-[#25282E] border border-white/5 text-xs font-bold text-slate-300 hover:text-white transition-all active:scale-95"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#181D2A] hover:bg-[#202738] border border-[#232A3B] text-xs font-bold text-[#8290A4] hover:text-white transition-all active:scale-95 cursor-pointer"
             id="manage-crypto-bottom-btn"
           >
-            <Plus className="h-3.5 w-3.5 text-[#05D686]" />
+            <Plus className="h-3.5 w-3.5 text-[#3862FB]" />
             <span>Manage Crypto</span>
           </button>
         </div>

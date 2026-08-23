@@ -173,12 +173,12 @@ export const BuyCryptoModal: React.FC<BuyCryptoModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
       <div className="relative w-full max-w-lg rounded-3xl bg-[#121418] border border-white/10 p-6 shadow-2xl overflow-hidden text-white">
         {/* Glow Accent */}
-        <div className="absolute -top-24 -right-24 h-48 w-48 rounded-full bg-[#05D686]/15 blur-3xl pointer-events-none" />
+        <div className="absolute -top-24 -right-24 h-48 w-48 rounded-full bg-[#3862FB]/15 blur-3xl pointer-events-none" />
 
         {/* Modal Header */}
         <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#05D686]/15 text-[#05D686] border border-[#05D686]/30 shadow-md">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#3862FB]/15 text-[#3862FB] border border-[#3862FB]/30 shadow-md">
               <CreditCard className="h-5 w-5" />
             </div>
             <div>
@@ -220,7 +220,7 @@ export const BuyCryptoModal: React.FC<BuyCryptoModalProps> = ({
                     const found = FIAT_CURRENCIES.find((f) => f.code === e.target.value);
                     if (found) setSelectedFiat(found);
                   }}
-                  className="rounded-xl bg-[#25282E] border border-white/10 px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-[#05D686]"
+                  className="rounded-xl bg-[#25282E] border border-white/10 px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-[#3862FB]"
                   id="buy-fiat-currency-select"
                 >
                   {FIAT_CURRENCIES.map((f) => (
@@ -239,13 +239,13 @@ export const BuyCryptoModal: React.FC<BuyCryptoModalProps> = ({
                 <span>Rate: 1 {targetAsset.symbol} = ${targetAsset.priceUsd.toLocaleString()}</span>
               </div>
               <div className="flex items-center justify-between gap-3">
-                <div className="text-2xl font-black text-[#05D686]">
+                <div className="text-2xl font-black text-[#3862FB]">
                   {cryptoReceived > 0 ? cryptoReceived.toFixed(6) : '0.00'}
                 </div>
                 <select
                   value={selectedSymbol}
                   onChange={(e) => setSelectedSymbol(e.target.value)}
-                  className="rounded-xl bg-[#25282E] border border-white/10 px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-[#05D686]"
+                  className="rounded-xl bg-[#25282E] border border-white/10 px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-[#3862FB]"
                   id="buy-crypto-token-select"
                 >
                   {assets.slice(0, 15).map((a) => (
@@ -266,11 +266,11 @@ export const BuyCryptoModal: React.FC<BuyCryptoModalProps> = ({
                   onClick={() => setPaymentMethod('card')}
                   className={`flex flex-col items-center justify-center p-3 rounded-2xl border text-xs font-bold transition-all ${
                     paymentMethod === 'card'
-                      ? 'bg-[#05D686]/15 border-[#05D686] text-white shadow-md shadow-[#05D686]/10'
+                      ? 'bg-[#3862FB]/15 border-[#3862FB] text-white shadow-md shadow-[#3862FB]/10'
                       : 'bg-[#1A1C20] border-white/10 text-slate-400 hover:text-white'
                   }`}
                 >
-                  <CreditCard className="h-4 w-4 mb-1 text-[#05D686]" />
+                  <CreditCard className="h-4 w-4 mb-1 text-[#3862FB]" />
                   <span>Debit / Credit</span>
                 </button>
                 <button
@@ -278,11 +278,11 @@ export const BuyCryptoModal: React.FC<BuyCryptoModalProps> = ({
                   onClick={() => setPaymentMethod('apple_pay')}
                   className={`flex flex-col items-center justify-center p-3 rounded-2xl border text-xs font-bold transition-all ${
                     paymentMethod === 'apple_pay'
-                      ? 'bg-[#05D686]/15 border-[#05D686] text-white shadow-md shadow-[#05D686]/10'
+                      ? 'bg-[#3862FB]/15 border-[#3862FB] text-white shadow-md shadow-[#3862FB]/10'
                       : 'bg-[#1A1C20] border-white/10 text-slate-400 hover:text-white'
                   }`}
                 >
-                  <Smartphone className="h-4 w-4 mb-1 text-[#05D686]" />
+                  <Smartphone className="h-4 w-4 mb-1 text-[#3862FB]" />
                   <span>Apple / GPay</span>
                 </button>
                 <button
@@ -290,11 +290,11 @@ export const BuyCryptoModal: React.FC<BuyCryptoModalProps> = ({
                   onClick={() => setPaymentMethod('bank')}
                   className={`flex flex-col items-center justify-center p-3 rounded-2xl border text-xs font-bold transition-all ${
                     paymentMethod === 'bank'
-                      ? 'bg-[#05D686]/15 border-[#05D686] text-white shadow-md shadow-[#05D686]/10'
+                      ? 'bg-[#3862FB]/15 border-[#3862FB] text-white shadow-md shadow-[#3862FB]/10'
                       : 'bg-[#1A1C20] border-white/10 text-slate-400 hover:text-white'
                   }`}
                 >
-                  <Building2 className="h-4 w-4 mb-1 text-[#05D686]" />
+                  <Building2 className="h-4 w-4 mb-1 text-[#3862FB]" />
                   <span>Bank / UPI</span>
                 </button>
               </div>
@@ -312,7 +312,7 @@ export const BuyCryptoModal: React.FC<BuyCryptoModalProps> = ({
                       onClick={() => setSelectedProviderId(p.id)}
                       className={`flex items-center justify-between p-3 rounded-2xl border cursor-pointer transition-all ${
                         isSelected
-                          ? 'bg-[#1A1C20] border-[#05D686] ring-1 ring-[#05D686]'
+                          ? 'bg-[#1A1C20] border-[#3862FB] ring-1 ring-[#3862FB]'
                           : 'bg-[#16181D] border-white/5 hover:border-white/20'
                       }`}
                     >
@@ -321,7 +321,7 @@ export const BuyCryptoModal: React.FC<BuyCryptoModalProps> = ({
                         <div>
                           <div className="flex items-center gap-2">
                             <span className="text-xs font-bold text-white">{p.name}</span>
-                            <span className="rounded-full bg-[#05D686]/15 px-2 py-0.2 text-[9px] font-extrabold text-[#05D686]">
+                            <span className="rounded-full bg-[#3862FB]/15 px-2 py-0.2 text-[9px] font-extrabold text-[#3862FB]">
                               {p.badge}
                             </span>
                           </div>
@@ -350,7 +350,7 @@ export const BuyCryptoModal: React.FC<BuyCryptoModalProps> = ({
               </div>
               <div className="flex justify-between pt-1.5 border-t border-white/5 font-bold text-white">
                 <span>Receiving Wallet:</span>
-                <span className="font-mono text-emerald-400 text-[11px]">
+                <span className="font-mono text-[#38B6FF] text-[11px]">
                   {receiveAddress.slice(0, 8)}...{receiveAddress.slice(-6)}
                 </span>
               </div>
@@ -361,10 +361,10 @@ export const BuyCryptoModal: React.FC<BuyCryptoModalProps> = ({
               type="button"
               onClick={handleExecuteBuy}
               disabled={parsedFiatAmount <= 0}
-              className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl bg-gradient-to-r from-[#0570F2] to-[#05D686] hover:opacity-95 text-black font-black text-sm transition-all shadow-lg shadow-[#05D686]/20 active:scale-[0.98] disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl bg-[#3862FB] hover:bg-[#2D54E5] text-white font-black text-sm transition-all shadow-lg shadow-[#3862FB]/30 active:scale-[0.98] disabled:opacity-50"
               id="confirm-buy-crypto-btn"
             >
-              <Zap className="h-4 w-4 fill-black" />
+              <Zap className="h-4 w-4 fill-white" />
               <span>
                 Buy {cryptoReceived > 0 ? cryptoReceived.toFixed(4) : ''} {targetAsset.symbol} with {selectedFiat.code}
               </span>
@@ -375,8 +375,8 @@ export const BuyCryptoModal: React.FC<BuyCryptoModalProps> = ({
         {/* STEP 2: PROCESSING SIMULATION */}
         {step === 'processing' && (
           <div className="py-12 px-4 text-center space-y-6">
-            <div className="relative mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#05D686]/15 border-2 border-[#05D686] animate-pulse">
-              <RefreshCw className="h-8 w-8 text-[#05D686] animate-spin" />
+            <div className="relative mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#3862FB]/15 border-2 border-[#3862FB] animate-pulse">
+              <RefreshCw className="h-8 w-8 text-[#3862FB] animate-spin" />
             </div>
             <div>
               <h3 className="text-lg font-black text-white">Routing Order via {selectedProvider.name}...</h3>
@@ -384,7 +384,7 @@ export const BuyCryptoModal: React.FC<BuyCryptoModalProps> = ({
                 Securely verifying payment through 3D Secure, acquiring liquidity on-chain, and transferring {selectedSymbol} to your Trust Wallet.
               </p>
             </div>
-            <div className="flex justify-center items-center gap-2 text-xs font-mono text-emerald-400 bg-emerald-500/10 py-2 px-4 rounded-xl border border-emerald-500/20 max-w-xs mx-auto">
+            <div className="flex justify-center items-center gap-2 text-xs font-mono text-[#38B6FF] bg-[#3862FB]/10 py-2 px-4 rounded-xl border border-[#3862FB]/20 max-w-xs mx-auto">
               <Lock className="h-3.5 w-3.5" />
               <span>256-Bit SSL Encrypted Channel</span>
             </div>

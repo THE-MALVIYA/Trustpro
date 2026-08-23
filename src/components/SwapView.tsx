@@ -257,7 +257,7 @@ export const SwapView: React.FC = () => {
             onClick={() => setTradingMode('swap')}
             className={`flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-black transition-all ${
               tradingMode === 'swap'
-                ? 'bg-[#05D686] text-black shadow-md shadow-[#05D686]/20'
+                ? 'bg-[#3862FB] text-white shadow-md shadow-[#3862FB]/20'
                 : 'text-slate-400 hover:text-white'
             }`}
             id="tab-mode-instant-swap"
@@ -270,7 +270,7 @@ export const SwapView: React.FC = () => {
             onClick={() => setTradingMode('swing')}
             className={`flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-black transition-all ${
               tradingMode === 'swing'
-                ? 'bg-gradient-to-r from-[#0570F2] to-[#05D686] text-black shadow-md shadow-[#0570F2]/20'
+                ? 'bg-gradient-to-r from-[#0570F2] to-[#3862FB] text-white shadow-md shadow-[#0570F2]/20'
                 : 'text-slate-400 hover:text-white'
             }`}
             id="tab-mode-pro-swing"
@@ -286,14 +286,14 @@ export const SwapView: React.FC = () => {
 
       <div className="rounded-3xl bg-[#121418] border border-white/10 p-6 sm:p-8 shadow-2xl relative overflow-hidden text-white">
         {/* Glow Accent */}
-        <div className="absolute -top-24 -right-24 h-48 w-48 rounded-full bg-[#05D686]/15 blur-3xl pointer-events-none" />
+        <div className="absolute -top-24 -right-24 h-48 w-48 rounded-full bg-[#3862FB]/15 blur-3xl pointer-events-none" />
 
         {/* Feedback alert */}
         {txResult && (
           <div
             className={`mb-6 p-4 rounded-2xl border text-xs flex items-center gap-3 ${
               txResult.success
-                ? 'bg-[#05D686]/10 border-[#05D686]/30 text-[#05D686]'
+                ? 'bg-[#3862FB]/10 border-[#3862FB]/30 text-[#38B6FF]'
                 : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
             }`}
           >
@@ -313,7 +313,7 @@ export const SwapView: React.FC = () => {
             {/* Header Bar */}
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-2.5">
-                <div className="h-10 w-10 rounded-2xl bg-[#05D686]/15 border border-[#05D686]/30 flex items-center justify-center text-[#05D686]">
+                <div className="h-10 w-10 rounded-2xl bg-[#3862FB]/15 border border-[#3862FB]/30 flex items-center justify-center text-[#38B6FF]">
                   <Repeat className="h-5 w-5" />
                 </div>
                 <div>
@@ -344,7 +344,7 @@ export const SwapView: React.FC = () => {
                       onClick={() => setSlippage(val)}
                       className={`flex-1 py-1.5 rounded-lg font-bold transition-all ${
                         slippage === val
-                          ? 'bg-[#05D686] text-black'
+                          ? 'bg-[#3862FB] text-white'
                           : 'bg-[#1E2024] text-slate-400 hover:text-white'
                       }`}
                     >
@@ -383,7 +383,7 @@ export const SwapView: React.FC = () => {
                   <select
                     value={fromSymbol}
                     onChange={(e) => setFromSymbol(e.target.value)}
-                    className="rounded-xl bg-[#25282E] border border-white/10 px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-[#05D686]"
+                    className="rounded-xl bg-[#25282E] border border-white/10 px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-[#3862FB]"
                     id="swap-from-symbol-select"
                   >
                     {assets.slice(0, 20).map((a) => (
@@ -400,7 +400,7 @@ export const SwapView: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleSwapTokens}
-                  className="h-10 w-10 rounded-2xl bg-[#1E2024] border border-white/10 hover:border-[#05D686] flex items-center justify-center text-slate-400 hover:text-[#05D686] transition-all shadow-xl hover:rotate-180 duration-300"
+                  className="h-10 w-10 rounded-2xl bg-[#1E2024] border border-white/10 hover:border-[#3862FB] flex items-center justify-center text-slate-400 hover:text-[#38B6FF] transition-all shadow-xl hover:rotate-180 duration-300"
                   id="swap-invert-tokens-btn"
                 >
                   <ArrowDown className="h-4 w-4" />
@@ -413,21 +413,21 @@ export const SwapView: React.FC = () => {
                   <span>Receive (Estimated)</span>
                   <span>
                     1 {fromSymbol} ={' '}
-                    <span className="text-emerald-400 font-mono">
+                    <span className="text-[#38B6FF] font-mono">
                       {exchangeRate.toFixed(6)} {toSymbol}
                     </span>
                   </span>
                 </div>
 
                 <div className="flex items-center justify-between gap-4">
-                  <div className="text-2xl sm:text-3xl font-black text-[#05D686] font-mono">
+                  <div className="text-2xl sm:text-3xl font-black text-[#38B6FF] font-mono">
                     {calculatedToAmount.toFixed(6)}
                   </div>
 
                   <select
                     value={toSymbol}
                     onChange={(e) => setToSymbol(e.target.value)}
-                    className="rounded-xl bg-[#25282E] border border-white/10 px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-[#05D686]"
+                    className="rounded-xl bg-[#25282E] border border-white/10 px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-[#3862FB]"
                     id="swap-to-symbol-select"
                   >
                     {assets.slice(0, 20).map((a) => (
@@ -447,7 +447,7 @@ export const SwapView: React.FC = () => {
                 </div>
                 <div className="flex justify-between">
                   <span>Price Impact:</span>
-                  <span className="text-emerald-400 font-mono">~{priceImpact}%</span>
+                  <span className="text-[#38B6FF] font-mono">~{priceImpact}%</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Estimated Network Fee:</span>
@@ -458,10 +458,10 @@ export const SwapView: React.FC = () => {
               <button
                 type="submit"
                 disabled={numFromAmount <= 0}
-                className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl bg-gradient-to-r from-[#0570F2] to-[#05D686] hover:opacity-95 text-black font-black text-sm transition-all shadow-lg shadow-[#05D686]/20 active:scale-[0.98] disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl bg-gradient-to-r from-[#3862FB] to-[#38B6FF] hover:opacity-95 text-white font-black text-sm transition-all shadow-lg shadow-[#3862FB]/20 active:scale-[0.98] disabled:opacity-50"
                 id="execute-swap-submit-btn"
               >
-                <Zap className="h-4 w-4 fill-black" />
+                <Zap className="h-4 w-4 fill-white" />
                 <span>Execute Sub-Second Swap</span>
               </button>
             </form>
@@ -476,7 +476,7 @@ export const SwapView: React.FC = () => {
             {/* Header Bar */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <div className="h-10 w-10 rounded-2xl bg-[#0570F2]/15 border border-[#0570F2]/30 flex items-center justify-center text-[#0570F2]">
+                <div className="h-10 w-10 rounded-2xl bg-[#3862FB]/15 border border-[#3862FB]/30 flex items-center justify-center text-[#3862FB]">
                   <Activity className="h-5 w-5" />
                 </div>
                 <div>
@@ -499,7 +499,7 @@ export const SwapView: React.FC = () => {
                   <select
                     value={swingSymbol}
                     onChange={(e) => setSwingSymbol(e.target.value)}
-                    className="w-full rounded-2xl bg-[#16181D] border border-white/10 px-3.5 py-2.5 text-xs font-bold text-white focus:outline-none focus:border-[#05D686]"
+                    className="w-full rounded-2xl bg-[#16181D] border border-white/10 px-3.5 py-2.5 text-xs font-bold text-white focus:outline-none focus:border-[#3862FB]"
                   >
                     {assets.slice(0, 15).map((a) => (
                       <option key={a.id} value={a.symbol}>
@@ -517,7 +517,7 @@ export const SwapView: React.FC = () => {
                       onClick={() => setSwingType('LONG')}
                       className={`py-2 rounded-xl text-xs font-black flex items-center justify-center gap-1 transition-all ${
                         swingType === 'LONG'
-                          ? 'bg-[#05D686] text-black shadow-md shadow-[#05D686]/20'
+                          ? 'bg-[#3862FB] text-white shadow-md shadow-[#3862FB]/20'
                           : 'bg-[#16181D] text-slate-400 hover:text-white border border-white/10'
                       }`}
                     >
@@ -554,7 +554,7 @@ export const SwapView: React.FC = () => {
                       onClick={() => setSwingLeverage(lev)}
                       className={`py-2 rounded-xl text-xs font-mono font-bold transition-all ${
                         swingLeverage === lev
-                          ? 'bg-gradient-to-r from-[#0570F2] to-[#05D686] text-black shadow-md'
+                          ? 'bg-gradient-to-r from-[#3862FB] to-[#38B6FF] text-white shadow-md'
                           : 'bg-[#16181D] text-slate-400 hover:text-white border border-white/10'
                       }`}
                     >
@@ -570,7 +570,7 @@ export const SwapView: React.FC = () => {
                   <span>Margin Amount (USDT)</span>
                   <span>
                     Position Size:{' '}
-                    <span className="text-[#05D686] font-bold font-mono">
+                    <span className="text-[#38B6FF] font-bold font-mono">
                       ${swingPositionSizeUsd.toFixed(2)}
                     </span>
                   </span>
@@ -597,7 +597,7 @@ export const SwapView: React.FC = () => {
                       type="number"
                       value={takeProfitPercent}
                       onChange={(e) => setTakeProfitPercent(e.target.value)}
-                      className="w-full bg-transparent text-sm font-bold text-emerald-400 focus:outline-none font-mono"
+                      className="w-full bg-transparent text-sm font-bold text-[#38B6FF] focus:outline-none font-mono"
                     />
                     <span className="text-xs text-slate-400">%</span>
                   </div>
@@ -639,7 +639,7 @@ export const SwapView: React.FC = () => {
                 type="submit"
                 className={`w-full flex items-center justify-center gap-2 py-4 rounded-2xl font-black text-sm transition-all shadow-lg active:scale-[0.98] ${
                   swingType === 'LONG'
-                    ? 'bg-[#05D686] hover:bg-[#00EC96] text-black shadow-[#05D686]/20'
+                    ? 'bg-[#3862FB] hover:bg-[#2f54db] text-white shadow-[#3862FB]/20'
                     : 'bg-rose-500 hover:bg-rose-600 text-white shadow-rose-500/20'
                 }`}
               >
@@ -675,7 +675,7 @@ export const SwapView: React.FC = () => {
                           <span
                             className={`rounded px-1.5 py-0.2 text-[10px] font-extrabold ${
                               pos.type === 'LONG'
-                                ? 'bg-emerald-500/20 text-emerald-400'
+                                ? 'bg-[#3862FB]/20 text-[#38B6FF]'
                                 : 'bg-rose-500/20 text-rose-400'
                             }`}
                           >
@@ -690,7 +690,7 @@ export const SwapView: React.FC = () => {
                       <div className="text-right">
                         <div
                           className={`font-mono font-bold ${
-                            pos.pnlUsd >= 0 ? 'text-[#05D686]' : 'text-rose-400'
+                            pos.pnlUsd >= 0 ? 'text-[#38B6FF]' : 'text-rose-400'
                           }`}
                         >
                           {pos.pnlUsd >= 0 ? '+' : ''}${pos.pnlUsd.toFixed(2)} ({pos.pnlPercent.toFixed(2)}%)

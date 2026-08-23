@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useWallet } from '../context/WalletContext';
 import { CryptoAsset } from '../types';
 import { CryptoIcon } from './CryptoIcon';
+import { TokenDetailModal } from './TokenDetailModal';
 import {
   Wallet,
   ArrowUpRight,
@@ -41,11 +42,12 @@ export const UserDashboard: React.FC = () => {
   const [filterMode, setFilterMode] = useState<'all' | 'watchlist' | 'popular'>('all');
   const [hideZeroBalances, setHideZeroBalances] = useState(false);
   const [showBalance, setShowBalance] = useState(true);
+  const [selectedCoinForDetail, setSelectedCoinForDetail] = useState<CryptoAsset | null>(null);
 
   if (!currentUser) {
     return (
       <div className="flex flex-col items-center justify-center py-20 px-4 text-center">
-        <Wallet className="h-16 w-16 text-emerald-400 mb-4 animate-bounce" />
+        <Wallet className="h-16 w-16 text-[#38B6FF] mb-4 animate-bounce" />
         <h2 className="text-2xl font-extrabold text-white">Connect Your Wallet</h2>
         <p className="text-sm text-slate-400 max-w-md mt-2 mb-6">
           Log in or connect a wallet to view your portfolio balances, transaction logs, and multi-chain assets.
@@ -121,7 +123,7 @@ export const UserDashboard: React.FC = () => {
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
       {/* PORTFOLIO HEADER CARD */}
-      <div className="rounded-3xl bg-gradient-to-r from-slate-900 via-[#0e121a] to-slate-900 border border-slate-800 p-6 sm:p-8 relative overflow-hidden shadow-2xl shadow-emerald-500/5">
+      <div className="rounded-3xl bg-gradient-to-r from-slate-900 via-[#0e121a] to-slate-900 border border-slate-800 p-6 sm:p-8 relative overflow-hidden shadow-2xl shadow-[#3862FB]/5">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* Left Balance Summary */}
           <div className="lg:col-span-7 space-y-4">
@@ -140,14 +142,14 @@ export const UserDashboard: React.FC = () => {
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="rounded-full bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 text-xs font-mono font-bold text-emerald-400">
+                <span className="rounded-full bg-[#3862FB]/10 border border-[#3862FB]/20 px-2.5 py-0.5 text-xs font-mono font-bold text-[#38B6FF]">
                   {currentUser.role.toUpperCase()}
                 </span>
                 <span
                   onClick={() => setActiveTab('settings')}
                   className={`cursor-pointer rounded-full px-2.5 py-0.5 text-xs font-mono font-bold border transition-all ${
                     currentUser.kycStatus === 'verified'
-                      ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                      ? 'bg-[#3862FB]/10 border-[#3862FB]/30 text-[#38B6FF]'
                       : currentUser.kycStatus === 'pending'
                       ? 'bg-blue-300/10 border-blue-300/30 text-blue-300'
                       : 'bg-rose-500/10 border-rose-500/30 text-rose-400 animate-pulse'
@@ -167,8 +169,8 @@ export const UserDashboard: React.FC = () => {
               <div
                 className={`flex items-center gap-1 font-bold text-sm px-2.5 py-1 rounded-full ${
                   weighted24hPnlPercent >= 0
-                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                    : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+                    ? 'bg-emerald-500/10 text-[#00D182] border border-emerald-500/20'
+                    : 'bg-rose-500/10 text-[#FF4A5A] border border-rose-500/20'
                 }`}
               >
                 <TrendingUp className="h-4 w-4" />
@@ -190,7 +192,7 @@ export const UserDashboard: React.FC = () => {
                   setSelectedAssetForModal(assets[0]);
                   setIsSendModalOpen(true);
                 }}
-                className="flex items-center gap-2 rounded-xl bg-emerald-500 px-4 py-2.5 text-xs font-bold text-black hover:bg-emerald-400 transition-all shadow-md"
+                className="flex items-center gap-2 rounded-xl bg-[#3862FB] px-4 py-2.5 text-xs font-bold text-white hover:bg-[#2f54db] transition-all shadow-md shadow-[#3862FB]/20"
                 id="dashboard-send-btn"
               >
                 <Send className="h-3.5 w-3.5" />
@@ -205,7 +207,7 @@ export const UserDashboard: React.FC = () => {
                 className="flex items-center gap-2 rounded-xl bg-slate-800 border border-slate-700 px-4 py-2.5 text-xs font-bold text-white hover:bg-slate-700 transition-all"
                 id="dashboard-receive-btn"
               >
-                <Download className="h-3.5 w-3.5 text-emerald-400" />
+                <Download className="h-3.5 w-3.5 text-[#38B6FF]" />
                 <span>Receive</span>
               </button>
 
@@ -340,7 +342,7 @@ export const UserDashboard: React.FC = () => {
               onClick={() => setFilterMode('all')}
               className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
                 filterMode === 'all'
-                  ? 'bg-emerald-500 text-black'
+                  ? 'bg-[#3862FB] text-white'
                   : 'bg-slate-950 text-slate-400 hover:text-white'
               }`}
             >
@@ -350,7 +352,7 @@ export const UserDashboard: React.FC = () => {
               onClick={() => setFilterMode('watchlist')}
               className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
                 filterMode === 'watchlist'
-                  ? 'bg-emerald-500 text-black'
+                  ? 'bg-[#3862FB] text-white'
                   : 'bg-slate-950 text-slate-400 hover:text-white'
               }`}
             >
@@ -360,7 +362,7 @@ export const UserDashboard: React.FC = () => {
               onClick={() => setFilterMode('popular')}
               className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
                 filterMode === 'popular'
-                  ? 'bg-emerald-500 text-black'
+                  ? 'bg-[#3862FB] text-white'
                   : 'bg-slate-950 text-slate-400 hover:text-white'
               }`}
             >
@@ -375,7 +377,7 @@ export const UserDashboard: React.FC = () => {
                 type="checkbox"
                 checked={hideZeroBalances}
                 onChange={(e) => setHideZeroBalances(e.target.checked)}
-                className="rounded border-slate-800 bg-slate-950 text-emerald-500 focus:ring-emerald-500"
+                className="rounded border-slate-800 bg-slate-950 text-[#3862FB] focus:ring-[#3862FB]"
               />
               <span>Hide Zero Balances</span>
             </label>
@@ -387,7 +389,7 @@ export const UserDashboard: React.FC = () => {
                 placeholder="Search coin..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-44 rounded-xl bg-slate-950 border border-slate-800 pl-9 pr-3 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+                className="w-44 rounded-xl bg-slate-950 border border-slate-800 pl-9 pr-3 py-1.5 text-xs text-white focus:outline-none focus:border-[#3862FB]"
               />
             </div>
           </div>
@@ -412,37 +414,58 @@ export const UserDashboard: React.FC = () => {
                 return (
                   <tr key={asset.id} className="hover:bg-slate-800/30 transition-colors group">
                     {/* Coin & Symbol */}
-                    <td className="py-4 pl-2">
+                    <td
+                      className="py-4 pl-2 cursor-pointer"
+                      onClick={() => setSelectedCoinForDetail(asset)}
+                    >
                       <div className="flex items-center gap-3">
                         <button
-                          onClick={() => toggleWatchlist(asset.symbol)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleWatchlist(asset.symbol);
+                          }}
                           className="text-slate-600 hover:text-blue-300 transition-colors"
                           title="Toggle Watchlist"
                         >
                           <Star className={`h-4 w-4 ${isWatchlisted ? 'fill-blue-300 text-blue-300' : ''}`} />
                         </button>
-                        <CryptoIcon symbol={asset.symbol} src={asset.icon} size="md" />
+                        <CryptoIcon
+                          symbol={asset.symbol}
+                          name={asset.name}
+                          network={asset.network}
+                          src={asset.icon}
+                          size="md"
+                        />
                         <div>
-                          <p className="font-bold text-white group-hover:text-emerald-400 transition-colors">{asset.name}</p>
+                          <p className="font-bold text-white group-hover:text-[#38B6FF] transition-colors">{asset.name}</p>
                           <span className="text-[10px] text-slate-400 font-mono">{asset.symbol} • {asset.network}</span>
                         </div>
                       </div>
                     </td>
 
                     {/* Price */}
-                    <td className="py-4 font-mono font-bold text-white">
+                    <td
+                      className="py-4 font-mono font-bold text-white cursor-pointer"
+                      onClick={() => setSelectedCoinForDetail(asset)}
+                    >
                       ${asset.priceUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 })}
                     </td>
 
                     {/* 24h Change */}
-                    <td className="py-4 font-semibold">
-                      <span className={asset.change24h >= 0 ? 'text-emerald-400' : 'text-rose-400'}>
+                    <td
+                      className="py-4 font-semibold cursor-pointer"
+                      onClick={() => setSelectedCoinForDetail(asset)}
+                    >
+                      <span className={asset.change24h >= 0 ? 'text-[#00D182]' : 'text-[#FF4A5A]'}>
                         {asset.change24h >= 0 ? '+' : ''}{asset.change24h}%
                       </span>
                     </td>
 
                     {/* Balance */}
-                    <td className="py-4 font-mono">
+                    <td
+                      className="py-4 font-mono cursor-pointer"
+                      onClick={() => setSelectedCoinForDetail(asset)}
+                    >
                       {showBalance ? (
                         <div>
                           <p className="font-bold text-slate-200">{asset.userAmount} {asset.symbol}</p>
@@ -453,7 +476,10 @@ export const UserDashboard: React.FC = () => {
                     </td>
 
                     {/* Value USD */}
-                    <td className="py-4 font-mono font-bold text-white">
+                    <td
+                      className="py-4 font-mono font-bold text-white cursor-pointer"
+                      onClick={() => setSelectedCoinForDetail(asset)}
+                    >
                       {showBalance ? `$${asset.valueUsd.toLocaleString('en-US', { minimumFractionDigits: 2 })}` : '••••••'}
                     </td>
 
@@ -462,7 +488,7 @@ export const UserDashboard: React.FC = () => {
                       <div className="flex items-center justify-end gap-2">
                         <button
                           onClick={() => handleOpenSend(asset)}
-                          className="px-2.5 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 font-semibold text-[11px]"
+                          className="px-2.5 py-1.5 rounded-lg bg-[#3862FB]/10 text-[#38B6FF] hover:bg-[#3862FB]/20 font-semibold text-[11px]"
                         >
                           Send
                         </button>
@@ -492,7 +518,7 @@ export const UserDashboard: React.FC = () => {
       <div className="rounded-3xl bg-slate-900/80 border border-slate-800 p-6 space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-base font-bold text-white flex items-center gap-2">
-            <Clock className="h-4 w-4 text-emerald-400" />
+            <Clock className="h-4 w-4 text-[#38B6FF]" />
             <span>Recent Activity Logs</span>
           </h3>
           <span className="text-xs text-slate-400 font-mono">
@@ -524,7 +550,7 @@ export const UserDashboard: React.FC = () => {
                         tx.type === 'send' || tx.type === 'admin_debit' || tx.type === 'withdraw'
                           ? 'bg-rose-500/10 text-rose-400'
                           : tx.type === 'receive' || tx.type === 'admin_credit' || tx.type === 'deposit'
-                          ? 'bg-emerald-500/10 text-emerald-400'
+                          ? 'bg-[#3862FB]/10 text-[#38B6FF]'
                           : 'bg-blue-300/10 text-blue-300'
                       }`}
                     >
@@ -535,7 +561,7 @@ export const UserDashboard: React.FC = () => {
                         {tx.type.replace('_', ' ')} • {tx.assetSymbol}
                       </p>
                       {tx.toAddress && (
-                        <p className="text-[11px] font-mono text-emerald-400 font-medium truncate max-w-[220px]" title={tx.toAddress}>
+                        <p className="text-[11px] font-mono text-[#38B6FF] font-medium truncate max-w-[220px]" title={tx.toAddress}>
                           To: {tx.toAddress}
                         </p>
                       )}
@@ -556,7 +582,7 @@ export const UserDashboard: React.FC = () => {
                         tx.type === 'send' || tx.type === 'admin_debit' || tx.type === 'withdraw'
                           ? 'text-rose-400'
                           : tx.type === 'receive' || tx.type === 'admin_credit' || tx.type === 'deposit'
-                          ? 'text-emerald-400'
+                          ? 'text-[#38B6FF]'
                           : 'text-white'
                       }`}
                     >
@@ -570,6 +596,13 @@ export const UserDashboard: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* TOKEN DETAIL MODAL */}
+      <TokenDetailModal
+        asset={selectedCoinForDetail}
+        isOpen={!!selectedCoinForDetail}
+        onClose={() => setSelectedCoinForDetail(null)}
+      />
     </div>
   );
 };

@@ -70,7 +70,7 @@ export const NftGalleryView: React.FC = () => {
                 </div>
                 <div className="text-right">
                   <p className="text-[10px] text-slate-500">Value USD</p>
-                  <p className="font-bold font-mono text-emerald-400">${nft.floorPriceUsd.toLocaleString()}</p>
+                  <p className="font-bold font-mono text-[#38B6FF]">${nft.floorPriceUsd.toLocaleString()}</p>
                 </div>
               </div>
             </div>

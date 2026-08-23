@@ -107,7 +107,7 @@ export const AdminDashboard: React.FC = () => {
         </div>
         <h2 className="text-2xl font-black text-white">Super Admin Verification Required</h2>
         <p className="text-xs text-slate-400 mt-2 max-w-md mx-auto">
-          The Admin Portal is locked and protected. Please sign in with your official Super Administrator credentials (<span className="text-emerald-400 font-mono">legendxadmin1999@gmail.com</span>) to proceed.
+          The Admin Portal is locked and protected. Please sign in with your official Super Administrator credentials (<span className="text-[#38B6FF] font-mono">legendxadmin1999@gmail.com</span>) to proceed.
         </p>
         <button
           onClick={() => setIsAuthModalOpen(true)}
@@ -396,7 +396,7 @@ export const AdminDashboard: React.FC = () => {
 
           {transactions.filter((t) => t.status === 'pending').length === 0 ? (
             <div className="rounded-3xl bg-slate-900/50 border border-slate-800 p-12 text-center">
-              <CheckCircle2 className="h-12 w-12 text-emerald-400 mx-auto mb-3 opacity-60" />
+              <CheckCircle2 className="h-12 w-12 text-[#38B6FF] mx-auto mb-3 opacity-60" />
               <h3 className="text-base font-bold text-white">No Pending Transactions</h3>
               <p className="text-xs text-slate-400 mt-1">All user deposits and withdrawals have been verified and processed.</p>
             </div>
@@ -418,7 +418,7 @@ export const AdminDashboard: React.FC = () => {
                           <span
                             className={`px-3 py-1 rounded-full text-xs font-bold ${
                               isDeposit
-                                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
+                                ? 'bg-[#3862FB]/10 text-[#38B6FF] border border-[#3862FB]/30'
                                 : 'bg-rose-500/10 text-rose-400 border border-rose-500/30'
                             }`}
                           >
@@ -455,7 +455,7 @@ export const AdminDashboard: React.FC = () => {
                                   type="text"
                                   value={editToAddressInput}
                                   onChange={(e) => setEditToAddressInput(e.target.value)}
-                                  className="w-full rounded-lg bg-slate-950 border border-blue-300/50 px-2.5 py-1 text-xs text-emerald-400 font-mono focus:outline-none"
+                                  className="w-full rounded-lg bg-slate-950 border border-blue-300/50 px-2.5 py-1 text-xs text-[#38B6FF] font-mono focus:outline-none"
                                 />
                                 <button
                                   onClick={() => {
@@ -464,7 +464,7 @@ export const AdminDashboard: React.FC = () => {
                                     }
                                     setEditingTxId(null);
                                   }}
-                                  className="px-2.5 py-1 rounded bg-emerald-500 text-black font-bold text-[10px] shrink-0"
+                                  className="px-2.5 py-1 rounded bg-[#3862FB] text-white font-bold text-[10px] shrink-0 hover:bg-[#2f54db]"
                                 >
                                   Save
                                 </button>
@@ -477,7 +477,7 @@ export const AdminDashboard: React.FC = () => {
                               </div>
                             ) : (
                               <div className="flex items-center gap-2 font-mono">
-                                <span className="text-emerald-400 truncate">{tx.toAddress || tx.fromAddress || 'N/A'}</span>
+                                <span className="text-[#38B6FF] truncate">{tx.toAddress || tx.fromAddress || 'N/A'}</span>
                                 <button
                                   onClick={() => {
                                     setEditingTxId(tx.id);
@@ -503,11 +503,11 @@ export const AdminDashboard: React.FC = () => {
                       <div className="flex flex-col sm:flex-row gap-3 shrink-0 items-stretch md:items-center border-t md:border-t-0 border-slate-800 pt-4 md:pt-0">
                         <button
                           onClick={() => approveTransaction(tx.id)}
-                          className="flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs transition-all shadow-lg shadow-emerald-500/20"
+                          className="flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-[#3862FB] hover:bg-[#2f54db] text-white font-bold text-xs transition-all shadow-lg shadow-[#3862FB]/20"
                           id={`approve-tx-${tx.id}`}
                         >
                           <Check className="h-4 w-4 stroke-[3]" />
-                          <span>Accept & Confirm (Green)</span>
+                          <span>Accept & Confirm (Blue)</span>
                         </button>
 
                         <button
@@ -534,7 +534,7 @@ export const AdminDashboard: React.FC = () => {
             <div className="rounded-3xl bg-slate-900/80 border border-slate-800 p-6">
               <p className="text-xs text-slate-400 font-medium">Total Registered Users</p>
               <p className="text-3xl font-black text-white font-mono mt-1">{users.length}</p>
-              <span className="text-[10px] text-emerald-400 font-bold mt-2 inline-block">100% Active / Verified Ratio</span>
+              <span className="text-[10px] text-[#38B6FF] font-bold mt-2 inline-block">100% Active / Verified Ratio</span>
             </div>
 
             <div className="rounded-3xl bg-slate-900/80 border border-slate-800 p-6">
@@ -546,12 +546,12 @@ export const AdminDashboard: React.FC = () => {
             <div className="rounded-3xl bg-slate-900/80 border border-slate-800 p-6">
               <p className="text-xs text-slate-400 font-medium">Platform 24h Volume</p>
               <p className="text-3xl font-black text-blue-300 font-mono mt-1">$14.8M</p>
-              <span className="text-[10px] text-emerald-400 font-bold mt-2 inline-block">+18.2% vs Yesterday</span>
+              <span className="text-[10px] text-[#38B6FF] font-bold mt-2 inline-block">+18.2% vs Yesterday</span>
             </div>
 
             <div className="rounded-3xl bg-slate-900/80 border border-slate-800 p-6">
               <p className="text-xs text-slate-400 font-medium">Platform Revenue (Gas Share)</p>
-              <p className="text-3xl font-black text-emerald-400 font-mono mt-1">$48,290.00</p>
+              <p className="text-3xl font-black text-[#38B6FF] font-mono mt-1">$48,290.00</p>
               <span className="text-[10px] text-slate-400 mt-2 inline-block">Auto-Audited Weekly</span>
             </div>
           </div>
@@ -575,7 +575,7 @@ export const AdminDashboard: React.FC = () => {
             <div
               className={`p-4 rounded-2xl border text-xs font-bold flex items-center gap-3 ${
                 adjustFeedback.success
-                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                  ? 'bg-[#3862FB]/10 border-[#3862FB]/30 text-[#38B6FF]'
                   : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
               }`}
             >
@@ -602,7 +602,7 @@ export const AdminDashboard: React.FC = () => {
                   setSelectedAssetSymbol('GAS_TRX');
                   if (!adjustAmount || adjustAmount === '0') setAdjustAmount('100');
                 }}
-                className="px-4 py-2.5 rounded-xl bg-emerald-500 text-[#0B1020] text-xs font-black hover:bg-emerald-400 transition-all shrink-0 shadow-md"
+                className="px-4 py-2.5 rounded-xl bg-[#3862FB] text-white text-xs font-black hover:bg-[#2f54db] transition-all shrink-0 shadow-md"
               >
                 Select Gas Fee (TRX)
               </button>
@@ -680,7 +680,7 @@ export const AdminDashboard: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-center gap-4 pt-4 border-t border-slate-800">
             <button
               onClick={handleApplyCredit}
-              className="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 rounded-xl bg-emerald-500 px-6 py-3.5 text-xs font-black text-black hover:bg-emerald-400 transition-all shadow-lg shadow-emerald-500/20"
+              className="w-full sm:w-auto flex-1 flex items-center justify-center gap-2 rounded-xl bg-[#3862FB] px-6 py-3.5 text-xs font-black text-white hover:bg-[#2f54db] transition-all shadow-lg shadow-[#3862FB]/20"
               id="admin-apply-credit-btn"
             >
               <PlusCircle className="h-4 w-4" />
@@ -708,7 +708,7 @@ export const AdminDashboard: React.FC = () => {
               <h2 className="text-lg font-bold text-white flex items-center gap-2">
                 <Edit2 className="h-5 w-5 text-blue-300" />
                 <span>Custom User Deposit & Receive Coin Addresses</span>
-                <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-[10px] font-mono text-emerald-400 font-bold">
+                <span className="px-2.5 py-0.5 rounded-full bg-[#3862FB]/10 border border-[#3862FB]/30 text-[10px] font-mono text-[#38B6FF] font-bold">
                   Live Overrides
                 </span>
               </h2>
@@ -721,7 +721,7 @@ export const AdminDashboard: React.FC = () => {
               <button
                 type="button"
                 onClick={handleSaveAllAddresses}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 text-black font-black text-xs hover:opacity-95 shadow-lg shadow-emerald-500/20 transition-all"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#3862FB] to-[#38B6FF] text-white font-black text-xs hover:opacity-95 shadow-lg shadow-[#3862FB]/20 transition-all"
               >
                 <Save className="h-4 w-4" />
                 <span>Save All Addresses for User</span>
@@ -734,7 +734,7 @@ export const AdminDashboard: React.FC = () => {
             <div
               className={`p-4 rounded-2xl border text-xs font-bold flex items-center gap-2.5 transition-all ${
                 addressSaveFeedback.success
-                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                  ? 'bg-[#3862FB]/10 border-[#3862FB]/30 text-[#38B6FF]'
                   : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
               }`}
             >
@@ -880,7 +880,7 @@ export const AdminDashboard: React.FC = () => {
                           title="Copy Address"
                         >
                           {copiedAddressKey === key ? (
-                            <Check className="h-3.5 w-3.5 text-emerald-400" />
+                            <Check className="h-3.5 w-3.5 text-[#38B6FF]" />
                           ) : (
                             <Copy className="h-3.5 w-3.5" />
                           )}
@@ -933,7 +933,7 @@ export const AdminDashboard: React.FC = () => {
 
                 <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
                   <p className="text-[10px] text-slate-400 font-bold uppercase mb-1">Active Address</p>
-                  <p className="text-xs font-mono text-emerald-400 break-all">{previewQrModal.address}</p>
+                  <p className="text-xs font-mono text-[#38B6FF] break-all">{previewQrModal.address}</p>
                 </div>
 
                 <button
@@ -957,7 +957,7 @@ export const AdminDashboard: React.FC = () => {
         <div className="rounded-3xl bg-slate-900/80 border border-slate-800 p-6 space-y-6">
           {deleteFeedback && (
             <div className={`p-4 rounded-2xl border text-xs font-bold flex items-center gap-2 ${
-              deleteFeedback.success ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
+              deleteFeedback.success ? 'bg-[#3862FB]/10 border-[#3862FB]/30 text-[#38B6FF]' : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
             }`}>
               <CheckCircle2 className="h-4 w-4 shrink-0" />
               <span>{deleteFeedback.message}</span>
@@ -991,7 +991,7 @@ export const AdminDashboard: React.FC = () => {
                 <div key={`card-${u.id}`} className="p-3.5 rounded-2xl bg-slate-950 border border-amber-500/20 space-y-2">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <div className="h-2 w-2 rounded-full bg-emerald-400"></div>
+                      <div className="h-2 w-2 rounded-full bg-[#38B6FF]"></div>
                       <span className="font-bold text-white text-xs">{u.name}</span>
                     </div>
                     <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-500/10 text-blue-300 uppercase">
@@ -1007,7 +1007,7 @@ export const AdminDashboard: React.FC = () => {
                     <div className="flex items-center justify-between">
                       <span className="text-slate-400">Password:</span>
                       <div className="flex items-center gap-1.5">
-                        <span className="text-emerald-400 font-bold">
+                        <span className="text-[#38B6FF] font-bold">
                           {isPassVisible ? pwdText : '••••••••••••'}
                         </span>
                         <button
@@ -1025,7 +1025,7 @@ export const AdminDashboard: React.FC = () => {
                             setCopiedPassUserId(u.id);
                             setTimeout(() => setCopiedPassUserId(null), 2000);
                           }}
-                          className="p-1 text-slate-400 hover:text-emerald-400"
+                          className="p-1 text-slate-400 hover:text-[#38B6FF]"
                           title="Copy Email & Password"
                         >
                           <Copy className="h-3.5 w-3.5" />
@@ -1034,7 +1034,7 @@ export const AdminDashboard: React.FC = () => {
                     </div>
                   </div>
                   {copiedPassUserId === u.id && (
-                    <p className="text-[10px] text-emerald-400 font-bold text-right">Copied Credentials!</p>
+                    <p className="text-[10px] text-[#38B6FF] font-bold text-right">Copied Credentials!</p>
                   )}
                 </div>
               );
@@ -1062,7 +1062,7 @@ export const AdminDashboard: React.FC = () => {
                     <tr key={u.id} className="hover:bg-slate-800/30 transition-colors">
                       <td className="py-4">
                         <div className="flex items-center gap-3">
-                          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-[#16E6A8] via-[#1E88FF] to-[#3B82F6] text-[#0B1020] font-black text-xs shrink-0">
+                          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-[#3862FB] via-[#38B6FF] to-[#1E88FF] text-white font-black text-xs shrink-0">
                             {(u.name || 'US').slice(0, 2).toUpperCase()}
                           </div>
                           <div>
@@ -1079,7 +1079,7 @@ export const AdminDashboard: React.FC = () => {
                         <div className="space-y-1">
                           <p className="text-white font-bold text-[11px]">{u.email}</p>
                           <div className="flex items-center gap-1.5">
-                            <span className="text-emerald-400 font-bold bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded text-[11px]">
+                            <span className="text-[#38B6FF] font-bold bg-[#3862FB]/10 border border-[#3862FB]/20 px-2 py-0.5 rounded text-[11px]">
                               {isPassVisible ? userPwd : '••••••••••••'}
                             </span>
                             <button
@@ -1098,7 +1098,7 @@ export const AdminDashboard: React.FC = () => {
                                 setCopiedPassUserId(u.id);
                                 setTimeout(() => setCopiedPassUserId(null), 2000);
                               }}
-                              className="p-1 rounded bg-slate-900 border border-slate-800 text-slate-300 hover:text-emerald-400"
+                              className="p-1 rounded bg-slate-900 border border-slate-800 text-slate-300 hover:text-[#38B6FF]"
                               title="Copy Credentials"
                             >
                               <Copy className="h-3.5 w-3.5" />
@@ -1114,7 +1114,7 @@ export const AdminDashboard: React.FC = () => {
                     </td>
 
                     <td className="py-4 font-semibold">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${u.status === 'active' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'}`}>
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${u.status === 'active' ? 'bg-[#3862FB]/10 text-[#38B6FF]' : 'bg-rose-500/10 text-rose-400'}`}>
                         {u.status.toUpperCase()}
                       </span>
                     </td>
@@ -1144,7 +1144,7 @@ export const AdminDashboard: React.FC = () => {
                             setSelectedUserForAddressEdit(u.id);
                             setActiveTab('user_addresses');
                           }}
-                          className="flex items-center gap-1 px-2.5 py-1 rounded font-bold text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all"
+                          className="flex items-center gap-1 px-2.5 py-1 rounded font-bold text-[10px] bg-[#3862FB]/10 text-[#38B6FF] border border-[#3862FB]/20 hover:bg-[#3862FB]/20 transition-all"
                           title="Edit Coin Addresses for this User"
                         >
                           <Edit2 className="h-3 w-3" />
@@ -1174,7 +1174,7 @@ export const AdminDashboard: React.FC = () => {
                         ) : (
                           <button
                             onClick={() => updateUserStatus(u.id, 'active')}
-                            className="px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 font-bold text-[10px]"
+                            className="px-2.5 py-1 rounded bg-[#3862FB]/10 text-[#38B6FF] hover:bg-[#3862FB]/20 font-bold text-[10px]"
                           >
                             Restore
                           </button>
@@ -1212,11 +1212,11 @@ export const AdminDashboard: React.FC = () => {
       {/* TAB: LIVE PLATFORM TRAFFIC CONTROL */}
       {activeTab === 'traffic' && (
         <div className="space-y-6 animate-fadeIn">
-          <div className="rounded-3xl bg-slate-900/90 border border-emerald-500/30 p-6 space-y-6 shadow-2xl">
+          <div className="rounded-3xl bg-slate-900/90 border border-[#3862FB]/30 p-6 space-y-6 shadow-2xl">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
               <div>
                 <div className="flex items-center gap-2">
-                  <Sliders className="h-6 w-6 text-emerald-400" />
+                  <Sliders className="h-6 w-6 text-[#38B6FF]" />
                   <h2 className="text-xl font-black text-white uppercase">Live Platform Traffic Control Center</h2>
                 </div>
                 <p className="text-xs text-slate-400 mt-1">
@@ -1269,7 +1269,7 @@ export const AdminDashboard: React.FC = () => {
             </div>
 
             {trafficSavedSuccess && (
-              <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold flex items-center gap-2 animate-bounce">
+              <div className="p-4 rounded-2xl bg-[#3862FB]/10 border border-[#3862FB]/30 text-[#38B6FF] text-xs font-bold flex items-center gap-2 animate-bounce">
                 <CheckCircle2 className="h-5 w-5" />
                 <span>Live Traffic Control Broadcasted Successfully! All users will see these exact metrics.</span>
               </div>
@@ -1281,18 +1281,18 @@ export const AdminDashboard: React.FC = () => {
                 <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
                   <label className="block text-xs font-bold text-slate-300 flex items-center justify-between">
                     <span>Daily Active Users Count</span>
-                    <span className="text-[10px] text-emerald-400 font-mono">Today's Traffic</span>
+                    <span className="text-[10px] text-[#38B6FF] font-mono">Today's Traffic</span>
                   </label>
                   <input
                     type="number"
                     value={trafficActiveUsers}
                     onChange={(e) => setTrafficActiveUsers(Number(e.target.value))}
-                    className="w-full rounded-xl bg-slate-900 border border-slate-700 px-3.5 py-2.5 text-lg font-black text-white font-mono focus:outline-none focus:border-emerald-500"
+                    className="w-full rounded-xl bg-slate-900 border border-slate-700 px-3.5 py-2.5 text-lg font-black text-white font-mono focus:outline-none focus:border-[#3862FB]"
                     required
                     id="traffic-active-users-input"
                   />
                   <p className="text-[10px] text-slate-400">
-                    Formatted: <span className="text-emerald-400 font-bold">{trafficActiveUsers.toLocaleString()}</span> active users
+                    Formatted: <span className="text-[#38B6FF] font-bold">{trafficActiveUsers.toLocaleString()}</span> active users
                   </p>
                 </div>
 
@@ -1344,10 +1344,10 @@ export const AdminDashboard: React.FC = () => {
                   <select
                     value={trafficStatus}
                     onChange={(e) => setTrafficStatus(e.target.value as any)}
-                    className="w-full rounded-xl bg-slate-900 border border-slate-700 px-3.5 py-2.5 text-xs text-white font-bold focus:outline-none focus:border-emerald-500"
+                    className="w-full rounded-xl bg-slate-900 border border-slate-700 px-3.5 py-2.5 text-xs text-white font-bold focus:outline-none focus:border-[#3862FB]"
                     id="traffic-system-status-select"
                   >
-                    <option value="OPERATIONAL">99.99% Operational (Green)</option>
+                    <option value="OPERATIONAL">99.99% Operational (Blue)</option>
                     <option value="HIGH_VOLUME">High Volume Processing (Blue)</option>
                     <option value="SURGE">Network Surge Traffic (Purple)</option>
                     <option value="MAINTENANCE">Node Maintenance (Amber)</option>
@@ -1364,7 +1364,7 @@ export const AdminDashboard: React.FC = () => {
                     type="checkbox"
                     checked={trafficAutoFluctuate}
                     onChange={(e) => setTrafficAutoFluctuate(e.target.checked)}
-                    className="h-5 w-5 rounded text-emerald-500 bg-slate-900 border-slate-800 focus:ring-emerald-500 cursor-pointer"
+                    className="h-5 w-5 rounded text-[#3862FB] bg-slate-900 border-slate-800 focus:ring-[#3862FB] cursor-pointer"
                   />
                 </div>
               </div>
@@ -1379,7 +1379,7 @@ export const AdminDashboard: React.FC = () => {
                   value={trafficTicker}
                   onChange={(e) => setTrafficTicker(e.target.value)}
                   placeholder="Enter custom ticker banner message for users..."
-                  className="w-full rounded-xl bg-slate-900 border border-slate-700 p-3 text-xs text-white focus:outline-none focus:border-emerald-500 resize-none font-mono"
+                  className="w-full rounded-xl bg-slate-900 border border-slate-700 p-3 text-xs text-white focus:outline-none focus:border-[#3862FB] resize-none font-mono"
                   id="traffic-ticker-notice-textarea"
                 />
               </div>
@@ -1387,7 +1387,7 @@ export const AdminDashboard: React.FC = () => {
               <div className="flex justify-end gap-3 pt-2">
                 <button
                   type="submit"
-                  className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:opacity-95 text-slate-950 font-black text-xs transition-all shadow-xl flex items-center gap-2"
+                  className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-[#3862FB] to-[#38B6FF] hover:opacity-95 text-white font-black text-xs transition-all shadow-xl flex items-center gap-2"
                   id="save-traffic-config-btn"
                 >
                   <Save className="h-4 w-4" />
@@ -1401,25 +1401,25 @@ export const AdminDashboard: React.FC = () => {
               <p className="text-xs font-bold text-slate-400 uppercase tracking-widest font-mono">
                 Live User Dashboard Preview
               </p>
-              <div className="rounded-2xl bg-[#131A2D] border border-emerald-500/30 p-5 space-y-4">
+              <div className="rounded-2xl bg-[#131A2D] border border-[#3862FB]/30 p-5 space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="relative flex h-3 w-3">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#38B6FF] opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-[#3862FB]"></span>
                     </span>
-                    <span className="text-[11px] font-extrabold uppercase tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">
+                    <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#38B6FF] bg-[#3862FB]/10 border border-[#3862FB]/20 px-2.5 py-0.5 rounded-full">
                       ● LIVE Platform Traffic Monitor
                     </span>
                   </div>
                   <h3 className="text-xs font-semibold text-slate-300">Daily Active Website & Wallet Users</h3>
                 </div>
 
-                <div className="flex items-center gap-3 bg-[#080d19] border border-emerald-500/20 px-4 py-2.5 rounded-2xl">
-                  <Users className="h-6 w-6 text-emerald-400 shrink-0" />
+                <div className="flex items-center gap-3 bg-[#080d19] border border-[#3862FB]/20 px-4 py-2.5 rounded-2xl">
+                  <Users className="h-6 w-6 text-[#38B6FF] shrink-0" />
                   <div>
                     <p className="text-2xl font-black text-white font-mono">
-                      {trafficActiveUsers.toLocaleString()} <span className="text-xs text-emerald-400">+ Users Today</span>
+                      {trafficActiveUsers.toLocaleString()} <span className="text-xs text-[#38B6FF]">+ Users Today</span>
                     </p>
                   </div>
                 </div>
@@ -1438,7 +1438,7 @@ export const AdminDashboard: React.FC = () => {
                   </div>
                   <div className="bg-[#0B1020]/80 p-2 rounded-xl border border-white/5">
                     <p className="text-[9px] text-slate-400 font-semibold uppercase">Active Node Sessions</p>
-                    <p className="text-xs font-black text-emerald-400 font-mono">{trafficOnlineNodes.toLocaleString()} Live</p>
+                    <p className="text-xs font-black text-[#38B6FF] font-mono">{trafficOnlineNodes.toLocaleString()} Live</p>
                   </div>
                   <div className="bg-[#0B1020]/80 p-2 rounded-xl border border-white/5">
                     <p className="text-[9px] text-slate-400 font-semibold uppercase">Peak Concurrent</p>
@@ -1446,7 +1446,7 @@ export const AdminDashboard: React.FC = () => {
                   </div>
                   <div className="bg-[#0B1020]/80 p-2 rounded-xl border border-white/5">
                     <p className="text-[9px] text-slate-400 font-semibold uppercase">Platform Status</p>
-                    <p className="text-xs font-black text-emerald-400 font-mono">{trafficStatus}</p>
+                    <p className="text-xs font-black text-[#38B6FF] font-mono">{trafficStatus}</p>
                   </div>
                 </div>
               </div>
@@ -1551,7 +1551,7 @@ export const AdminDashboard: React.FC = () => {
                         updateDepositAddress('GAS_TRX', e.target.value.trim());
                       }
                     }}
-                    className="w-full rounded-xl bg-slate-900 border border-[#38B6FF]/30 px-3 py-2 text-xs text-emerald-400 font-mono focus:outline-none focus:border-[#38B6FF]"
+                    className="w-full rounded-xl bg-slate-900 border border-[#38B6FF]/30 px-3 py-2 text-xs text-[#38B6FF] font-mono focus:outline-none focus:border-[#38B6FF]"
                     placeholder="Enter TRX Gas deposit address..."
                   />
                 </div>
@@ -1690,7 +1690,7 @@ export const AdminDashboard: React.FC = () => {
                               updateDepositAddress(coin.symbol, e.target.value.trim());
                             }
                           }}
-                          className="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-1.5 text-xs text-emerald-400 font-mono focus:outline-none focus:border-blue-300"
+                          className="w-full rounded-xl bg-slate-900 border border-slate-800 px-3 py-1.5 text-xs text-[#38B6FF] font-mono focus:outline-none focus:border-blue-300"
                           placeholder="Enter deposit address..."
                         />
                       </div>
@@ -1717,7 +1717,7 @@ export const AdminDashboard: React.FC = () => {
                       <button
                         onClick={() => toggleAssetEnabled(coin.id)}
                         className={`px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 self-center w-full ${
-                          coin.enabled ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/10 text-rose-400 border border-rose-500/30'
+                          coin.enabled ? 'bg-[#3862FB]/10 text-[#38B6FF] border border-[#3862FB]/30' : 'bg-rose-500/10 text-rose-400 border border-rose-500/30'
                         }`}
                       >
                         {coin.enabled ? 'Enabled' : 'Disabled'}
@@ -1772,7 +1772,7 @@ export const AdminDashboard: React.FC = () => {
             <Key className="h-12 w-12 text-blue-300 mx-auto" />
             <h3 className="text-lg font-bold text-white">Temporary Credentials Issued</h3>
             <p className="text-xs text-slate-400">Target: {resetPassModal.email}</p>
-            <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-sm font-mono font-bold text-emerald-400">
+            <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-sm font-mono font-bold text-[#38B6FF]">
               {resetPassModal.pass}
             </div>
             <button

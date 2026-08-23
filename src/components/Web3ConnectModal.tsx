@@ -117,7 +117,7 @@ export const Web3ConnectModal: React.FC<Web3ConnectModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
       <div className="relative w-full max-w-md rounded-3xl bg-[#0F172A] border border-blue-500/30 p-6 shadow-2xl space-y-5 text-white overflow-hidden">
         {/* Decorative Top Glow */}
-        <div className="absolute -top-12 left-1/2 -translate-x-1/2 h-24 w-48 bg-gradient-to-r from-blue-600 via-emerald-500 to-indigo-600 blur-3xl opacity-30 pointer-events-none" />
+        <div className="absolute -top-12 left-1/2 -translate-x-1/2 h-24 w-48 bg-gradient-to-r from-blue-600 via-[#3862FB] to-indigo-600 blur-3xl opacity-30 pointer-events-none" />
 
         {/* Header Title & Close Button */}
         <div className="flex items-center justify-between border-b border-slate-800 pb-4">
@@ -151,11 +151,11 @@ export const Web3ConnectModal: React.FC<Web3ConnectModalProps> = ({
         {/* IF ALREADY CONNECTED */}
         {isConnectedToWeb3 ? (
           <div className="space-y-4 py-2">
-            <div className="p-4 rounded-2xl bg-slate-900/90 border border-emerald-500/30 space-y-3">
+            <div className="p-4 rounded-2xl bg-slate-900/90 border border-[#3862FB]/30 space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="text-xs font-bold text-emerald-400 uppercase tracking-wide font-mono">
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#38B6FF] animate-pulse" />
+                  <span className="text-xs font-bold text-[#38B6FF] uppercase tracking-wide font-mono">
                     {web3ProviderName || 'Trust Wallet'} Connected
                   </span>
                 </div>
@@ -177,17 +177,17 @@ export const Web3ConnectModal: React.FC<Web3ConnectModalProps> = ({
                         setTimeout(() => setCopiedAddress(false), 2000);
                       }
                     }}
-                    className="p-1 text-slate-400 hover:text-emerald-400 ml-2 shrink-0"
+                    className="p-1 text-slate-400 hover:text-[#38B6FF] ml-2 shrink-0"
                     title="Copy Address"
                   >
                     <Copy className="h-4 w-4" />
                   </button>
                 </div>
-                {copiedAddress && <p className="text-[10px] text-emerald-400 font-bold">Address Copied!</p>}
+                {copiedAddress && <p className="text-[10px] text-[#38B6FF] font-bold">Address Copied!</p>}
               </div>
 
               <div className="flex items-center gap-2 text-[11px] text-slate-400 font-medium">
-                <ShieldCheck className="h-4 w-4 text-emerald-400 shrink-0" />
+                <ShieldCheck className="h-4 w-4 text-[#38B6FF] shrink-0" />
                 <span>Integrated with Trust Wallet Security Shield & non-custodial protection</span>
               </div>
             </div>
@@ -223,7 +223,7 @@ export const Web3ConnectModal: React.FC<Web3ConnectModalProps> = ({
                   setErrorMessage('');
                 }}
                 className={`flex-1 py-2 rounded-xl font-bold transition-all ${
-                  activeTab === 'wallets' ? 'bg-[#38B6FF] text-white shadow-md' : 'text-slate-400 hover:text-white'
+                  activeTab === 'wallets' ? 'bg-[#3862FB] text-white shadow-md' : 'text-slate-400 hover:text-white'
                 }`}
               >
                 Wallet Extension
@@ -235,7 +235,7 @@ export const Web3ConnectModal: React.FC<Web3ConnectModalProps> = ({
                   setErrorMessage('');
                 }}
                 className={`flex-1 py-2 rounded-xl font-bold transition-all ${
-                  activeTab === 'manual' ? 'bg-[#38B6FF] text-white shadow-md' : 'text-slate-400 hover:text-white'
+                  activeTab === 'manual' ? 'bg-[#3862FB] text-white shadow-md' : 'text-slate-400 hover:text-white'
                 }`}
               >
                 Enter Address
@@ -247,7 +247,7 @@ export const Web3ConnectModal: React.FC<Web3ConnectModalProps> = ({
                   setErrorMessage('');
                 }}
                 className={`flex-1 py-2 rounded-xl font-bold transition-all ${
-                  activeTab === 'qr' ? 'bg-[#38B6FF] text-white shadow-md' : 'text-slate-400 hover:text-white'
+                  activeTab === 'qr' ? 'bg-[#3862FB] text-white shadow-md' : 'text-slate-400 hover:text-white'
                 }`}
               >
                 Trust App QR
@@ -272,7 +272,7 @@ export const Web3ConnectModal: React.FC<Web3ConnectModalProps> = ({
                   id="connect-trust-wallet-option"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-xl bg-[#38B6FF] flex items-center justify-center text-white shrink-0 shadow-lg">
+                    <div className="h-10 w-10 rounded-xl bg-[#3862FB] flex items-center justify-center text-white shrink-0 shadow-lg">
                       <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 2L3 5V11C3 16.55 7 21.74 12 23C17 21.74 21 16.55 21 11V5L12 2Z" fill="white" fillOpacity="0.3" stroke="white" strokeWidth="2"/>
                         <path d="M12 6L7 9V12C7 15.5 9.5 18.5 12 19.5C14.5 18.5 17 15.5 17 12V9L12 6Z" fill="white"/>
@@ -281,7 +281,7 @@ export const Web3ConnectModal: React.FC<Web3ConnectModalProps> = ({
                     <div>
                       <p className="font-bold text-white text-xs flex items-center gap-1.5">
                         <span>Trust Wallet</span>
-                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-blue-500/20 text-[#38B6FF] border border-blue-500/30">
                           RECOMMENDED
                         </span>
                       </p>

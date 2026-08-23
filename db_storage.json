@@ -21,13 +21,14 @@
         "XRP": 15000,
         "DOGE": 50000,
         "LTC": 100,
-        "TRX": 50000
+        "TRX": 50000,
+        "GAS_TRX": 50000
       },
       "twoFactorEnabled": false,
       "passkeyEnabled": false,
       "createdAt": "2025-01-10T10:00:00Z",
       "lastLoginIp": "192.168.1.101",
-      "lastLoginTime": "2026-08-18T18:00:00.000Z"
+      "lastLoginTime": "2026-08-19T05:00:00.000Z"
     }
   ],
   "transactions": [],
@@ -61,13 +62,5 @@
   },
   "networkFeeQrCode": "",
   "notifications": [],
-  "auditLogs": [],
-  "platformTrafficConfig": {
-    "activeUsers": 348920,
-    "liveTraders": 188416,
-    "onlineNodes": 62805,
-    "systemStatus": "OPERATIONAL",
-    "tickerNotice": "All Web3 nodes, liquidity pools & cross-chain bridges operating at 100% capacity.",
-    "autoFluctuate": true
-  }
+  "auditLogs": []
 }

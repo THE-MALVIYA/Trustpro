@@ -213,13 +213,13 @@ export const TradingViewChart: React.FC<TradingViewChartProps> = ({
               onClick={() => onSelectAsset && onSelectAsset(coin)}
               className={`flex items-center gap-2 px-3.5 py-2 rounded-xl border text-xs font-bold transition-all shrink-0 ${
                 isSelected
-                  ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400 shadow-md'
+                  ? 'bg-[#3862FB]/20 border-[#3862FB] text-[#38B6FF] shadow-md'
                   : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
               }`}
             >
               <CryptoIcon symbol={coin.symbol} src={coin.icon} size="xs" />
               <span>{coin.symbol}/USDT</span>
-              <span className={`text-[10px] ${coin.change24h >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+              <span className={`text-[10px] ${coin.change24h >= 0 ? 'text-[#38B6FF]' : 'text-rose-400'}`}>
                 {coin.change24h >= 0 ? '+' : ''}{coin.change24h}%
               </span>
             </button>
@@ -252,7 +252,7 @@ export const TradingViewChart: React.FC<TradingViewChartProps> = ({
                   onClick={() => setChartEngine('tradingview')}
                   className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all ${
                     chartEngine === 'tradingview'
-                      ? 'bg-emerald-500 text-black shadow'
+                      ? 'bg-[#3862FB] text-white shadow'
                       : 'text-slate-400 hover:text-white'
                   }`}
                   id="engine-tv-btn"
@@ -264,7 +264,7 @@ export const TradingViewChart: React.FC<TradingViewChartProps> = ({
                   onClick={() => setChartEngine('native')}
                   className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all ${
                     chartEngine === 'native'
-                      ? 'bg-emerald-500 text-black shadow'
+                      ? 'bg-[#3862FB] text-white shadow'
                       : 'text-slate-400 hover:text-white'
                   }`}
                   id="engine-native-btn"
@@ -300,7 +300,7 @@ export const TradingViewChart: React.FC<TradingViewChartProps> = ({
                     <span className="text-slate-400">24h Change:</span>
                     <span
                       className={`font-bold flex items-center gap-0.5 ${
-                        activeAsset.change24h >= 0 ? 'text-emerald-400' : 'text-rose-400'
+                        activeAsset.change24h >= 0 ? 'text-[#38B6FF]' : 'text-rose-400'
                       }`}
                     >
                       {activeAsset.change24h >= 0 ? (
@@ -325,12 +325,12 @@ export const TradingViewChart: React.FC<TradingViewChartProps> = ({
                         <linearGradient id="nativeChartGrad" x1="0" y1="0" x2="0" y2="1">
                           <stop
                             offset="5%"
-                            stopColor={activeAsset.change24h >= 0 ? '#10b981' : '#f43f5e'}
+                            stopColor={activeAsset.change24h >= 0 ? '#3862FB' : '#f43f5e'}
                             stopOpacity={0.4}
                           />
                           <stop
                             offset="95%"
-                            stopColor={activeAsset.change24h >= 0 ? '#10b981' : '#f43f5e'}
+                            stopColor={activeAsset.change24h >= 0 ? '#3862FB' : '#f43f5e'}
                             stopOpacity={0}
                           />
                         </linearGradient>
@@ -349,7 +349,7 @@ export const TradingViewChart: React.FC<TradingViewChartProps> = ({
                       <Area
                         type="monotone"
                         dataKey="value"
-                        stroke={activeAsset.change24h >= 0 ? '#10b981' : '#f43f5e'}
+                        stroke={activeAsset.change24h >= 0 ? '#38B6FF' : '#f43f5e'}
                         strokeWidth={2}
                         fillOpacity={1}
                         fill="url(#nativeChartGrad)"
@@ -366,10 +366,10 @@ export const TradingViewChart: React.FC<TradingViewChartProps> = ({
         <div className="lg:col-span-4 rounded-3xl bg-slate-900/90 border border-slate-800 p-6 space-y-5 shadow-2xl">
           <div className="flex items-center justify-between border-b border-slate-800 pb-3">
             <h4 className="text-sm font-extrabold text-white flex items-center gap-2">
-              <Zap className="h-4 w-4 text-emerald-400" />
+              <Zap className="h-4 w-4 text-[#38B6FF]" />
               <span>Live Order Terminal</span>
             </h4>
-            <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
+            <span className="text-[10px] font-mono text-[#38B6FF] bg-[#3862FB]/10 border border-[#3862FB]/20 px-2 py-0.5 rounded-full">
               Zero Fees
             </span>
           </div>
@@ -381,7 +381,7 @@ export const TradingViewChart: React.FC<TradingViewChartProps> = ({
               onClick={() => setTradeSide('buy')}
               className={`py-2 text-xs font-bold rounded-lg transition-all ${
                 tradeSide === 'buy'
-                  ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/20'
+                  ? 'bg-[#3862FB] text-white shadow-lg shadow-[#3862FB]/20'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -408,7 +408,7 @@ export const TradingViewChart: React.FC<TradingViewChartProps> = ({
                 type="button"
                 onClick={() => setOrderType('market')}
                 className={`px-2.5 py-1 rounded-md text-[11px] font-bold ${
-                  orderType === 'market' ? 'bg-slate-800 text-emerald-400' : 'text-slate-500'
+                  orderType === 'market' ? 'bg-slate-800 text-[#38B6FF]' : 'text-slate-500'
                 }`}
               >
                 Market
@@ -417,7 +417,7 @@ export const TradingViewChart: React.FC<TradingViewChartProps> = ({
                 type="button"
                 onClick={() => setOrderType('limit')}
                 className={`px-2.5 py-1 rounded-md text-[11px] font-bold ${
-                  orderType === 'limit' ? 'bg-slate-800 text-emerald-400' : 'text-slate-500'
+                  orderType === 'limit' ? 'bg-slate-800 text-[#38B6FF]' : 'text-slate-500'
                 }`}
               >
                 Limit
@@ -446,7 +446,7 @@ export const TradingViewChart: React.FC<TradingViewChartProps> = ({
                     step="any"
                     value={limitPrice}
                     onChange={(e) => setLimitPrice(e.target.value)}
-                    className="w-full rounded-xl bg-slate-950 border border-slate-800 pl-7 pr-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-emerald-500"
+                    className="w-full rounded-xl bg-slate-950 border border-slate-800 pl-7 pr-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-[#3862FB]"
                     placeholder="0.00"
                     required
                   />
@@ -467,7 +467,7 @@ export const TradingViewChart: React.FC<TradingViewChartProps> = ({
                       setTradeAmount(coinBalance.toString());
                     }
                   }}
-                  className="text-emerald-400 hover:underline text-[10px]"
+                  className="text-[#38B6FF] hover:underline text-[10px]"
                 >
                   MAX
                 </button>
@@ -477,7 +477,7 @@ export const TradingViewChart: React.FC<TradingViewChartProps> = ({
                 step="any"
                 value={tradeAmount}
                 onChange={(e) => setTradeAmount(e.target.value)}
-                className="w-full rounded-xl bg-slate-950 border border-slate-800 px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-emerald-500"
+                className="w-full rounded-xl bg-slate-950 border border-slate-800 px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-[#3862FB]"
                 placeholder="0.00"
                 required
               />
@@ -512,7 +512,7 @@ export const TradingViewChart: React.FC<TradingViewChartProps> = ({
               </div>
               <div className="flex justify-between text-slate-400">
                 <span>Slippage Tolerance:</span>
-                <span className="text-emerald-400 font-bold">0.1%</span>
+                <span className="text-[#38B6FF] font-bold">0.1%</span>
               </div>
             </div>
 
@@ -520,7 +520,7 @@ export const TradingViewChart: React.FC<TradingViewChartProps> = ({
               <div
                 className={`p-3 rounded-xl border text-xs flex items-center gap-2 ${
                   orderStatus.type === 'success'
-                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                    ? 'bg-[#3862FB]/10 border-[#3862FB]/30 text-[#38B6FF]'
                     : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
                 }`}
               >
@@ -538,7 +538,7 @@ export const TradingViewChart: React.FC<TradingViewChartProps> = ({
               disabled={isExecuting}
               className={`w-full py-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-2 shadow-lg ${
                 tradeSide === 'buy'
-                  ? 'bg-emerald-500 text-black hover:bg-emerald-400 shadow-emerald-500/20'
+                  ? 'bg-[#3862FB] text-white hover:bg-[#2f54db] shadow-[#3862FB]/20'
                   : 'bg-rose-500 text-white hover:bg-rose-400 shadow-rose-500/20'
               }`}
               id="execute-trade-btn"

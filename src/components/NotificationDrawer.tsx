@@ -52,7 +52,7 @@ export const NotificationDrawer: React.FC = () => {
           <div className="p-5 border-b border-slate-800/80 bg-slate-900/40">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                <div className="p-2 rounded-xl bg-[#3862FB]/10 border border-[#3862FB]/20 text-[#38B6FF]">
                   <Bell className="h-4 w-4" />
                 </div>
                 <div>
@@ -71,14 +71,14 @@ export const NotificationDrawer: React.FC = () => {
 
             <div className="mt-4 flex items-center justify-between pt-2 border-t border-slate-800/50">
               <span className="text-[11px] text-slate-400">
-                <span className="font-bold text-emerald-400">
+                <span className="font-bold text-[#38B6FF]">
                   {userNotifications.filter((n) => !n.read).length}
                 </span>{' '}
                 Unread alerts
               </span>
               <button
                 onClick={markAllNotificationsAsRead}
-                className="flex items-center gap-1 text-[11px] font-semibold text-emerald-400 hover:underline"
+                className="flex items-center gap-1 text-[11px] font-semibold text-[#38B6FF] hover:underline"
                 id="mark-all-read-btn"
               >
                 <CheckCheck className="h-3.5 w-3.5" />
@@ -106,7 +106,7 @@ export const NotificationDrawer: React.FC = () => {
                     className={`rounded-2xl border transition-all overflow-hidden ${
                       notif.read
                         ? 'bg-slate-950/50 border-slate-800/80'
-                        : 'bg-slate-900/90 border-emerald-500/40 shadow-lg shadow-emerald-500/5'
+                        : 'bg-slate-900/90 border-[#3862FB]/40 shadow-lg shadow-[#3862FB]/5'
                     }`}
                   >
                     <div
@@ -117,7 +117,7 @@ export const NotificationDrawer: React.FC = () => {
                         <div
                           className={`mt-0.5 p-2 rounded-xl shrink-0 ${
                             notif.type === 'deposit'
-                              ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                              ? 'bg-[#3862FB]/10 text-[#38B6FF] border border-[#3862FB]/20'
                               : notif.type === 'withdraw'
                               ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
                               : notif.type === 'security'
@@ -139,7 +139,7 @@ export const NotificationDrawer: React.FC = () => {
                           <div className="flex items-center gap-2">
                             <p className="text-xs font-bold text-white">{notif.title}</p>
                             {!notif.read && (
-                              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                              <span className="h-2 w-2 rounded-full bg-[#38B6FF] animate-pulse" />
                             )}
                           </div>
                           <p className="text-xs text-slate-300 mt-0.5 leading-snug">{notif.message}</p>
@@ -157,12 +157,12 @@ export const NotificationDrawer: React.FC = () => {
                     {/* Email Details View (Expanded) */}
                     {isExpanded && (
                       <div className="p-4 bg-slate-950 border-t border-slate-800/80 space-y-2 text-xs">
-                        <div className="flex items-center justify-between text-[11px] text-emerald-400 font-semibold pb-2 border-b border-slate-800/60">
+                        <div className="flex items-center justify-between text-[11px] text-[#38B6FF] font-semibold pb-2 border-b border-slate-800/60">
                           <span className="flex items-center gap-1.5">
                             <Mail className="h-3.5 w-3.5" />
                             <span>Official Dispatched Gmail Notice</span>
                           </span>
-                          <span className="bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                          <span className="bg-[#3862FB]/10 px-2 py-0.5 rounded-full border border-[#3862FB]/20">
                             Sent to {notif.recipientEmail}
                           </span>
                         </div>

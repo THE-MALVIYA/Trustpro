@@ -100,8 +100,8 @@ export const WalletManageModal: React.FC<WalletManageModalProps> = ({ isOpen, on
         {/* Modal Header */}
         <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
           <div className="flex items-center gap-2.5">
-            <div className="h-9 w-9 rounded-xl bg-[#05D686]/10 border border-[#05D686]/30 flex items-center justify-center text-[#05D686]">
-              <Shield className="h-5 w-5 fill-[#05D686]" />
+            <div className="h-9 w-9 rounded-xl bg-[#3862FB]/10 border border-[#3862FB]/30 flex items-center justify-center text-[#3862FB]">
+              <Shield className="h-5 w-5 fill-[#3862FB]" />
             </div>
             <div>
               <h2 className="text-lg font-bold text-white">Wallets & Accounts</h2>
@@ -121,7 +121,7 @@ export const WalletManageModal: React.FC<WalletManageModalProps> = ({ isOpen, on
           <div
             className={`mb-4 flex items-center gap-2 rounded-xl p-3 text-xs font-medium ${
               feedbackMsg.success
-                ? 'bg-[#05D686]/15 border border-[#05D686]/30 text-[#05D686]'
+                ? 'bg-[#3862FB]/15 border border-[#3862FB]/30 text-[#3862FB]'
                 : 'bg-rose-500/15 border border-rose-500/30 text-rose-400'
             }`}
           >
@@ -137,7 +137,7 @@ export const WalletManageModal: React.FC<WalletManageModalProps> = ({ isOpen, on
               <div className="text-xs font-semibold uppercase tracking-wider text-slate-400 px-1 flex items-center justify-between">
                 <span>Active Wallets ({displayWallets.length})</span>
                 {currentUser && (
-                  <span className="text-[11px] text-emerald-400 font-mono">
+                  <span className="text-[11px] text-blue-400 font-mono">
                     Logged in as: {currentUser.name}
                   </span>
                 )}
@@ -152,12 +152,12 @@ export const WalletManageModal: React.FC<WalletManageModalProps> = ({ isOpen, on
                     onClick={() => handleSwitchUser(u)}
                     className={`flex items-center justify-between p-3.5 rounded-2xl border cursor-pointer transition-all ${
                       isActive
-                        ? 'bg-[#1E2024] border-[#05D686]/50 shadow-md ring-1 ring-[#05D686]/20'
+                        ? 'bg-[#1E2024] border-[#3862FB]/50 shadow-md ring-1 ring-[#3862FB]/20'
                         : 'bg-[#16181D] border-white/5 hover:bg-[#1E2024] hover:border-white/10'
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-xl flex items-center justify-center bg-[#05D686]/15 text-[#05D686] border border-[#05D686]/30">
+                      <div className="h-10 w-10 rounded-xl flex items-center justify-center bg-[#3862FB]/15 text-[#3862FB] border border-[#3862FB]/30">
                         <Wallet className="h-5 w-5" />
                       </div>
                       <div>
@@ -172,7 +172,7 @@ export const WalletManageModal: React.FC<WalletManageModalProps> = ({ isOpen, on
 
                     <div className="flex items-center gap-2">
                       {isActive && (
-                        <div className="flex items-center gap-1 bg-[#05D686]/15 text-[#05D686] text-[11px] font-semibold px-2.5 py-1 rounded-full border border-[#05D686]/30">
+                        <div className="flex items-center gap-1 bg-[#3862FB]/15 text-[#3862FB] text-[11px] font-semibold px-2.5 py-1 rounded-full border border-[#3862FB]/30">
                           <Check className="h-3.5 w-3.5" />
                           <span>Active</span>
                         </div>
@@ -187,7 +187,7 @@ export const WalletManageModal: React.FC<WalletManageModalProps> = ({ isOpen, on
             <div className="pt-2">
               <button
                 onClick={() => setActiveTab('import')}
-                className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-[#05D686] hover:bg-[#00EC96] text-black font-bold text-xs transition-all shadow-md shadow-[#05D686]/20 active:scale-95"
+                className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-[#3862FB] hover:bg-[#2D54E5] text-white font-bold text-xs transition-all shadow-md shadow-[#3862FB]/20 active:scale-95"
               >
                 <Key className="h-4 w-4 stroke-[2.5]" />
                 <span>Import Wallet with Recovery Phrase / Key</span>
@@ -204,7 +204,7 @@ export const WalletManageModal: React.FC<WalletManageModalProps> = ({ isOpen, on
                   }}
                   className="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/60 text-xs font-semibold text-white transition-all"
                 >
-                  <User className="h-3.5 w-3.5 text-emerald-400" />
+                  <User className="h-3.5 w-3.5 text-blue-400" />
                   <span>Sign In / Login</span>
                 </button>
                 <button
@@ -212,9 +212,9 @@ export const WalletManageModal: React.FC<WalletManageModalProps> = ({ isOpen, on
                     onClose();
                     setIsAuthModalOpen(true);
                   }}
-                  className="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/60 text-xs font-semibold text-emerald-400 transition-all"
+                  className="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/60 text-xs font-semibold text-blue-400 transition-all"
                 >
-                  <Sparkles className="h-3.5 w-3.5 text-emerald-400" />
+                  <Sparkles className="h-3.5 w-3.5 text-blue-400" />
                   <span>Register Account</span>
                 </button>
               </div>
@@ -233,7 +233,7 @@ export const WalletManageModal: React.FC<WalletManageModalProps> = ({ isOpen, on
                     onClose();
                     setIsAuthModalOpen(true);
                   }}
-                  className="w-full flex items-center justify-center gap-2 p-2.5 rounded-xl bg-[#05D686]/15 hover:bg-[#05D686]/25 border border-[#05D686]/30 text-xs font-bold text-[#05D686] transition-all"
+                  className="w-full flex items-center justify-center gap-2 p-2.5 rounded-xl bg-[#3862FB]/15 hover:bg-[#3862FB]/25 border border-[#3862FB]/30 text-xs font-bold text-[#3862FB] transition-all"
                 >
                   <User className="h-3.5 w-3.5" />
                   <span>Sign In with Gmail / Password</span>
@@ -254,7 +254,7 @@ export const WalletManageModal: React.FC<WalletManageModalProps> = ({ isOpen, on
                   <Lock className="h-4 w-4 text-amber-400" />
                   <span>Backup Secret Recovery Phrase</span>
                 </div>
-                <span className="text-[#05D686] font-semibold text-[11px]">View &rarr;</span>
+                <span className="text-[#3862FB] font-semibold text-[11px]">View &rarr;</span>
               </button>
             </div>
           </div>
@@ -269,7 +269,7 @@ export const WalletManageModal: React.FC<WalletManageModalProps> = ({ isOpen, on
                 type="text"
                 value={importNameInput}
                 onChange={(e) => setImportNameInput(e.target.value)}
-                className="w-full rounded-xl bg-[#16181D] border border-white/10 px-3.5 py-2.5 text-sm text-white focus:border-[#05D686] focus:outline-none"
+                className="w-full rounded-xl bg-[#16181D] border border-white/10 px-3.5 py-2.5 text-sm text-white focus:border-[#3862FB] focus:outline-none"
               />
             </div>
 
@@ -282,7 +282,7 @@ export const WalletManageModal: React.FC<WalletManageModalProps> = ({ isOpen, on
                 placeholder="Enter 12 or 24 words separated by spaces..."
                 value={importSeedInput}
                 onChange={(e) => setImportSeedInput(e.target.value)}
-                className="w-full rounded-xl bg-[#16181D] border border-white/10 p-3 text-xs font-mono text-white placeholder-slate-500 focus:border-[#05D686] focus:outline-none"
+                className="w-full rounded-xl bg-[#16181D] border border-white/10 p-3 text-xs font-mono text-white placeholder-slate-500 focus:border-[#3862FB] focus:outline-none"
               />
             </div>
 
@@ -296,7 +296,7 @@ export const WalletManageModal: React.FC<WalletManageModalProps> = ({ isOpen, on
               </button>
               <button
                 type="submit"
-                className="flex-1 py-3 rounded-xl bg-[#05D686] hover:bg-[#00EC96] text-black text-xs font-bold transition-all shadow-md shadow-[#05D686]/20"
+                className="flex-1 py-3 rounded-xl bg-[#3862FB] hover:bg-[#2D54E5] text-white text-xs font-bold transition-all shadow-md shadow-[#3862FB]/20"
               >
                 Restore Wallet
               </button>
@@ -334,14 +334,14 @@ export const WalletManageModal: React.FC<WalletManageModalProps> = ({ isOpen, on
                       className="flex items-center gap-1.5 rounded-lg bg-[#1E2024] px-2.5 py-1.5 text-xs font-mono text-white border border-white/5"
                     >
                       <span className="text-slate-500 text-[10px] w-4">{idx + 1}.</span>
-                      <span className="font-semibold text-emerald-400">{word}</span>
+                      <span className="font-semibold text-blue-400">{word}</span>
                     </div>
                   ))}
                 </div>
               ) : (
                 <div
                   onClick={() => setShowSeedSecret(true)}
-                  className="h-24 rounded-xl bg-[#1E2024] border border-dashed border-white/20 flex flex-col items-center justify-center text-xs text-slate-400 cursor-pointer hover:border-[#05D686] transition-colors"
+                  className="h-24 rounded-xl bg-[#1E2024] border border-dashed border-white/20 flex flex-col items-center justify-center text-xs text-slate-400 cursor-pointer hover:border-[#3862FB] transition-colors"
                 >
                   <Eye className="h-5 w-5 mb-1 text-slate-300" />
                   <span>Tap to reveal Secret Phrase</span>

@@ -287,7 +287,7 @@ export const CryptoIcon: React.FC<CryptoIconProps> = ({
 
       default:
         return (
-          <div className="flex h-full w-full items-center justify-center rounded-full bg-[#1E222B] text-[#05D686] font-bold font-mono border border-white/10 shadow-sm">
+          <div className="flex h-full w-full items-center justify-center rounded-full bg-[#1E222B] text-[#3862FB] font-bold font-mono border border-white/10 shadow-sm">
             {sym.slice(0, 3)}
           </div>
         );
